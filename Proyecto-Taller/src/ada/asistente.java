@@ -44,7 +44,7 @@ public class asistente {
 			return consultaTiempo(cad);
 		else if (seDespideAlAsistente(cad))
 			return respuesta_salida();
-		else if (cad.matches(".*ada.*"))
+		else if (cad.matches(".*ad+a.*"))
 			return nombrada(cad);
 		else if (cad.matches(".*funcion.*resolver.*") || cad.matches(".*resolver.*funcion.*")) {
 			cuenta = true;
@@ -69,8 +69,8 @@ public class asistente {
 
 	private String respuesta_salida() {
 		respuestaSalida = new ArrayList<String>();
-		cargarLista(respuestaSalida, "saludo.dat");
-		return "Adios, espero haber ayudado";
+		cargarLista(respuestaSalida, "saludos.dat");
+		return respuestaSalida.get(subindice(respuestaSalida));
 	}
 
 	private String consultaTiempo(String cad) {
