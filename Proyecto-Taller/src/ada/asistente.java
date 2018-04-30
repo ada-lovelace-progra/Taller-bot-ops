@@ -1,116 +1,99 @@
 package ada;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import ada.CalculoString;
 
 public class asistente {
-	private ArrayList<String> despedidasAceptables;
-	private ArrayList<String> llamadasAceptables;
-	private ArrayList<String> peticionesTiempo;
-	private ArrayList<String> respuestaNose;
-	private ArrayList<String> respuestaSalida;
-	private ArrayList<String> respuestaTiempo;
-	private ArrayList<String> respuesta_nombrada;
-
+	private Hashtable<String, ArrayList<String>> tabla;
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
 	public boolean activo;
-	public boolean cuenta;
-	public String dir = "";
+	private boolean cuenta;
+	private String dir = ""; // se utiliza como auxiliar por si
 
 	public asistente() {
-		this.despedidasAceptables = new ArrayList<String>();
-		this.llamadasAceptables = new ArrayList<String>();
-		this.peticionesTiempo = new ArrayList<String>();
-		this.respuestaNose = new ArrayList<String>();
-		this.respuestaTiempo = new ArrayList<String>();
-		this.respuesta_nombrada = new ArrayList<String>();
-
-		this.activo = false;
+		tabla = new Hashtable<String, ArrayList<String>>();
+		this.activo = this.cuenta = false;
 		this.cordialidad = -1;
-		this.cuenta = false;
-		cargarLista(llamadasAceptables, "llamadas.dat");
+		cargarLista("llamadas");
 	}
 
-	private String nombrada(String cad) {
-		return respuesta_nombrada.get(subindice(respuesta_nombrada));
+	private boolean consulta(String select, String cod) {
+		if (tabla.containsKey(select) && tabla.get(select).contains(cod)) {
+			setear_Cordialidad(tabla.get(select), cod);
+			return true;
+		}
+		return false;
+	}
+
+	private String respuesta(String select) {
+		select = "respuestas_" + select;
+		ArrayList<String> temp = null;
+		if (!tabla.containsKey(select)) {
+			cargarLista(select);
+			if (tabla.containsKey(select))
+				temp = tabla.get(select);
+		}
+		else
+			temp = tabla.get(select);
+		if (temp == null)
+			temp = tabla.get("No_se");
+		return temp.get(subindice(temp));
 	}
 
 	public String procesarMensaje(String entrada) {
 		String cad = entrada.toLowerCase();
-		cargaArraysGenerales();
-		if (peticionesTiempo.contains(cad))
-			return consultaTiempo(cad);
-		else if (seDespideAlAsistente(cad))
-			return respuesta_salida();
-		else if (cad.matches(".*ad+a.*"))
-			return nombrada(cad);
-		else if (cad.matches(".*funcion.*resolver.*") || cad.matches(".*resolver.*funcion.*")) {
-			cuenta = true;
-			return "no hay problema. ingresala a continuacion";
-		} else if (cuenta) {
+		if (activo) {
+			for (Entry<String, ArrayList<String>> temp : tabla.entrySet()) {
+				if (consulta(temp.getKey(), cad)) {
+					if (temp.getKey() == "salidas")
+						activo = false;
+					return respuesta(temp.getKey());
+				}
+			}
+			if (cad.matches(".*ad+a.*"))
+				return respuesta("nombrada");
+			if (cad.matches(".*funcion.*resolver.*") || cad.matches(".*resolver.*funcion.*")) {
+				cuenta = true;
+				return "no hay problema. ingresala a continuacion";
+			}
+			if (cuenta)
+				return "la funcion da: " + CalculoString.calcularFormat("2+2", "%.4f");
+
 			cuenta = false;
-			return "la funcion da: " + CalculoString.calcular(cad);
 		}
-		return "nada";
+		if (consulta("llamadas", cad)) {
+			activo = true;
+			return respuesta("llamadas");
+		}
+		if (consulta("despedidas", cad)) {
+			activo = false;
+			return respuesta("despedidas");
+		}
+		return "";
 	}
 
-	private void cargaArraysGenerales() {
-		if (despedidasAceptables.isEmpty())
-			cargarLista(despedidasAceptables, "despedidas.dat");
-		if (peticionesTiempo.isEmpty())
-			cargarLista(peticionesTiempo, "peticion_tiempo.dat");
-		if (peticionesTiempo.isEmpty())
-			cargarLista(peticionesTiempo, "peticion_tiempo.dat");
-		if (respuesta_nombrada.isEmpty())
-			cargarLista(respuesta_nombrada, "respuestas_nombrada.dat");
-	}
-
-	private String respuesta_salida() {
-		respuestaSalida = new ArrayList<String>();
-		cargarLista(respuestaSalida, "saludos.dat");
-		return respuestaSalida.get(subindice(respuestaSalida));
-	}
-
-	private String consultaTiempo(String cad) {
-		setear_Cordialidad(peticionesTiempo, cad);
-		if (respuestaTiempo.isEmpty())
-			cargarLista(respuestaTiempo, "respuestas_tiempo.dat");
-		return respuestaTiempo.get(subindice(respuestaTiempo));
-	}
-
-	private String Ay_Nose() {
-		if (respuestaNose.isEmpty())
-			cargarLista(respuestaNose, "respuestas_nose.dat");
-		return respuestaNose.get(subindice(respuestaNose));
+	private int subindice(String select) {
+		ArrayList<String> temp = tabla.get(select);
+		int ret = 10000, sub = cordial(temp);
+		while (ret >= temp.size())
+			ret = (int) ( sub);
+		return ret;
 	}
 
 	private int subindice(ArrayList<String> temp) {
-		int ret = 10000;
+		int ret = 10000, sub = cordial(temp);
 		while (ret >= temp.size())
-			ret = (int) ((2 - Math.random() % 5) + cordial(temp));
+			ret = (int) (sub);
 		return ret;
 	}
 
 	private int cordial(ArrayList<String> temp) {
 		return (int) (((double) this.cordialidad / tope_cordialidad) * temp.size());
-	}
-
-	public boolean seDespideAlAsistente(String entrada) {
-		String cad = entrada.toLowerCase();
-		if (despedidasAceptables.contains(cad))
-			activo = false;
-		return !activo;
-	}
-
-	public boolean seLlamoAlAsistente(String entrada) {
-		String cad = entrada.toLowerCase();
-		if (llamadasAceptables.contains(cad)) {
-			setear_Cordialidad(llamadasAceptables, cad);
-			activo = true;
-		}
-		return activo;
 	}
 
 	private void setear_Cordialidad(ArrayList<String> temp, String cad) {
@@ -122,15 +105,19 @@ public class asistente {
 			this.cordialidad = tope_cordialidad - 1;
 	}
 
-	private void cargarLista(ArrayList<String> temp, String dir) {
+	private void cargarLista(String select) {
 		Scanner entrada = null;
 		try {
-			entrada = new Scanner(new File(this.dir + dir));
+			tabla.put(select, (new ArrayList<String>()));
+			entrada = new Scanner(new File(this.dir + select + ".dat"));
 			while (entrada.hasNextLine())
-				temp.add(entrada.nextLine());
-		} catch (FileNotFoundException e) {
+				tabla.get(select).add(entrada.nextLine());
+			entrada.close();
+		} catch (Exception e) {
+			if (entrada != null)
+				entrada.close();
+			System.out.println("no se encontro el arhivo " + select);
 		}
-		entrada.close();
 	}
 
 }
