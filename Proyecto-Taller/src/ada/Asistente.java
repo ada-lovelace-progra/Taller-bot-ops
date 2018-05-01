@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import ada.CalculoString;
 
-public class asistente {
+public class Asistente {
 	private Hashtable<String, ArrayList<String>> tabla;
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
@@ -15,7 +15,7 @@ public class asistente {
 	private boolean cuenta;
 	private String dir = ""; // se utiliza como auxiliar por si
 
-	public asistente() {
+	public Asistente() {
 		tabla = new Hashtable<String, ArrayList<String>>();
 		this.activo = this.cuenta = false;
 		this.cordialidad = -1;
@@ -77,6 +77,7 @@ public class asistente {
 		return "";
 	}
 
+	@SuppressWarnings("unused")
 	private int subindice(String select) {
 		ArrayList<String> temp = tabla.get(select);
 		int ret = 10000, sub = cordial(temp);
