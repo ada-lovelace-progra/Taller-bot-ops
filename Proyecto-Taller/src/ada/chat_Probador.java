@@ -6,7 +6,7 @@ class chat_Probador {
 	public static void main(String a[]) {
 		@SuppressWarnings("resource")
 		Scanner entrada = new Scanner(System.in);
-		asistente Asistent = new asistente();
+		Asistente Asistent = new Asistente();
 		while (true) {
 			String mensaje = entrada.nextLine();
 			System.out.println(Asistent.procesarMensaje(mensaje));

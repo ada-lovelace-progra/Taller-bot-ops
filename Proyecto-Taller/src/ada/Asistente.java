@@ -77,7 +77,7 @@ public class Asistente {
 		return "";
 	}
 
-	@SuppressWarnings("unused")
+	
 	private int subindice(String select) {
 		ArrayList<String> temp = tabla.get(select);
 		int ret = 10000, sub = cordial(temp);
