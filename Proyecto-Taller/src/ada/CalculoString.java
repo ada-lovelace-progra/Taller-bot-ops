@@ -1,7 +1,7 @@
 package ada;
 
 public class CalculoString {
-	private static int cantChar(char a, String cad) {
+	private int cantChar(char a, String cad) {
 		int i = 0, j = cad.length();
 		while (j-- != 0)
 			if (cad.charAt(j) == a)
@@ -9,7 +9,7 @@ public class CalculoString {
 		return i;
 	}
 
-	public static String calcularFormat(String funcion, String formato) {
+	public String calcularFormat(String funcion, String formato) {
 		try {
 			return String.format(formato, calcular(funcion));
 		} catch (Exception e) {
@@ -17,7 +17,7 @@ public class CalculoString {
 		}
 	}
 
-	static public double calcular(String cad) {
+	public double calcular(String cad) {
 		while (cad.contains("(")) {
 			int ini = cad.indexOf("(") + 1;
 			int fin = cad.lastIndexOf(")");
@@ -32,19 +32,18 @@ public class CalculoString {
 			cad = cad.substring(0, ini - 1) + calcular(subcad) + restocad;
 		}
 
-		if (cad.contains("-") && cad.lastIndexOf("-")!=0 && Character.isDigit(cad.charAt(cad.lastIndexOf("-") -1))) {
-			int div=cad.lastIndexOf("-");
+		if (cad.contains("-") && cad.lastIndexOf("-") != 0 && Character.isDigit(cad.charAt(cad.lastIndexOf("-") - 1))) {
+			int div = cad.lastIndexOf("-");
 			double izq = calcular(cad.substring(0, div));
 			int fin = 0;
-			double num=0;
-			while(cad.length()-1 >fin+div && Character.isDigit(cad.substring(div+1).charAt(fin)))
-			{
+			double num = 0;
+			while (cad.length() - 1 > fin + div && Character.isDigit(cad.substring(div + 1).charAt(fin))) {
 				fin++;
 			}
-			num=-1*Double.parseDouble(cad.substring(div+1, div+1+fin));
-			cad= (izq+num) + cad.substring(div+fin+1);
-			
-			return calcular(cad); 
+			num = -1 * Double.parseDouble(cad.substring(div + 1, div + 1 + fin));
+			cad = (izq + num) + cad.substring(div + fin + 1);
+
+			return calcular(cad);
 		}
 		if (cad.contains("+")) {
 			int div = cad.lastIndexOf("+");
@@ -55,7 +54,7 @@ public class CalculoString {
 			int div = cad.indexOf("/");
 			return calcular(cad.substring(0, div)) / calcular(cad.substring(div + 1));
 		}
-		
+
 		if (cad.contains("*")) {
 			int div = cad.indexOf("*");
 			return calcular(cad.substring(0, div)) * calcular(cad.substring(div + 1));
@@ -65,6 +64,7 @@ public class CalculoString {
 			int div = cad.indexOf("^");
 			return Math.pow(calcular(cad.substring(0, div)), calcular(cad.substring(div + 1)));
 		}
-		return Double.parseDouble(cad);
+
+		return cad.matches("L?l?og[0-9]+\\.?[0-9]*") ? Math.log(Double.parseDouble(cad.substring(3,cad.length()-1))) : Double.parseDouble(cad);
 	}
 }

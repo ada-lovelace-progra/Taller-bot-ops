@@ -13,8 +13,7 @@ public class Asistente {
 	private int cordialidad;
 	public boolean activo;
 	private boolean cuenta;
-	private String dir = ""; // se utiliza como auxiliar por si
-
+	
 	public Asistente() {
 		tabla = new Hashtable<String, ArrayList<String>>();
 		this.activo = this.cuenta = false;
@@ -63,7 +62,7 @@ public class Asistente {
 				}
 			}
 			if (cuenta)
-				return "la funcion da: " + CalculoString.calcularFormat("2+2", "%.3f");
+				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
 
 			cuenta = false;
 		}
@@ -81,14 +80,6 @@ public class Asistente {
 			if (!tabla.containsKey(nombre))
 				cargarLista(nombre);
 		}
-	}
-
-	private int subindice(String select) {
-		ArrayList<String> temp = tabla.get(select);
-		int ret = 10000, sub = cordial(temp);
-		while (ret >= temp.size())
-			ret = (int) (sub);
-		return ret;
 	}
 
 	private int subindice(ArrayList<String> temp) {
