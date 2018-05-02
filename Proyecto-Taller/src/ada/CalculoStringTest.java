@@ -95,7 +95,7 @@ public class CalculoStringTest {
 
 		Assert.assertEquals(Math.log(1000), res, 0.1);
 	}
-	
+
 	@Test
 	public void logaritmoConExtras() {
 		CalculoString cs = new CalculoString();
@@ -110,14 +110,11 @@ public class CalculoStringTest {
 		Assert.assertEquals(Math.log(1000) / 10, res, 0.1);
 		res = cs.calcular("5+" + cad + "+10");
 		Assert.assertEquals(5 + Math.log(1000) + 10, res, 0.1);
-		/// falla aca.... la verdad ni idea porque....
 		res = cs.calcular("5-" + cad + "-10");
 		Assert.assertEquals(5 - Math.log(1000) - 10, res, 0.1);
-		////////////////////////////////////////////////
 		res = cs.calcular("5*" + cad + "*10");
 		Assert.assertEquals(5 * Math.log(1000) * 10, res, 0.1);
 		res = cs.calcular("5/" + cad + "/10");
 		Assert.assertEquals(5 / Math.log(1000) / 10, res, 0.1);
 	}
-
 }

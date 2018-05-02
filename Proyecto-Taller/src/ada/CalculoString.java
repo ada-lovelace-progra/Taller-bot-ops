@@ -32,39 +32,50 @@ public class CalculoString {
 			cad = cad.substring(0, ini - 1) + calcular(subcad) + restocad;
 		}
 
+		if (cad.contains("+")) {
+			int div = cad.indexOf("+");
+			if (div != 0)
+				return calcular(cad.substring(0, div)) + calcular(cad.substring(div + 1));
+			return calcular(cad.substring(div + 1));
+		}
+
 		if (cad.contains("-") && cad.lastIndexOf("-") != 0 && Character.isDigit(cad.charAt(cad.lastIndexOf("-") - 1))) {
 			int div = cad.lastIndexOf("-");
-			double izq = calcular(cad.substring(0, div));
-			int fin = 0;
-			double num = 0;
-			while (cad.length() - 1 > fin + div && Character.isDigit(cad.substring(div + 1).charAt(fin))) {
-				fin++;
-			}
-			num = -1 * Double.parseDouble(cad.substring(div + 1, div + 1 + fin));
-			cad = (izq + num) + cad.substring(div + fin + 1);
-
-			return calcular(cad);
-		}
-		if (cad.contains("+")) {
-			int div = cad.lastIndexOf("+");
-			return calcular(cad.substring(0, div)) + calcular(cad.substring(div + 1));
+			if (div != 0)
+				return calcular(cad.substring(0, div)) - calcular(cad.substring(div + 1));
+			return -calcular(cad.substring(div + 1));
+			/*
+			 * double izq = calcular(cad.substring(0, div)); int fin = 0; double num = 0;
+			 * while (cad.length() - 1 > fin + div && Character.isDigit(cad.substring(div +
+			 * 1).charAt(fin))) { fin++; } num = -1 * Double.parseDouble(cad.substring(div +
+			 * 1, div + 1 + fin)); cad = (izq + num) + cad.substring(div + fin + 1);
+			 * 
+			 * return calcular(cad);
+			 */
 		}
 
 		if (cad.contains("/")) {
-			int div = cad.indexOf("/");
-			return calcular(cad.substring(0, div)) / calcular(cad.substring(div + 1));
+			int div = cad.lastIndexOf("/");
+			if (div != 0)
+				return calcular(cad.substring(0, div)) / calcular(cad.substring(div + 1));
+			return 0; 
 		}
 
 		if (cad.contains("*")) {
 			int div = cad.indexOf("*");
-			return calcular(cad.substring(0, div)) * calcular(cad.substring(div + 1));
+			if (div != 0)
+				return calcular(cad.substring(0, div)) * calcular(cad.substring(div + 1));
+			return 0;
 		}
 
 		if (cad.contains("^")) {
 			int div = cad.indexOf("^");
-			return Math.pow(calcular(cad.substring(0, div)), calcular(cad.substring(div + 1)));
+			if (div != 0)
+				return Math.pow(calcular(cad.substring(0, div)), calcular(cad.substring(div + 1)));
+			return 0;
 		}
 
-		return cad.matches("L?l?og[0-9]+\\.?[0-9]*") ? Math.log(Double.parseDouble(cad.substring(3,cad.length()-1))) : Double.parseDouble(cad);
+		return cad.matches("L?l?og[0-9]+\\.?[0-9]*") ? Math.log(Double.parseDouble(cad.substring(3, cad.length() - 1)))
+				: Double.parseDouble(cad);
 	}
 }
