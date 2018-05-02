@@ -62,10 +62,6 @@ public class Asistente {
 					return respuesta(clave);
 				}
 			}
-			if (cad.matches(".*funcion.*resolver.*") || cad.matches(".*resolver.*funcion.*")) {
-				cuenta = true;
-				return "no hay problema. ingresala a continuacion";
-			}
 			if (cuenta)
 				return "la funcion da: " + CalculoString.calcularFormat("2+2", "%.3f");
 
