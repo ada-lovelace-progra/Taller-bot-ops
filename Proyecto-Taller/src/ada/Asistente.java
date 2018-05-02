@@ -23,10 +23,12 @@ public class Asistente {
 	}
 
 	private boolean consulta(String select, String cod) {
-		if (tabla.containsKey(select) && tabla.get(select).contains(cod)) {
-			setear_Cordialidad(tabla.get(select), cod);
-			return true;
-		}
+		if (tabla.containsKey(select))
+			for (String temp : tabla.get(select))
+				if (cod.matches(temp)) {
+					setear_Cordialidad(tabla.get(select), cod);
+					return true;
+				}
 		return false;
 	}
 
@@ -37,8 +39,7 @@ public class Asistente {
 			cargarLista(select);
 			if (tabla.containsKey(select))
 				temp = tabla.get(select);
-		}
-		else
+		} else
 			temp = tabla.get(select);
 		if (temp == null)
 			temp = tabla.get("No_se");
@@ -48,21 +49,25 @@ public class Asistente {
 	public String procesarMensaje(String entrada) {
 		String cad = entrada.toLowerCase();
 		if (activo) {
+			cargarPeticionesGenerales();
 			for (Entry<String, ArrayList<String>> temp : tabla.entrySet()) {
-				if (consulta(temp.getKey(), cad)) {
-					if (temp.getKey() == "salidas")
+				String clave = temp.getKey();
+				if (consulta(clave, cad)) {
+					///// Acciones Especiales
+					if (clave == "despedidas")
 						activo = false;
-					return respuesta(temp.getKey());
+					if (clave == "cuenta")
+						cuenta = true;
+					///// Acciones Especiales
+					return respuesta(clave);
 				}
 			}
-			if (cad.matches(".*ad+a.*"))
-				return respuesta("nombrada");
 			if (cad.matches(".*funcion.*resolver.*") || cad.matches(".*resolver.*funcion.*")) {
 				cuenta = true;
 				return "no hay problema. ingresala a continuacion";
 			}
 			if (cuenta)
-				return "la funcion da: " + CalculoString.calcularFormat("2+2", "%.4f");
+				return "la funcion da: " + CalculoString.calcularFormat("2+2", "%.3f");
 
 			cuenta = false;
 		}
@@ -70,19 +75,23 @@ public class Asistente {
 			activo = true;
 			return respuesta("llamadas");
 		}
-		if (consulta("despedidas", cad)) {
-			activo = false;
-			return respuesta("despedidas");
-		}
 		return "";
 	}
 
-	
+	private void cargarPeticionesGenerales() {
+		for (File file : (new File("Peticiones\\")).listFiles()) {
+			String nombre = file.getName().toString();
+			nombre = nombre.substring(0, nombre.length() - 4);
+			if (!tabla.containsKey(nombre))
+				cargarLista(nombre);
+		}
+	}
+
 	private int subindice(String select) {
 		ArrayList<String> temp = tabla.get(select);
 		int ret = 10000, sub = cordial(temp);
 		while (ret >= temp.size())
-			ret = (int) ( sub);
+			ret = (int) (sub);
 		return ret;
 	}
 
@@ -110,7 +119,8 @@ public class Asistente {
 		Scanner entrada = null;
 		try {
 			tabla.put(select, (new ArrayList<String>()));
-			entrada = new Scanner(new File(this.dir + select + ".dat"));
+			entrada = new Scanner(
+					new File((select.contains("respuesta") ? "Respuestas\\" : "Peticiones\\\\") + select + ".dat"));
 			while (entrada.hasNextLine())
 				tabla.get(select).add(entrada.nextLine());
 			entrada.close();
