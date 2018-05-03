@@ -9,7 +9,7 @@ class chat_Probador {
 		Asistente Asistent = new Asistente();
 		while (true) {
 			String mensaje = entrada.nextLine();
-			System.out.println(Asistent.procesarMensaje(mensaje));
+			System.out.println(Asistent.escuchar(mensaje));
 		}
 	}
 }

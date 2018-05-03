@@ -11,7 +11,8 @@ public class CalculoString {
 
 	public String calcularFormat(String funcion, String formato) {
 		try {
-			return String.format(formato, calcular(funcion));
+			double var = calcular(funcion);
+			return var % 1 == 0 ? ((int) var) + "" : String.format(formato, var);
 		} catch (Exception e) {
 			return "";
 		}
@@ -58,7 +59,7 @@ public class CalculoString {
 			int div = cad.lastIndexOf("/");
 			if (div != 0)
 				return calcular(cad.substring(0, div)) / calcular(cad.substring(div + 1));
-			return 0; 
+			return 0;
 		}
 
 		if (cad.contains("*")) {

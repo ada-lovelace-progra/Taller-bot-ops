@@ -70,7 +70,7 @@ public class Asistente {
 		return temp.get(subindice(temp));
 	}
 
-	public String procesarMensaje(String entrada) {
+	public String escuchar(String entrada) {
 		String cad = entrada.toLowerCase();
 		if (activo) {
 			/// RESPUESTAS ESPERADAS
