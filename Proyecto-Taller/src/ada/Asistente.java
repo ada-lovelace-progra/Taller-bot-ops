@@ -72,7 +72,8 @@ public class Asistente {
 
 	public String escuchar(String entrada) {
 		String cad = entrada.toLowerCase();
-		if (activo) {
+		if (activo) { //&& cad.contains("@ada")) { /// esta parte es la de la llamada que pide luquitash
+			cad=cad.replace("@ada", "");
 			/// RESPUESTAS ESPERADAS
 			if (!esperado.isEmpty()) {
 				for (Entry<String, ArrayList<String>> temp : esperado.entrySet()) {
