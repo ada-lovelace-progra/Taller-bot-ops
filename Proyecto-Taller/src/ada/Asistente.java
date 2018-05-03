@@ -89,7 +89,7 @@ public class Asistente {
 				}
 				esperado.clear();
 			}
-			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
+			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE   
 			cargarPeticionesGenerales();
 			for (Entry<String, ArrayList<String>> temp : tabla.entrySet()) {
 				String clave = temp.getKey();
