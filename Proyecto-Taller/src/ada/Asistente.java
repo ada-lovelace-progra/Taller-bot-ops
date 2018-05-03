@@ -61,7 +61,7 @@ public class Asistente {
 					return respuesta(clave);
 				}
 			}
-			if(consulta("nombrada", cad))
+			if (consulta("nombrada", cad))
 				return respuesta("nombrada");
 			if (cuenta)
 				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
@@ -88,31 +88,25 @@ public class Asistente {
 	 * private int subindice(ArrayList<String> temp) { int ret = 10000, sub =
 	 * cordial(temp); while (ret >= temp.size()) ret = sub; return ret; }
 	 */
+
 	private int subindice(ArrayList<String> temp) {
-		return cordial(temp);
+		double porcentajeDeCordialidad = (double) this.cordialidad / (double) this.tope_cordialidad;
+		int tamArray = temp.size() - 1;
+		int desface = (int) ((Math.random() * 10) % 3) - 1;
+		int i = (int) (porcentajeDeCordialidad * tamArray);
+		i += desface;
+		return i > -1 ? i < tamArray ? i : tamArray : 0;
 	}
 
-	private int cordial(ArrayList<String> temp) {
-		int i = (int) (((double) this.cordialidad / tope_cordialidad) * (temp.size() - 1));
-		return i > -1 ? i : 0;
-	}
-
-	private void setear_Cordialidad(ArrayList<String> temp, String cad) {
-		if (this.cordialidad > 0)
-			this.cordialidad += ((temp.indexOf(cad) * (tope_cordialidad / temp.size())) - this.cordialidad) / 3;
-		else
-			this.cordialidad = temp.indexOf(cad) * (tope_cordialidad / temp.size());
-		if (this.cordialidad > tope_cordialidad)
-			this.cordialidad = tope_cordialidad - 1;
-	}
-
-	private void setear_Cordialidad(int i, int t) {
-		if (t == 1)
+	private void setear_Cordialidad(double SubIndice, double TamArray) {
+		if (TamArray == 1)
 			return;
-		if (this.cordialidad > 0)
-			this.cordialidad = (i * (tope_cordialidad / t) - this.cordialidad);
+		int CordialidadEnviada = (int) ((SubIndice / TamArray) * tope_cordialidad);
+		if (this.cordialidad < 0)
+			this.cordialidad = CordialidadEnviada;
 		else
-			this.cordialidad = i * (tope_cordialidad / t);
+			this.cordialidad = ((CordialidadEnviada - this.cordialidad) / 3) + this.cordialidad;
+
 		if (this.cordialidad > tope_cordialidad)
 			this.cordialidad = tope_cordialidad - 1;
 	}
