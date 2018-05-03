@@ -26,7 +26,8 @@ public class Asistente {
 		if (tabla.containsKey(select))
 			for (String temp : tabla.get(select))
 				if (cod.matches(temp)) {
-					setear_Cordialidad(tabla.get(select).indexOf(temp), tabla.get(select).size());
+					if (!select.contains("simpsons"))
+						setear_Cordialidad(tabla.get(select).indexOf(temp), tabla.get(select).size());
 					return true;
 				}
 		return false;
@@ -72,8 +73,9 @@ public class Asistente {
 
 	public String escuchar(String entrada) {
 		String cad = entrada.toLowerCase();
-		if (activo) { //&& cad.contains("@ada")) { /// esta parte es la de la llamada que pide luquitash
-			cad=cad.replace("@ada", "");
+		if (activo) { // && cad.contains("@ada")) { /// esta parte es la de la llamada que pide
+						// luquitash
+			cad = cad.replace("@ada", "");
 			/// RESPUESTAS ESPERADAS
 			if (!esperado.isEmpty()) {
 				for (Entry<String, ArrayList<String>> temp : esperado.entrySet()) {
@@ -93,9 +95,16 @@ public class Asistente {
 				String clave = temp.getKey();
 				if (!clave.contains("respuestas") && !clave.contains("nombrada") && consulta(clave, cad)) {
 					///// Acciones Especiales
-					if (clave == "despedidas")
+					if (clave.contains("simpsons")) {
+						cargarLista("respuestas_simpsons");
+						return tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad));
+					}
+					if (clave.contains("despedidas")) {
 						activo = false;
-					if (clave == "cuenta")
+						tabla.clear();
+						cargarLista("llamadas");
+					}
+					if (clave.contains("cuenta"))
 						cuenta = true;
 					///// Acciones Especiales
 					return respuesta(clave);
