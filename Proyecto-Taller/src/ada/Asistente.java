@@ -101,6 +101,7 @@ public class Asistente {
 	private void setear_Cordialidad(double SubIndice, double TamArray) {
 		if (TamArray == 1)
 			return;
+		TamArray--;
 		int CordialidadEnviada = (int) ((SubIndice / TamArray) * tope_cordialidad);
 		if (this.cordialidad < 0)
 			this.cordialidad = CordialidadEnviada;
@@ -108,7 +109,7 @@ public class Asistente {
 			this.cordialidad = ((CordialidadEnviada - this.cordialidad) / 3) + this.cordialidad;
 
 		if (this.cordialidad > tope_cordialidad)
-			this.cordialidad = tope_cordialidad - 1;
+			this.cordialidad = tope_cordialidad -1;
 	}
 
 	private void cargarLista(String select) {
