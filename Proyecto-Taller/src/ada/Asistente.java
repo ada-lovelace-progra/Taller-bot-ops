@@ -8,7 +8,7 @@ import java.util.Scanner;
 import ada.CalculoString;
 
 public class Asistente {
-	private Hashtable<String, ArrayList<String>> tabla;
+	private Hashtable<String, ArrayList<String>> tabla, esperado;
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
 	public boolean activo;
@@ -16,6 +16,7 @@ public class Asistente {
 
 	public Asistente() {
 		tabla = new Hashtable<String, ArrayList<String>>();
+		esperado = new Hashtable<String, ArrayList<String>>();
 		this.activo = this.cuenta = false;
 		this.cordialidad = -1;
 		cargarLista("llamadas");
@@ -25,7 +26,17 @@ public class Asistente {
 		if (tabla.containsKey(select))
 			for (String temp : tabla.get(select))
 				if (cod.matches(temp)) {
-					setear_Cordialidad(tabla.get(select).indexOf(cod), tabla.get(select).size());
+					setear_Cordialidad(tabla.get(select).indexOf(temp), tabla.get(select).size());
+					return true;
+				}
+		return false;
+	}
+
+	private boolean consultaEsperadas(String select, String cod) {
+		if (esperado.containsKey(select))
+			for (String temp : esperado.get(select))
+				if (cod.matches(temp)) {
+					setear_Cordialidad(esperado.get(select).indexOf(temp), esperado.get(select).size());
 					return true;
 				}
 		return false;
@@ -45,13 +56,41 @@ public class Asistente {
 		return temp.get(subindice(temp));
 	}
 
+	private String respuestaEsperadas(String select) {
+		select = "respuestas_" + select;
+		ArrayList<String> temp = null;
+		if (!esperado.containsKey(select)) {
+			cargarListaEsperadas(select);
+			if (esperado.containsKey(select))
+				temp = esperado.get(select);
+		} else
+			temp = esperado.get(select);
+		if (temp == null)
+			temp = esperado.get("No_se");
+		return temp.get(subindice(temp));
+	}
+
 	public String procesarMensaje(String entrada) {
 		String cad = entrada.toLowerCase();
 		if (activo) {
+			/// RESPUESTAS ESPERADAS
+			if (!esperado.isEmpty()) {
+				for (Entry<String, ArrayList<String>> temp : esperado.entrySet()) {
+					String clave = temp.getKey();
+					if (!clave.contains("respuestas") && consultaEsperadas(clave, cad)) {
+						///// Acciones Especiales
+
+						///// Acciones Especiales
+						return respuestaEsperadas(clave);
+					}
+				}
+				esperado.clear();
+			}
+			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
 			cargarPeticionesGenerales();
 			for (Entry<String, ArrayList<String>> temp : tabla.entrySet()) {
 				String clave = temp.getKey();
-				if (!clave.contains("nombrada") && consulta(clave, cad)) {
+				if (!clave.contains("respuestas") && !clave.contains("nombrada") && consulta(clave, cad)) {
 					///// Acciones Especiales
 					if (clave == "despedidas")
 						activo = false;
@@ -84,11 +123,6 @@ public class Asistente {
 		}
 	}
 
-	/*
-	 * private int subindice(ArrayList<String> temp) { int ret = 10000, sub =
-	 * cordial(temp); while (ret >= temp.size()) ret = sub; return ret; }
-	 */
-
 	private int subindice(ArrayList<String> temp) {
 		double porcentajeDeCordialidad = (double) this.cordialidad / (double) this.tope_cordialidad;
 		int tamArray = temp.size() - 1;
@@ -109,7 +143,7 @@ public class Asistente {
 			this.cordialidad = ((CordialidadEnviada - this.cordialidad) / 3) + this.cordialidad;
 
 		if (this.cordialidad > tope_cordialidad)
-			this.cordialidad = tope_cordialidad -1;
+			this.cordialidad = tope_cordialidad - 1;
 	}
 
 	private void cargarLista(String select) {
@@ -118,6 +152,24 @@ public class Asistente {
 			tabla.put(select, (new ArrayList<String>()));
 			entrada = new Scanner(
 					new File((select.contains("respuesta") ? "Respuestas\\" : "Peticiones\\\\") + select + ".dat"));
+			while (entrada.hasNextLine()) {
+				String nextLine = entrada.nextLine();
+				tabla.get(select).add(nextLine);
+			}
+			entrada.close();
+		} catch (Exception e) {
+			if (entrada != null)
+				entrada.close();
+			System.out.println("no se encontro el arhivo " + select);
+		}
+	}
+
+	private void cargarListaEsperadas(String select) {
+		Scanner entrada = null;
+		try {
+			tabla.put(select, (new ArrayList<String>()));
+			entrada = new Scanner(new File("Esperadas"
+					+ (select.contains("respuesta") ? "Respuestas\\" : "Peticiones\\\\") + select + ".dat"));
 			while (entrada.hasNextLine()) {
 				String nextLine = entrada.nextLine();
 				tabla.get(select).add(nextLine);
