@@ -8,12 +8,15 @@ import java.util.Scanner;
 import ada.CalculoString;
 
 public class Asistente {
+	
 	private Hashtable<String, ArrayList<String>> tabla, esperado;
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
 	public boolean activo;
 	private boolean cuenta;
 
+	
+	
 	public Asistente() {
 		tabla = new Hashtable<String, ArrayList<String>>();
 		esperado = new Hashtable<String, ArrayList<String>>();
@@ -72,18 +75,19 @@ public class Asistente {
 	}
 
 	public String escuchar(String entrada) {
-		String cad = entrada.toLowerCase();
-		if (activo) { // && cad.contains("@ada")) { /// esta parte es la de la llamada que pide
-						// luquitash
+		String cad = entrada.toLowerCase().trim();
+		if (activo) { // && cad.contains("@ada")) { /// esta parte es la de la llamada que pide lucas
+						
 			cad = cad.replace("@ada", "");
+			
 			/// RESPUESTAS ESPERADAS
 			if (!esperado.isEmpty()) {
-				for (Entry<String, ArrayList<String>> temp : esperado.entrySet()) {
+				for ( Entry<String, ArrayList<String>> temp : esperado.entrySet() ) {
 					String clave = temp.getKey();
 					if (!clave.contains("respuestas") && consultaEsperadas(clave, cad)) {
 						///// Acciones Especiales
-
-						///// Acciones Especiales
+						
+						///// Acciones Especiales 
 						return respuestaEsperadas(clave);
 					}
 				}
@@ -115,7 +119,14 @@ public class Asistente {
 			if (cuenta)
 				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
 			cuenta = false;
-			if(entrada.contains("@ada")) {
+			
+			if (cad.matches(".*resolver.*"))
+			{
+				String aux = cad.substring( cad.lastIndexOf(" "));
+				return "la funcion da: " + new CalculoString().calcularFormat( aux , "%.3f");
+			}
+			
+			if(cad.contains("@ada")) {
 				return respuesta("nose");
 			}
 		}
@@ -127,6 +138,8 @@ public class Asistente {
 		return "";
 	}
 
+	
+	
 	private void cargarPeticionesGenerales() {
 		for (File file : (new File("Peticiones\\")).listFiles()) {
 			String nombre = file.getName().toString();

@@ -19,18 +19,18 @@ public class CalculoString {
 	}
 
 	public double calcular(String cad) {
-		while (cad.contains("(")) {
-			int ini = cad.indexOf("(") + 1;
-			int fin = cad.lastIndexOf(")");
-			String subcad = cad.substring(ini, fin);
-			String restocad = cad.substring(fin + 1);
-			while (cantChar('(', subcad) != cantChar(')', subcad)) {
-				fin = restocad.indexOf(")");
-				if (fin != restocad.length())
-					restocad = restocad.substring(fin + 1);
-				subcad += cad.substring(subcad.length(), fin);
-			}
-			cad = cad.substring(0, ini - 1) + calcular(subcad) + restocad;
+        while (cad.contains("(")) {
+            int ini = cad.indexOf("(") + 1;
+            int fin = cad.lastIndexOf(")");
+            String subcad = cad.substring(ini, fin);
+            String restocad = cad.substring(fin + 1);
+            while (cantChar('(', subcad) != cantChar(')', subcad)) {
+                fin = restocad.indexOf(")");
+                if (fin != restocad.length())
+                    restocad = restocad.substring(fin + 1);
+                subcad += cad.substring(subcad.length(), fin);
+            }
+            cad = cad.substring(0, ini - 1) + calcular(subcad) + restocad;
 		}
 
 		if (cad.contains("+")) {
