@@ -1,7 +1,8 @@
-package ada;
+package Tests.Funcionando;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ada.CalculoString;
 
 public class CalculoStringTest {
 	static String cad = "";

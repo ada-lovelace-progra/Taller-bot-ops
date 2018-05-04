@@ -1,9 +1,11 @@
+package Tests;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ada.Asistente;
 
-public class RF00Tests {
+public class AsistenteTest {
 
 	public final static String USUARIO = "delucas"; 
 	
