@@ -115,6 +115,9 @@ public class Asistente {
 			if (cuenta)
 				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
 			cuenta = false;
+			if(entrada.contains("@ada")) {
+				return respuesta("nose");
+			}
 		}
 		if (consulta("llamadas", cad)) {
 			activo = true;
