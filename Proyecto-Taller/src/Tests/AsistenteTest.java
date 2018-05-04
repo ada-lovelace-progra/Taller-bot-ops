@@ -1,9 +1,6 @@
-package LucasTests;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import ada.Asistente;
 
 public class RF00Tests {
