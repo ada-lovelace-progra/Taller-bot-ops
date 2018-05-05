@@ -77,14 +77,15 @@ public class Asistente {
 		if (activo) { // && cad.contains("@ada")) { /// esta parte es la de la llamada que pide lucas
 
 			cad = cad.replace("@ada", "");
-
-			/// RESPUESTAS ESPERADAS
-			{
+			{/// RESPUESTAS ESPERADAS
 				String aux = respuestas_esperadas_del_usuario(cad);
 				if (aux.length() > 1)
 					return aux;
-			}
-			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
+			} /// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
+
+			/// cargo los archivos con las peticiones comunes... conviene hacer esto aca asi
+			/// en caso de justo agregar archivos de peticiones mientras se corre el
+			/// asistente se cargan igual
 			cargarPeticionesGenerales();
 			for (Entry<String, ArrayList<String>> ArraysEnLaHashtable : tabla.entrySet()) {
 				String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver que archivo o que tipo de peticion es
@@ -112,14 +113,31 @@ public class Asistente {
 							/// tambien cargo la lista de llamadas para poder volver a llamarla
 							cargarLista("llamadas");
 						}
-						if (clave.contains("cuenta"))
+						if (clave.contains("cuenta")) {
 							// esto es por si la cuenta va por separado... pero creo que va a terminar
 							// borrandose...
-							cuenta = true;
+							String aux = cad.substring(cad.lastIndexOf(" "));
+							return "la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: "
+									+ new CalculoString().calcularFormat(aux, "%.3f");
+						}
+						if (clave.contains("fecha"))
+							return "hoy es " + Fecha.getFechaCompleta();
+						if (clave.contains("hora"))
+							return "son las " + Fecha.getHora();
 						///// Acciones Especiales
 						return respuesta(clave);
 					}
 			}
+			{
+				// abria que meter esto en los archivos... los archivos de peticion los evalua
+				// con expreciones regulares asique metiendo lo que dice en los archivo y
+				// clavando los if con el nombre del arhcivo para que ejecute la respuesta
+				// deciada ya alcanzaria
+				if (cad.matches(".*gracias.*"))
+					return "no es nada";
+			}
+			if (entrada.contains("@ada"))
+				return respuesta("nose");
 			if (consulta("nombrada", cad))
 				/// una vez que se que no entro en ningun caso evaluado me fijo si fue nombrada
 				return respuesta("nombrada");
@@ -127,26 +145,6 @@ public class Asistente {
 				// esto no estaria muy bien que digamos porque va con la peticion anterior
 				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
 			cuenta = false;
-			{
-				// abria que meter esto en los archivos... los archivos de peticion los evalua
-				// con expreciones regulares asique metiendo lo que dice en los archivo y
-				// clavando los if con el nombre del arhcivo para que ejecute la respuesta
-				// deciada ya alcanzaria
-				if (cad.matches(".*resolver.*")) {
-					String aux = cad.substring(cad.lastIndexOf(" "));
-					return "la funcion da: " + new CalculoString().calcularFormat(aux, "%.3f");
-				} else if (cad.matches(".*fecha.*")) {
-					return "hoy es " + Fecha.getFechaCompleta();
-				} else if (cad.matches(".*hora.*")) {
-					return "son las " + Fecha.getHora();
-				} else if (cad.matches(".*dia.*")) {
-					return "hoy es " + Fecha.getDiaDeLaSemana();
-				} else if (cad.matches(".*gracias.*")) {
-					return "no es nada";
-				} else if (entrada.contains("@ada")) {
-					return respuesta("nose");
-				}
-			}
 		}
 		if (consulta("llamadas", cad)) {
 			activo = true;
