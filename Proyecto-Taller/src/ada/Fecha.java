@@ -15,13 +15,21 @@ public class Fecha {
 	//devuelve hora:minutos
 	static public String getHora() {
 		Date hora = new Date();
-		return "" + hora.getHours() + ":" + hora.getMinutes();
+		int hs = hora.getHours(),
+				min = hora.getMinutes();
+		return "" + (hs<10? "0"+ hs : hs) + ":" + (min<10? "0"+min : min);
 	}
 	
 	//devuelve fecha actual en formato dia/mes/año
 	static public String getFecha() {
 		return new SimpleDateFormat ("dd/MM/yyyy").format(new Date());
 	}
+	
+	//devuelve la fecha actual en formato "viernes, 04 de mayo de 2018"
+	static public String getFechaCompleta()
+		{
+			return new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
+		}
 	
 	//devuelve el dia de la variable date que recibe
 	static public String getDia( Date dia) {
