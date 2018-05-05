@@ -58,7 +58,7 @@ public class Fecha {
 		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
 		// return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
 		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
-		int dias = Integer.parseInt(aux[0]);
+		int dias = Integer.parseInt(aux[0])-1;
 		int semanas = dias / 7;
 		dias %= 7;
 		int meses = Integer.parseInt(aux[1]) - 1;

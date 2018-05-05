@@ -99,34 +99,37 @@ public class Asistente {
 						///// Acciones Especiales
 						/// estas acciones son para las peticiones mas complejas y que necesitan una
 						///// respuesta especial
-						if (clave.contains("simpsons")) {
+						switch (clave) {
+
+						case "simpsons":
 							/// en este caso no paso por la funcion respuesta() ya que no quiero cambiar la
 							/// cordialidad y quiero cargar el archivo de simpson por separado
 							cargarLista("respuestas_simpsons");
 							return tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad));
-						}
-						if (clave.contains("despedidas")) {
+						case "despedidas":
 							/// si la despido borro la hashtable para no ocupar espacio y cambio el estado
 							/// de activo
 							activo = false;
 							tabla.clear();
 							/// tambien cargo la lista de llamadas para poder volver a llamarla
 							cargarLista("llamadas");
-						}
-						if (clave.contains("cuenta")) {
+						case "cuenta":
 							// esto es por si la cuenta va por separado... pero creo que va a terminar
 							// borrandose...
 							String aux = cad.substring(cad.lastIndexOf(" "));
 							return "la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: "
 									+ new CalculoString().calcularFormat(aux, "%.3f");
-						}
-						if (clave.contains("fecha"))
+						case "fecha":
 							return "hoy es " + Fecha.getFechaCompleta();
-						if (clave.contains("hora"))
+						case "hora":
 							return "son las " + Fecha.getHora();
-						///// Acciones Especiales
-						return respuesta(clave);
+							
+						default:
+							///// Acciones Especiales
+							return respuesta(clave);
+						}
 					}
+
 			}
 			{
 				// abria que meter esto en los archivos... los archivos de peticion los evalua
