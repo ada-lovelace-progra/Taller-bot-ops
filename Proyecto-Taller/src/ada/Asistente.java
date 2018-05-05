@@ -8,15 +8,13 @@ import java.util.Scanner;
 import ada.CalculoString;
 
 public class Asistente {
-	
+
 	private Hashtable<String, ArrayList<String>> tabla, esperado;
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
 	public boolean activo;
 	private boolean cuenta;
 
-	
-	
 	public Asistente() {
 		tabla = new Hashtable<String, ArrayList<String>>();
 		esperado = new Hashtable<String, ArrayList<String>>();
@@ -77,76 +75,78 @@ public class Asistente {
 	public String escuchar(String entrada) {
 		String cad = entrada.toLowerCase().trim();
 		if (activo) { // && cad.contains("@ada")) { /// esta parte es la de la llamada que pide lucas
-						
+
 			cad = cad.replace("@ada", "");
-			
+
 			/// RESPUESTAS ESPERADAS
-			if (!esperado.isEmpty()) {
-				for ( Entry<String, ArrayList<String>> temp : esperado.entrySet() ) {
-					String clave = temp.getKey();
-					if (!clave.contains("respuestas") && consultaEsperadas(clave, cad)) {
-						///// Acciones Especiales
-						
-						///// Acciones Especiales 
-						return respuestaEsperadas(clave);
-					}
-				}
-				esperado.clear();
+			{
+				String aux = respuestas_esperadas_del_usuario(cad);
+				if (aux.length() > 1)
+					return aux;
 			}
-			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE   
+			/// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
 			cargarPeticionesGenerales();
-			for (Entry<String, ArrayList<String>> temp : tabla.entrySet()) {
-				String clave = temp.getKey();
-				if (!clave.contains("respuestas") && !clave.contains("nombrada") && consulta(clave, cad)) {
-					///// Acciones Especiales
-					if (clave.contains("simpsons")) {
-						cargarLista("respuestas_simpsons");
-						return tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad));
+			for (Entry<String, ArrayList<String>> ArraysEnLaHashtable : tabla.entrySet()) {
+				String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver que archivo o que tipo de peticion es
+				if (!clave.contains("respuestas") && !clave.contains("nombrada"))
+					/// si contiene respuesta no entro... esto es para optimizar y no evaluar las
+					/// respuestas ya que no contienen ninguna peticion
+					/// no entro por nombrada porque capaz se nombra para pedirle una accion onda
+					/// "ada decime el tiempo"... y la idea es que entre en tiempo y no en nombrada
+					if (consulta(clave, cad)) { // aca evaluo si el mensaje esta contenido en los arraylist de cada
+												// clave
+						///// Acciones Especiales
+						/// estas acciones son para las peticiones mas complejas y que necesitan una
+						///// respuesta especial
+						if (clave.contains("simpsons")) {
+							/// en este caso no paso por la funcion respuesta() ya que no quiero cambiar la
+							/// cordialidad y quiero cargar el archivo de simpson por separado
+							cargarLista("respuestas_simpsons");
+							return tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad));
+						}
+						if (clave.contains("despedidas")) {
+							/// si la despido borro la hashtable para no ocupar espacio y cambio el estado
+							/// de activo
+							activo = false;
+							tabla.clear();
+							/// tambien cargo la lista de llamadas para poder volver a llamarla
+							cargarLista("llamadas");
+						}
+						if (clave.contains("cuenta"))
+							// esto es por si la cuenta va por separado... pero creo que va a terminar
+							// borrandose...
+							cuenta = true;
+						///// Acciones Especiales
+						return respuesta(clave);
 					}
-					if (clave.contains("despedidas")) {
-						activo = false;
-						tabla.clear();
-						cargarLista("llamadas");
-					}
-					if (clave.contains("cuenta"))
-						cuenta = true;
-					///// Acciones Especiales
-					return respuesta(clave);
-				}
 			}
 			if (consulta("nombrada", cad))
+				/// una vez que se que no entro en ningun caso evaluado me fijo si fue nombrada
 				return respuesta("nombrada");
 			if (cuenta)
+				// esto no estaria muy bien que digamos porque va con la peticion anterior
 				return "la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f");
 			cuenta = false;
-			
-			if (cad.matches(".*resolver.*"))
 			{
-				String aux = cad.substring( cad.lastIndexOf(" "));
-				return "la funcion da: " + new CalculoString().calcularFormat( aux , "%.3f");
+				// abria que meter esto en los archivos... los archivos de peticion los evalua
+				// con expreciones regulares asique metiendo lo que dice en los archivo y
+				// clavando los if con el nombre del arhcivo para que ejecute la respuesta
+				// deciada ya alcanzaria
+				if (cad.matches(".*resolver.*")) {
+					String aux = cad.substring(cad.lastIndexOf(" "));
+					return "la funcion da: " + new CalculoString().calcularFormat(aux, "%.3f");
+				} else if (cad.matches(".*fecha.*")) {
+					return "hoy es " + Fecha.getFechaCompleta();
+				} else if (cad.matches(".*hora.*")) {
+					return "son las " + Fecha.getHora();
+				} else if (cad.matches(".*dia.*")) {
+					return "hoy es " + Fecha.getDiaDeLaSemana();
+				} else if (cad.matches(".*gracias.*")) {
+					return "no es nada";
+				} else if (entrada.contains("@ada")) {
+					return respuesta("nose");
+				}
 			}
-			else if(cad.matches(".*fecha.*")) 
-			{
-				return "hoy es " + Fecha.getFechaCompleta();
-			}
-			else if(cad.matches(".*hora.*")) 
-			{
-				return "son las " + Fecha.getHora();
-			}
-			else if(cad.matches(".*dia.*")) 
-			{
-				return "hoy es " + Fecha.getDiaDeLaSemana();
-			}
-			else if(cad.matches(".*gracias.*")) 
-			{
-				return "no es nada";
-			}
-			else if(cad.contains("@ada")) 
-			{
-				return respuesta("nose");
-			}
-			
-			
 		}
 		if (consulta("llamadas", cad)) {
 			activo = true;
@@ -156,8 +156,22 @@ public class Asistente {
 		return "";
 	}
 
-	
-	
+	private String respuestas_esperadas_del_usuario(String cad) {
+		if (!esperado.isEmpty()) {
+			for (Entry<String, ArrayList<String>> temp : esperado.entrySet()) {
+				String clave = temp.getKey();
+				if (!clave.contains("respuestas") && consultaEsperadas(clave, cad)) {
+					///// Acciones Especiales
+
+					///// Acciones Especiales
+					return respuestaEsperadas(clave);
+				}
+			}
+			esperado.clear();
+		}
+		return "";
+	}
+
 	private void cargarPeticionesGenerales() {
 		for (File file : (new File("Peticiones\\")).listFiles()) {
 			String nombre = file.getName().toString();

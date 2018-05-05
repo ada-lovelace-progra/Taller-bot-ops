@@ -1,5 +1,9 @@
 package Tests;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +19,25 @@ public class AsistenteTest {
 	public void setup() {
 		ada = new Asistente();
 		ada.escuchar("hola ada");
+	}
+
+	@Test
+	public void llamadas() {
+		String[] mensajes = { "ada, necesito ayuda", "buenas ada", "dale ada, activa ameo" };
+		ArrayList<String> respuestas = new ArrayList<String>();
+		respuestas.add("Hola");
+		respuestas.add("hola....");
+		respuestas.add("Buenos dias. En que puedo servirte");
+		respuestas.add("Buenos dias!!");
+		respuestas.add("buenos dias");
+		respuestas.add("mas vale que valga la pena... estaba durmiendo...");
+		respuestas.add("mas vale que valga la pena...");
+		for (String mensaje : mensajes) {
+			ada.escuchar("chau ada");
+			String asd = ada.escuchar(mensaje);
+			System.out.println(asd);
+			Assert.assertTrue(respuestas.contains(asd));
+		}
 	}
 
 	@Test
@@ -38,7 +61,7 @@ public class AsistenteTest {
 	@Test
 	public void calcularConNegativos() {
 		Assert.assertEquals("la funcion da: 10", ada.escuchar("@ada resolver -1*(((1+1)^3*10)/80-6)*2"));// da un
-																									// numero																											// negativo
+		// numero // negativo
 	}
 
 	@Test
@@ -66,7 +89,7 @@ public class AsistenteTest {
 	public void hora() {
 		String[] mensajes = { "¿qué hora es, @ada?", "@ada, la hora por favor", "me decís la hora @ada?" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("son las 10:53", ada.escuchar(mensaje));
+			Assert.assertEquals("son las " + new SimpleDateFormat("HH:mm").format(new Date()), ada.escuchar(mensaje));
 		}
 	}
 
@@ -74,7 +97,8 @@ public class AsistenteTest {
 	public void dia() {
 		String[] mensajes = { "@ada que dia es hoy?", "@ada dia hoy", "@ada decime el dia" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("hoy es Sabado", ada.escuchar("@ada que dia es hoy?"));
+			Assert.assertEquals("hoy es " + new SimpleDateFormat("EEEEEEEEE").format(new Date()),
+					ada.escuchar(mensaje));
 		}
 	}
 }

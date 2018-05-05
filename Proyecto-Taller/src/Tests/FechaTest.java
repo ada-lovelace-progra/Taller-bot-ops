@@ -1,6 +1,6 @@
 package Tests;
-import java.util.GregorianCalendar;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,12 +10,12 @@ public class FechaTest {
 
 	@Test
 	public void hora() {
-		Assert.assertEquals( "10:44" , Fecha.getHora() );
+		Assert.assertEquals(new SimpleDateFormat("HH:mm").format(new Date())  , Fecha.getHora() );
 	}
 	
 	@Test
 	public void dia() {
-		Assert.assertEquals( "Sabado", Fecha.getDiaDeLaSemana() );
+		Assert.assertEquals( new SimpleDateFormat("EEEEEEEEE").format(new Date()), Fecha.getDiaDeLaSemana() );
 	}
 	
 	@Test
@@ -25,7 +25,7 @@ public class FechaTest {
 	
 	@Test
 	public void hasta() {
-		Assert.assertEquals( "4 dias", Fecha.hasta( 10, 4, 2018) );
+		Assert.assertEquals( "4 dias", Fecha.hasta( 10, 4, 2038) );
 	}
 	
 	@Test
@@ -36,7 +36,7 @@ public class FechaTest {
 	
 	@Test
 	public void fechaCompleta() {
-		Assert.assertEquals( "sábado, 05 de mayo de 2018", Fecha.getFechaCompleta() );
+		Assert.assertEquals(  new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date()), Fecha.getFechaCompleta() );
 	}
 	
 }
