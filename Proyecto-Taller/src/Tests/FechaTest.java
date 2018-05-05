@@ -1,15 +1,16 @@
 package Tests;
-import static org.junit.Assert.*;
+import java.util.GregorianCalendar;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import ada.Fecha;
 
 public class FechaTest {
 
 	@Test
 	public void hora() {
-		Assert.assertEquals( "0:25", Fecha.getHora() );
+		Assert.assertEquals( "10:44" , Fecha.getHora() );
 	}
 	
 	@Test
@@ -26,6 +27,12 @@ public class FechaTest {
 	public void hasta() {
 		Assert.assertEquals( "4 dias", Fecha.hasta( 10, 4, 2018) );
 	}
+	
+	@Test
+	public void desde() {
+		Assert.assertEquals( "4 dias", Fecha.desde( 1, 4, 2018) );
+	}
+	
 	
 	@Test
 	public void fechaCompleta() {
