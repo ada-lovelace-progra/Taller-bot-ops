@@ -125,10 +125,28 @@ public class Asistente {
 				String aux = cad.substring( cad.lastIndexOf(" "));
 				return "la funcion da: " + new CalculoString().calcularFormat( aux , "%.3f");
 			}
-			
-			if(cad.contains("@ada")) {
+			else if(cad.matches(".*fecha.*")) 
+			{
+				return "hoy es " + Fecha.getFechaCompleta();
+			}
+			else if(cad.matches(".*hora.*")) 
+			{
+				return "son las " + Fecha.getHora();
+			}
+			else if(cad.matches(".*dia.*")) 
+			{
+				return "hoy es " + Fecha.getDiaDeLaSemana();
+			}
+			else if(cad.matches(".*gracias.*")) 
+			{
+				return "no es nada";
+			}
+			else if(cad.contains("@ada")) 
+			{
 				return respuesta("nose");
 			}
+			
+			
 		}
 		if (consulta("llamadas", cad)) {
 			activo = true;
