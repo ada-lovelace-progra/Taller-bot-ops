@@ -1,11 +1,11 @@
-package Tests;
+package tests;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ada.Fecha;
+import funcionesExtras.Fecha;
 
 public class FechaTest {
 

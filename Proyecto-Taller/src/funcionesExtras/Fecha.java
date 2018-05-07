@@ -1,4 +1,4 @@
-package ada;
+package funcionesExtras;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
