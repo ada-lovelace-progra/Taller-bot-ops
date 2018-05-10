@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import funcionesExtras.CalculoString;
 import funcionesExtras.Fecha;
-import sockets.Cliente;
 
 import java.util.Scanner;
 
@@ -18,10 +17,9 @@ public class Asistente extends UsuarioGenerico {
 	public boolean activo;
 	private boolean cuenta;
 	private boolean seteado = false;
+	private String RespondoA;
 
 	public Asistente() {
-		laposta = new Cliente();
-		laposta.conectar("localhost", 5050);
 	}
 
 	private void seteoInicial() {
@@ -35,16 +33,23 @@ public class Asistente extends UsuarioGenerico {
 	}
 
 	public String escuchar(String entrada) {
-		return "Ada Lovelace: " + limpio(entrada);
+		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));
+		String cad = entrada.toLowerCase();
+		if (!seteado)
+			seteoInicial();
+		if (!activo) {
+			if (consulta("llamadas", cad)) {
+				activo = true;
+				tabla.get("llamadas").clear();
+				return "Ada Lovelace: " + respuesta("llamadas") + RespondoA;
+			}
+		} else
+			return "Ada Lovelace: " + limpio(entrada);
+		return "";
 	}
 
-	public String limpio(String entrada) {
-		/*
-		 * tring entrada = ""; while (entrada.length() < 4) { entrada =
-		 * recibirMensaje(); }
-		 */
+	private String limpio(String entrada) {
 		String cad = entrada.replace("@ada", "").substring(entrada.indexOf(":") + 2);
-		String user = " @" + entrada.substring(0, entrada.indexOf(":"));
 		{/// RESPUESTAS ESPERADAS
 			String aux = respuestas_esperadas_del_usuario(cad);
 			if (aux.length() > 1) {
@@ -53,56 +58,71 @@ public class Asistente extends UsuarioGenerico {
 			}
 		} /// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
 
-		/// cargo los archivos con las peticiones comunes... conviene hacer esto aca asi
+		/// cargo los archivos con las peticiones comunes... conviene hacer esto
+		/// aca asi
 		/// en caso de justo agregar archivos de peticiones mientras se corre el
 		/// asistente se cargan igual
 		cargarPeticionesGenerales();
 		for (Entry<String, ArrayList<String>> ArraysEnLaHashtable : tabla.entrySet()) {
-			String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver que archivo o que tipo de peticion
+			String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver
+															/// que archivo o
+															/// que tipo de
+															/// peticion
 															/// es
 			if (!clave.contains("respuestas") && !clave.contains("nombrada"))
-				/// si contiene respuesta no entro... esto es para optimizar y no evaluar las
+				/// si contiene respuesta no entro... esto es para optimizar y
+				/// no evaluar las
 				/// respuestas ya que no contienen ninguna peticion
-				/// no entro por nombrada porque capaz se nombra para pedirle una accion onda
-				/// "ada decime el tiempo"... y la idea es que entre en tiempo y no en nombrada
+				/// no entro por nombrada porque capaz se nombra para pedirle
+				/// una accion onda
+				/// "ada decime el tiempo"... y la idea es que entre en tiempo y
+				/// no en nombrada
 
-				if (consulta(clave, cad)) { // aca evaluo si el mensaje esta contenido en los arraylist de cada
+				if (consulta(clave, cad)) { // aca evaluo si el mensaje esta
+											// contenido en los arraylist de
+											// cada
 											// clave
 					///// Acciones Especiales
-					/// estas acciones son para las peticiones mas complejas y que necesitan una
+					/// estas acciones son para las peticiones mas complejas y
+					///// que necesitan una
 					///// respuesta especial
 					switch (clave) {
 
 					case "simpsons":
-						/// en este caso no paso por la funcion respuesta() ya que no quiero cambiar la
-						/// cordialidad y quiero cargar el archivo de simpson por separado
+						/// en este caso no paso por la funcion respuesta() ya
+						/// que no quiero cambiar la
+						/// cordialidad y quiero cargar el archivo de simpson
+						/// por separado
 						cargarLista("respuestas_simpsons");
 						return (tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad)));
 
 					case "despedidas":
-						/// si la despido borro la hashtable para no ocupar espacio y cambio el estado
+						/// si la despido borro la hashtable para no ocupar
+						/// espacio y cambio el estado
 						/// de activo
 						activo = false;
 						tabla.clear();
-						/// tambien cargo la lista de llamadas para poder volver a llamarla
+						/// tambien cargo la lista de llamadas para poder volver
+						/// a llamarla
 						cargarLista("llamadas");
 						return (respuesta(clave));
 
 					case "cuenta":
-						// esto es por si la cuenta va por separado... pero creo que va a terminar
+						// esto es por si la cuenta va por separado... pero creo
+						// que va a terminar
 						// borrandose...
 						String aux = cad.substring(cad.lastIndexOf(" "));
 						return ("la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: "
-								+ new CalculoString().calcularFormat(aux, "%.3f") + user);
+								+ new CalculoString().calcularFormat(aux, "%.3f") + RespondoA);
 
 					case "fecha":
-						return ("hoy es " + Fecha.getFechaCompleta() + user);
+						return ("hoy es " + Fecha.getFechaCompleta() + RespondoA);
 
 					case "hora":
-						return ("son las " + Fecha.getHora() + user);
+						return ("son las " + Fecha.getHora() + RespondoA);
 
 					case "todo_bien":
-						String[] lista = {"todobien"};
+						String[] lista = { "todobien" };
 						cargarListaEsperadas(lista);
 						///// Acciones Especiales
 					default:
@@ -112,12 +132,15 @@ public class Asistente extends UsuarioGenerico {
 				}
 
 		}
-		{ // abria que meter esto en los archivos... los archivos de peticion los evalua
-			// con expreciones regulares asique metiendo lo que dice en los archivo y
-			// clavando los if con el nombre del arhcivo para que ejecute la respuesta
+		{ // abria que meter esto en los archivos... los archivos de peticion
+			// los evalua
+			// con expreciones regulares asique metiendo lo que dice en los
+			// archivo y
+			// clavando los if con el nombre del arhcivo para que ejecute la
+			// respuesta
 			// deciada ya alcanzaria
 			if (cad.matches(".*gracias.*")) {
-				return ("no es nada" + user);
+				return ("no es nada" + RespondoA);
 
 			}
 		}
@@ -126,12 +149,14 @@ public class Asistente extends UsuarioGenerico {
 
 		}
 		if (consulta("nombrada", cad)) {
-			/// una vez que se que no entro en ningun caso evaluado me fijo si fue nombrada
-			return (respuesta("nombrada") + user);
+			/// una vez que se que no entro en ningun caso evaluado me fijo si
+			/// fue nombrada
+			return (respuesta("nombrada") + RespondoA);
 
 		}
 		if (cuenta) {
-			// esto no estaria muy bien que digamos porque va con la peticion anterior
+			// esto no estaria muy bien que digamos porque va con la peticion
+			// anterior
 			return ("la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f"));
 
 		}
@@ -139,22 +164,10 @@ public class Asistente extends UsuarioGenerico {
 		return "";
 	}
 
-	public String ActivarAda(String cad) {
-		cad = cad.toLowerCase();
-		if (!seteado)
-			seteoInicial();
-		if (!activo && consulta("llamadas", cad.toLowerCase())) {
-			activo = true;
-			tabla.get("llamadas").clear();
-			return "hola";
-		}
-		return "";
-	}
-
 	private boolean consulta(String select, String cod) {
 		if (tabla.containsKey(select))
 			for (String temp : tabla.get(select))
-				if (cod.matches(temp) || cod.contains(temp)) {
+				if (cod.matches(".*" + temp + ".*")) {
 					if (!select.contains("simpsons"))
 						setear_Cordialidad(tabla.get(select).indexOf(temp), tabla.get(select).size());
 					return true;

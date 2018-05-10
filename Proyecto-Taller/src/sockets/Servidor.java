@@ -6,10 +6,10 @@ import usuariosYAsistente.Asistente;
 
 import java.io.*;
 
-public class Servidor{
+public class Servidor {
 
 	Asistente Asistente;
-	
+
 	private Socket socket;
 	private ServerSocket serverSocket;
 	private DataInputStream bufferDeEntrada = null;
@@ -32,17 +32,14 @@ public class Servidor{
 		} catch (IOException e) {
 			mostrarTexto("Error en la apertura de flujos");
 		}
-		
+
 		Asistente = new Asistente();
 	}
 
 	public String recibir() {
 		try {
 			String mensaje = (String) bufferDeEntrada.readUTF();
-			if(!Asistente.activo)
-				enviar(Asistente.ActivarAda(mensaje));
-			else
-				enviar(Asistente.escuchar(mensaje));
+			enviar(Asistente.escuchar(mensaje));
 			return mensaje;
 		} catch (IOException e) {
 			cerrarConexion();

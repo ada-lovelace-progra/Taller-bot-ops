@@ -4,15 +4,12 @@ import sockets.Servidor;
 
 public class serverTesteador {
 
-	static Servidor server = new Servidor();
-
 	static public void main(String a[]) {
+		Servidor server = new Servidor();
 		server.Conectar(5050);
-		while(true)
-		{
+		while (true) {
 			String recibir = server.recibir();
 			System.out.println(recibir);
-			server.enviar(recibir);
 		}
 	}
 }
