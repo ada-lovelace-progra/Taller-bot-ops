@@ -53,7 +53,6 @@ public class Asistente extends UsuarioGenerico {
 		{/// RESPUESTAS ESPERADAS
 			String aux = respuestas_esperadas_del_usuario(cad);
 			if (aux.length() > 1) {
-				enviarMensaje(aux);
 				return aux;
 			}
 		} /// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE

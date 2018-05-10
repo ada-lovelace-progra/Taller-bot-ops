@@ -8,7 +8,7 @@ import usuariosYAsistente.UsuarioGenerico;
 
 class chat_Probador {
 
-	static UsuarioGenerico alguien = new Usuario("fede.markoo");
+	static Usuario alguien = new Usuario("fede.markoo");
 	
 	
 	
