@@ -29,7 +29,7 @@ public class Cliente {
 	}
 
 	private static void mostrarTexto(String s) {
-		System.out.println(s);
+//		System.out.println(s);
 	}
 
 	public void enviar(String s) {

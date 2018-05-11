@@ -2,18 +2,29 @@ package tests;
 
 import java.util.ArrayList;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import usuariosYAsistente.Asistente;
+import org.junit.*;
+import sockets.Servidor;
 import usuariosYAsistente.Usuario;
-import usuariosYAsistente.UsuarioGenerico;
 
-class Asistente_SaludosTest {
+public class Asistente_SaludosTest {
 
 	public final static String USUARIO = "delucas";
-	Asistente ada = new Asistente();
-	UsuarioGenerico user = new Usuario(USUARIO);
+	static Usuario user;
+
+	@BeforeClass
+	public static void inicio() {
+		new Thread() {
+			public void run() {
+				Servidor server = new Servidor();
+				server.Conectar(5050);
+				while (true) {
+					String recibir = server.recibir();
+					System.out.println(recibir);
+				}
+			}
+		}.start();
+		user = new Usuario(USUARIO);
+	}
 
 	@Test
 	public void llamadas() {
@@ -23,7 +34,7 @@ class Asistente_SaludosTest {
 		respuestas.add("Ada Lovelace: hola....@" + USUARIO);
 		respuestas.add("Ada Lovelace: Buenos dias. En que puedo servirte @" + USUARIO);
 		respuestas.add("Ada Lovelace: Buenos dias!! @" + USUARIO);
-		respuestas.add("Ada Lovelace: en que puedo ayudarte @"+USUARIO);
+		respuestas.add("Ada Lovelace: en que puedo ayudarte @" + USUARIO);
 		respuestas.add("Ada Lovelace: buenos dias @" + USUARIO);
 		respuestas.add("Ada Lovelace: estoy para servirle @" + USUARIO);
 		respuestas.add("Ada Lovelace: mas vale que valga la pena... estaba durmiendo... @" + USUARIO);
@@ -31,14 +42,10 @@ class Asistente_SaludosTest {
 
 		for (String mensaje : mensajes) {
 			user.enviarMensaje(mensaje);
-			ada.ActivarAda(mensaje);
-			String recibirMensaje = user.recibirMensaje();
-			System.out.println(recibirMensaje);
-			
+			Assert.assertTrue(respuestas.contains(user.recibirMensaje()));
 			user.enviarMensaje("chau ada");
-			System.out.println(user.recibirMensaje());
-			
-			Assert.assertTrue(respuestas.contains(recibirMensaje));
+			user.recibirMensaje();
+
 		}
 	}
 

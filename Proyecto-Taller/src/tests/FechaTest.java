@@ -24,17 +24,64 @@ public class FechaTest {
 		Assert.assertEquals(new SimpleDateFormat("dd/MM/yyyy").format(new Date()), Fecha.getFecha());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void hasta() {
-		Assert.assertEquals("2 dias 2 semanas 20 años", Fecha.hasta(21, 4, 2038));
-		Assert.assertEquals("4 dias 20 años", Fecha.hasta(9, 4, 2038));
-		Assert.assertEquals("2 dias 2 semanas", Fecha.hasta(21, 4, 2018));
-		Assert.assertEquals("4 dias 2 semanas 3 meses", Fecha.hasta(21, 7, 2018));
+		Date fecha = new Date();
+		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 1;
+		Assert.assertEquals("1 dia", Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem), fecha.getMonth() + DifMes,
+				fecha.getYear() + DifAno + 1900));
+
+		DifAno = 0;
+		DifMes = 6;
+		DifSem = 2;
+		DifDia = 0;
+		Assert.assertEquals("3 dias 2 semanas 6 meses", Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
+
+		DifAno = 29;
+		DifMes = 1;
+		DifSem = 3;
+		DifDia = 4;
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
+
+		DifAno = 0;
+		DifMes = 9;
+		DifSem = 0;
+		DifDia = 4;
+		Assert.assertEquals("1 semana 9 meses", Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void desde() {
-		Assert.assertEquals("4 dias", Fecha.desde(1, 4, 2018));
+		Date fecha = new Date();
+		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 4;
+		Assert.assertEquals("4 dias", Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem), fecha.getMonth() + DifMes,
+				fecha.getYear() + DifAno + 1900));
+
+		DifAno = 0;
+		DifMes = 9;
+		DifSem = 0;
+		DifDia = 4;
+		Assert.assertEquals("1 semana 9 meses", Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
+
+		DifAno = 0;
+		DifMes = 6;
+		DifSem = 2;
+		DifDia = 0;
+		Assert.assertEquals("3 dias 2 semanas 6 meses", Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
+
+		DifAno = 29;
+		DifMes = 1;
+		DifSem = 3;
+		DifDia = 4;
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),
+				fecha.getMonth() + DifMes, fecha.getYear() + DifAno + 1900));
 	}
 
 	@Test

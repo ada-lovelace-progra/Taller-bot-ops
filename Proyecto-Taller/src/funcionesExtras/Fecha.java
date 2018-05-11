@@ -53,12 +53,16 @@ public class Fecha {
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	static public String desde(int dia, int mes, int ano) {
 		Date actual = new Date();
-		GregorianCalendar FechaDada = new GregorianCalendar(ano, mes, dia);
-		Date desde = new Date(actual.getTime() - FechaDada.getTimeInMillis());
+		@SuppressWarnings("deprecation")
+		Date FechaDada = new Date(ano-1900, mes, dia);
+		long Diferencia = FechaDada.getTime() - actual.getTime();
+		if (Diferencia < 1)
+			return "";
+		Date desde = new Date(Diferencia);
 		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
 		// return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
 		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
-		int dias = Integer.parseInt(aux[0])-1;
+		int dias = Integer.parseInt(aux[0]);
 		int semanas = dias / 7;
 		dias %= 7;
 		int meses = Integer.parseInt(aux[1]) - 1;

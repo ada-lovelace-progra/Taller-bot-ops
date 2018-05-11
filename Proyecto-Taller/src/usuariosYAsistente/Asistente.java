@@ -50,6 +50,7 @@ public class Asistente extends UsuarioGenerico {
 
 	private String limpio(String entrada) {
 		String cad = entrada.replace("@ada", "").substring(entrada.indexOf(":") + 2);
+		cad = cad.trim();
 		{/// RESPUESTAS ESPERADAS
 			String aux = respuestas_esperadas_del_usuario(cad);
 			if (aux.length() > 1) {
