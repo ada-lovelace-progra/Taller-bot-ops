@@ -5,163 +5,195 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 
-import funcionesExtras.CalculoString;
-import funcionesExtras.Fecha;
+import resolvedores.CalculoString;
+import resolvedores.Fecha;
 
 import java.util.Scanner;
 
 public class Asistente extends UsuarioGenerico {
-	private Hashtable<String, ArrayList<String>> tabla, esperado;
+	// el nombre lo hereda de usuario generico
+	private Hashtable<String, ArrayList<String>> tabla, esperado;// vuela
 	private final int tope_cordialidad = 100;
 	private int cordialidad;
 	public boolean activo;
-	private boolean cuenta;
-	private boolean seteado = false;
+	private boolean cuenta; // tambien se fleta
+	private boolean seteado = false; // sacar (porque pongo un constructor)
 	private String RespondoA;
 
 	public Asistente() {
 	}
 
-	private void seteoInicial() {
-		seteado = true;
+	private void seteoInicial() { // constructor....
+		seteado = true;// sacar
 		nombre = "Ada Lovelace";
 		tabla = new Hashtable<String, ArrayList<String>>();
 		esperado = new Hashtable<String, ArrayList<String>>();
 		this.cuenta = false;
 		this.cordialidad = -1;
 		cargarLista("llamadas");
+		// cargar la interfaz con los resolvedores
 	}
+
+	// metodos a agregar:
+	// ActivoAsistente()
+	// ActivoAsistente( String Nombre)
 
 	public String escuchar(String entrada) {
-		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));
+		// tolower entrada
+		// llamar a la interfaz
+		// return interfaz....
+
+		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
 		String cad = entrada.toLowerCase();
-		if (!seteado)
-			seteoInicial();
+		// volamos seteado (ahora es el constructor)
 		if (!activo) {
+			// entra aca si no esta activo
+			// y verifica que la llamaste
 			if (consulta("llamadas", cad)) {
-				activo = true;
-				tabla.get("llamadas").clear();
-				return "Ada Lovelace: " + respuesta("llamadas") + RespondoA;
+				return activarAsistente();// activa asistente y setea nombre
 			}
 		} else
-			return "Ada Lovelace: " + limpio(entrada);
+			// si esta activo entra aca
+			return "Ada Lovelace: " + responderACharla(entrada);
+		/// responder a charla ahora es un metodo. aca lo que tengo que llamar es el
+		/// metodo de la interfaz que tiene cargada la cadena de responsabilidades con
+		/// los resolvedorer
+		
 		return "";
 	}
 
-	private String limpio(String entrada) {
+	private String activarAsistente() {
+		activo = true;
+		super.nombre = "nombre que recive de @(.*)";
+		tabla.get("llamadas").clear(); // borro esto para no volver a procesar la llamada
+		return "Ada Lovelace: " + respuesta("llamadas") + RespondoA;
+	}
+
+	private String responderACharla(String entrada) {
 		String cad = entrada.replace("@ada", "").substring(entrada.indexOf(":") + 2);
-		cad = cad.trim();
-		{/// RESPUESTAS ESPERADAS
-			String aux = respuestas_esperadas_del_usuario(cad);
-			if (aux.length() > 1) {
-				return aux;
-			}
-		} /// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
+		// arriba cambiame @ada por @nombre
+		return cad;
 
-		/// cargo los archivos con las peticiones comunes... conviene hacer esto
-		/// aca asi
-		/// en caso de justo agregar archivos de peticiones mientras se corre el
-		/// asistente se cargan igual
-		cargarPeticionesGenerales();
-		for (Entry<String, ArrayList<String>> ArraysEnLaHashtable : tabla.entrySet()) {
-			String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver
-															/// que archivo o
-															/// que tipo de
-															/// peticion
-															/// es
-			if (!clave.contains("respuestas") && !clave.contains("nombrada"))
-				/// si contiene respuesta no entro... esto es para optimizar y
-				/// no evaluar las
-				/// respuestas ya que no contienen ninguna peticion
-				/// no entro por nombrada porque capaz se nombra para pedirle
-				/// una accion onda
-				/// "ada decime el tiempo"... y la idea es que entre en tiempo y
-				/// no en nombrada
+		//
 
-				if (consulta(clave, cad)) { // aca evaluo si el mensaje esta
-											// contenido en los arraylist de
-											// cada
-											// clave
-					///// Acciones Especiales
-					/// estas acciones son para las peticiones mas complejas y
-					///// que necesitan una
-					///// respuesta especial
-					switch (clave) {
-
-					case "simpsons":
-						/// en este caso no paso por la funcion respuesta() ya
-						/// que no quiero cambiar la
-						/// cordialidad y quiero cargar el archivo de simpson
-						/// por separado
-						cargarLista("respuestas_simpsons");
-						return (tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad)));
-
-					case "despedidas":
-						/// si la despido borro la hashtable para no ocupar
-						/// espacio y cambio el estado
-						/// de activo
-						activo = false;
-						tabla.clear();
-						/// tambien cargo la lista de llamadas para poder volver
-						/// a llamarla
-						cargarLista("llamadas");
-						return (respuesta(clave));
-
-					case "cuenta":
-						// esto es por si la cuenta va por separado... pero creo
-						// que va a terminar
-						// borrandose...
-						String aux = cad.substring(cad.lastIndexOf(" "));
-						return ("la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: "
-								+ new CalculoString().calcularFormat(aux, "%.3f") + RespondoA);
-
-					case "fecha":
-						return ("hoy es " + Fecha.getFechaCompleta() + RespondoA);
-
-					case "hora":
-						return ("son las " + Fecha.getHora() + RespondoA);
-
-					case "todo_bien":
-						String[] lista = { "todobien" };
-						cargarListaEsperadas(lista);
-						///// Acciones Especiales
-					default:
-						return (respuesta(clave));
-
-					}
-				}
-
-		}
-		{ // abria que meter esto en los archivos... los archivos de peticion
-			// los evalua
-			// con expreciones regulares asique metiendo lo que dice en los
-			// archivo y
-			// clavando los if con el nombre del arhcivo para que ejecute la
-			// respuesta
-			// deciada ya alcanzaria
-			if (cad.matches(".*gracias.*")) {
-				return ("no es nada" + RespondoA);
-
-			}
-		}
-		if (entrada.contains("@ada")) {
-			return (respuesta("nose"));
-
-		}
-		if (consulta("nombrada", cad)) {
-			/// una vez que se que no entro en ningun caso evaluado me fijo si
-			/// fue nombrada
-			return (respuesta("nombrada") + RespondoA);
-
-		}
-		if (cuenta) {
-			// esto no estaria muy bien que digamos porque va con la peticion
-			// anterior
-			return ("la funcion da: " + new CalculoString().calcularFormat("2+2", "%.3f"));
-
-		}
-		cuenta = false;
-		return "";
+		// cad = cad.trim();
+		// {/// RESPUESTAS ESPERADAS
+		// /*
+		// yo:
+		// */
+		// String aux = respuestas_esperadas_del_usuario(cad);
+		// if (aux.length() > 1) {
+		// return aux;
+		// }
+		// }
+		// /// Y SI NO RESPONDIO LO ESPERADO PRUEBO CON LO DE SIEMPRE
+		//
+		// /// cargo los archivos con las peticiones comunes... conviene hacer esto
+		// /// aca asi
+		// /// en caso de justo agregar archivos de peticiones mientras se corre el
+		// /// asistente se cargan igual
+		// cargarPeticionesGenerales();
+		// for (Entry<String, ArrayList<String>> ArraysEnLaHashtable : tabla.entrySet())
+		// {
+		// String clave = ArraysEnLaHashtable.getKey(); /// esto es para ver
+		// /// que archivo o
+		// /// que tipo de
+		// /// peticion
+		// /// es
+		// if (!clave.contains("respuestas") && !clave.contains("nombrada"))
+		// /// si contiene respuesta no entro... esto es para optimizar y
+		// /// no evaluar las
+		// /// respuestas ya que no contienen ninguna peticion
+		// /// no entro por nombrada porque capaz se nombra para pedirle
+		// /// una accion onda
+		// /// "ada decime el tiempo"... y la idea es que entre en tiempo y
+		// /// no en nombrada
+		//
+		// if (consulta(clave, cad)) { // aca evaluo si el mensaje esta
+		// // contenido en los arraylist de
+		// // cada
+		// // clave
+		// ///// Acciones Especiales
+		// /// estas acciones son para las peticiones mas complejas y
+		// ///// que necesitan una
+		// ///// respuesta especial
+		// switch (clave) {
+		//
+		// case "simpsons":
+		// /// en este caso no paso por la funcion respuesta() ya
+		// /// que no quiero cambiar la
+		// /// cordialidad y quiero cargar el archivo de simpson
+		// /// por separado
+		// cargarLista("respuestas_simpsons");
+		// return (tabla.get("respuestas_" + clave).get(tabla.get(clave).indexOf(cad)));
+		//
+		// case "despedidas":
+		// /// si la despido borro la hashtable para no ocupar
+		// /// espacio y cambio el estado
+		// /// de activo
+		// activo = false;
+		// tabla.clear();
+		// /// tambien cargo la lista de llamadas para poder volver
+		// /// a llamarla
+		// cargarLista("llamadas");
+		// return (respuesta(clave));
+		//
+		// case "cuenta":
+		// // esto es por si la cuenta va por separado... pero creo
+		// // que va a terminar
+		// // borrandose...
+		// String aux = cad.substring(cad.lastIndexOf(" "));
+		// return ("la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: "
+		// + new CalculoString().calcularFormat(aux, "%.3f") + RespondoA);
+		//
+		// case "fecha":
+		// return ("hoy es " + Fecha.getFechaCompleta() + RespondoA);
+		//
+		// case "hora":
+		// return ("son las " + Fecha.getHora() + RespondoA);
+		//
+		// case "todo_bien":
+		// String[] lista = { "todobien" };
+		// cargarListaEsperadas(lista);
+		// ///// Acciones Especiales
+		// default:
+		// return (respuesta(clave));
+		//
+		// }
+		// }
+		//
+		// }
+		// { // abria que meter esto en los archivos... los archivos de peticion
+		// // los evalua
+		// // con expreciones regulares asique metiendo lo que dice en los
+		// // archivo y
+		// // clavando los if con el nombre del arhcivo para que ejecute la
+		// // respuesta
+		// // deciada ya alcanzaria
+		// if (cad.matches(".*gracias.*")) {
+		// return ("no es nada" + RespondoA);
+		//
+		// }
+		// }
+		// if (entrada.contains("@ada")) {
+		// return (respuesta("nose"));
+		//
+		// }
+		// if (consulta("nombrada", cad)) {
+		// /// una vez que se que no entro en ningun caso evaluado me fijo si
+		// /// fue nombrada
+		// return (respuesta("nombrada") + RespondoA);
+		//
+		// }
+		// if (cuenta) {
+		// // esto no estaria muy bien que digamos porque va con la peticion
+		// // anterior
+		// return ("la funcion da: " + new CalculoString().calcularFormat("2+2",
+		// "%.3f"));
+		//
+		// }
+		// cuenta = false;
+		// return "";
 	}
 
 	private boolean consulta(String select, String cod) {
