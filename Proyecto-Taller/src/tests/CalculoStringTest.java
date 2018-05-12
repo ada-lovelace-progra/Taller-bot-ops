@@ -3,7 +3,7 @@ package tests;
 import org.junit.Assert;
 import org.junit.Test;
 
-import funcionesExtras.CalculoString;
+import resolvedores.CalculoString;
 
 public class CalculoStringTest {
 	static String cad = "";

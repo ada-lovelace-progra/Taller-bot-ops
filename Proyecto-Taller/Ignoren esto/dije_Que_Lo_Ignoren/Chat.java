@@ -1,6 +1,10 @@
-package usuariosYAsistente;
+package dije_Que_Lo_Ignoren;
 
 import java.util.*;
+
+import usuariosYAsistente.Asistente;
+import usuariosYAsistente.Usuario;
+import usuariosYAsistente.UsuarioGenerico;
 
 /// si bien eso no se va a usar ahora... como flashee que si, lo cree para hacer que un usuario tenga varios chats... igual no se si estara bien posta
 

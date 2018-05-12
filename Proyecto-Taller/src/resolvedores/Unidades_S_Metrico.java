@@ -1,6 +1,8 @@
-package funcionesExtras;
+package resolvedores;
 
-public class Cambio_Unidades {
+import jdk.nashorn.internal.runtime.regexp.RegExp;
+
+public class Unidades_S_Metrico {
 	
 	public static String cambio(String cad) {
 		String regex = "(gramo)?(litro)?(metro)?+s?";

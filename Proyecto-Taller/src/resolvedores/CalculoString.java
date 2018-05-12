@@ -82,7 +82,7 @@
 //}
 
 //nuevo
-package funcionesExtras;
+package resolvedores;
 
 public class CalculoString {
 	private int cantChar(char a, String cad) 

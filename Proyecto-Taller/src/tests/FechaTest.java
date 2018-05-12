@@ -5,7 +5,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import funcionesExtras.Fecha;
+import resolvedores.Fecha;
 
 public class FechaTest {
 

@@ -1,10 +1,13 @@
-package funcionesExtras;
+package resolvedores;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Fecha {
+public class Fecha implements Respuesta{
+	
+	//va a tener que tener otra interfaz para manejar que respuesta especifica esta pidiendo 
+	
 
 	// devuelve fecha actual en formato hora:min:seg dia/mes/año
 	static public String now() {
@@ -61,6 +64,7 @@ public class Fecha {
 		Date desde = new Date(Diferencia);
 		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
 		// return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
+		//despues lo vemos esto
 		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
 		int dias = Integer.parseInt(aux[0]);
 		int semanas = dias / 7;
