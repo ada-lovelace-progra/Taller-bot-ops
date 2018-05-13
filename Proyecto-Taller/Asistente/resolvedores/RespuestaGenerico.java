@@ -15,6 +15,9 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 		Siguiente = new Default();
 	}
 
+	public RespuestaGenerico(boolean op) {
+	}
+
 	public void siguiente(RespuestaInterface sig) {
 		this.Siguiente = sig;
 	}
@@ -52,8 +55,12 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 	private void cargarLista(String select) {
 		Scanner entrada = null;
 		try {
-			peticiones = new ArrayList<String>();
-
+			ArrayList<String> temp;
+			if (select.contains("respuesta"))
+				temp = respuestas = new ArrayList<String>();
+			else
+				temp = peticiones = new ArrayList<String>();
+			
 			entrada = new Scanner(
 					new File((select.contains("respuesta") ? "Respuestas\\" : "Peticiones\\\\") + select + ".dat"));
 
@@ -62,7 +69,7 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 				if (nextLine.startsWith("\""))
 					while (entrada.hasNextLine() && nextLine.endsWith("\""))
 						nextLine += "\n" + entrada.nextLine();
-				peticiones.add(nextLine);
+				temp.add(nextLine);
 			}
 			entrada.close();
 		} catch (Exception e) {

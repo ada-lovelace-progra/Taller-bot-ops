@@ -4,6 +4,7 @@ import resolvedores.Despedida;
 import resolvedores.Llamada;
 import resolvedores.RespuestaInterface;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Asistente extends UsuarioGenerico {
@@ -53,8 +54,20 @@ public class Asistente extends UsuarioGenerico {
 	}
 
 	private void obtenerNombreAsistente(String entrada) {
-		nombre = Pattern.compile(entrada).matcher(".*@(.*) .*").group(0); // es un asco pero asi googlee que funca
-		nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
+		/////////////////////////////////////////////////////////////////////////////
+		// nada.... es una garcha aveces regex....
+		Matcher asd = Pattern.compile(".*@(\\S+).*").matcher(entrada);
+		if (asd.find())
+			nombre = asd.group(1);
+		else {
+			asd = Pattern.compile(".*@(.*).*").matcher(entrada);
+			if (asd.find())
+				nombre = asd.group(1);
+		}
+		/////////////////////////////////////////////////////////////////////////////
+
+		if (nombre != null)
+			nombre = "@" + nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
 		// lo formateo piola para que quede Ada o Jenkins... por si lo llaman ADA o ada
 	}
 
