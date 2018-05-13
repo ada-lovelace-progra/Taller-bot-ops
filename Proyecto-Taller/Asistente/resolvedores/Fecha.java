@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Fecha implements Respuesta{
+public class Fecha{
 	
 	//va a tener que tener otra interfaz para manejar que respuesta especifica esta pidiendo 
 	

@@ -1,7 +1,5 @@
 package resolvedores;
 
-import jdk.nashorn.internal.runtime.regexp.RegExp;
-
 public class Unidades_S_Metrico {
 	
 	public static String cambio(String cad) {

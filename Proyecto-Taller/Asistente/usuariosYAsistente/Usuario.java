@@ -21,6 +21,11 @@ public class Usuario extends UsuarioGenerico {
 		laposta.conectar(ip, puerto);
 	}
 
+	public Usuario(String NombreUsuario, String ip) {
+		nombre = NombreUsuario;
+		laposta.conectar(ip, 5050);
+	}
+
 	public void enviarMensaje(String mensaje) {
 		laposta.enviar(nombre + ": " + mensaje);
 	}
