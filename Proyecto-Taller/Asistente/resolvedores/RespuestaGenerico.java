@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class RespuestaGenerico implements RespuestaInterface {
-	protected RespuestaInterface Siguiente;
+public abstract class RespuestaGenerico {
+
+	protected RespuestaGenerico Siguiente;
 	private ArrayList<String> peticiones = null, respuestas = null;
 	protected String nombreDeLaClase;
-	protected static int cordialidad;
-	private final static double tope_cordialidad = 100;
+	protected static double cordialidad;
 
 	public RespuestaGenerico() {
 		Siguiente = new Default();
@@ -18,9 +18,11 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 	public RespuestaGenerico(boolean op) {
 	}
 
-	public void siguiente(RespuestaInterface sig) {
+	public void siguiente(RespuestaGenerico sig) {
 		this.Siguiente = sig;
 	}
+
+	public abstract String intentarResponder(String mensaje);
 
 	protected boolean consulta(String mensaje) {
 		if (peticiones == null)
@@ -45,10 +47,9 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 	}
 
 	private int subindice(ArrayList<String> temp) {
-		double porcentajeDeCordialidad = RespuestaGenerico.cordialidad / RespuestaGenerico.tope_cordialidad;
 		int tamArray = temp.size() - 1;
 		int desface = (int) ((Math.random() * 10) % 3) - 1;
-		int i = (int) (porcentajeDeCordialidad * tamArray) + desface;
+		int i = (int) (cordialidad * tamArray) + desface;
 		return i > -1 ? i < tamArray ? i : tamArray : 0;
 	}
 
@@ -83,15 +84,15 @@ public abstract class RespuestaGenerico implements RespuestaInterface {
 		if (TamArray == 1)
 			return;
 		TamArray--;
-		int cordialidadTemp;
-		int CordialidadEnviada = (int) ((SubIndice / TamArray) * tope_cordialidad);
+		double cordialidadTemp;
+		double CordialidadEnviada = SubIndice / TamArray;
 		if (cordialidad < 0)
 			cordialidadTemp = CordialidadEnviada;
 		else
 			cordialidadTemp = ((CordialidadEnviada - cordialidad) / 3) + cordialidad;
 
-		if (cordialidadTemp > tope_cordialidad)
-			cordialidadTemp = (int) (tope_cordialidad - 1);
+		if (cordialidadTemp > 1)
+			cordialidadTemp = 0.99;
 
 		cordialidad = cordialidadTemp;
 	}

@@ -2,7 +2,7 @@ package usuariosYAsistente;
 
 import resolvedores.Despedida;
 import resolvedores.Llamada;
-import resolvedores.RespuestaInterface;
+import resolvedores.RespuestaGenerico;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,14 +10,14 @@ import java.util.regex.Pattern;
 public class Asistente extends UsuarioGenerico {
 	// el nombre lo hereda de usuario generico
 	private String RespondoA;
-	private RespuestaInterface respuesta;
+	private RespuestaGenerico respuesta;
 
 	public Asistente() {
 		respuesta = new Llamada();
 		// el nombre se va a setear cuando lo llamen por primera vez
 	}
 
-	private RespuestaInterface seteoCadenaDeRespuestas() {
+	private RespuestaGenerico seteoCadenaDeRespuestas() {
 		// aca deberia armar la cadena y retornar el primer eslabon...
 		// pero como que faltan todos los eslabones....
 		Despedida despedida = new Despedida();
@@ -48,7 +48,7 @@ public class Asistente extends UsuarioGenerico {
 				respuestaTemp = respuestaTemp.substring(4);
 				respuesta = new Llamada();
 			}
-			return nombre + ": " + respuestaTemp + RespondoA; // aca lo formateo lindo
+			return nombre + ": " + normalizarCadena(respuestaTemp) + RespondoA; // aca lo formateo lindo
 		}
 		return null;
 	}
@@ -67,8 +67,17 @@ public class Asistente extends UsuarioGenerico {
 		/////////////////////////////////////////////////////////////////////////////
 
 		if (nombre != null)
-			nombre = "@" + nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
+			nombre = "@" + normalizarCadena(nombre);
 		// lo formateo piola para que quede Ada o Jenkins... por si lo llaman ADA o ada
+	}
+
+	private String normalizarCadena(String cad) {
+		String retorno = "";
+		for (String temp : cad.split(".")) {
+			temp = temp.trim();
+			retorno += temp.substring(0, 1).toUpperCase() + temp.substring(1).toLowerCase() + ". ";
+		}
+		return retorno;
 	}
 
 	/*
