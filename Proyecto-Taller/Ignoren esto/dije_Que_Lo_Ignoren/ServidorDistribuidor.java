@@ -13,8 +13,7 @@ public class ServidorDistribuidor {
 
 	public static void main(String a[]) {
 		while (true) {
-			Servidor server = new Servidor();
-			server.Conectar(5050 + conectados);
+			Servidor server = new Servidor(5050+conectados);
 			conectados++;
 			new Thread() {
 				public void run() {

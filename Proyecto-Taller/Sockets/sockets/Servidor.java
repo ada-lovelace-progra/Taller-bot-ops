@@ -14,7 +14,7 @@ public class Servidor {
 
 //	private void tratamientoPorCliente() {while (true)recibir();}
 
-	public void Conectar(int puerto) {
+	public Servidor(int puerto) {
 		boolean op = true;
 		try {
 			serverSocket = new ServerSocket(puerto);
