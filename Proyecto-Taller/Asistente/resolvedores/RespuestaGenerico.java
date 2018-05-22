@@ -57,14 +57,14 @@ public abstract class RespuestaGenerico {
 		Scanner entrada = null;
 		try {
 			ArrayList<String> temp;
-			if (select.contains("respuesta"))
+			if (select.contains("respuesta")) {
 				temp = respuestas = new ArrayList<String>();
-			else
+				entrada = new Scanner(new File("Respuestas\\" + select + ".dat"));
+			} else {
 				temp = peticiones = new ArrayList<String>();
+				entrada = new Scanner(new File("Peticiones\\" + select + ".dat"));
+			}
 			
-			entrada = new Scanner(
-					new File((select.contains("respuesta") ? "Respuestas\\" : "Peticiones\\\\") + select + ".dat"));
-
 			while (entrada.hasNextLine()) {
 				String nextLine = entrada.nextLine();
 				if (nextLine.startsWith("\""))
