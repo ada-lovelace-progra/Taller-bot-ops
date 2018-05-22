@@ -2,45 +2,27 @@ package probadoresAntiLucas;
 
 import java.util.Scanner;
 
-import sockets.Servidor;
-import usuariosYAsistente.Asistente;
-import usuariosYAsistente.Usuario;
-import usuariosYAsistente.UsuarioGenerico;
+import cs.Cliente;
 
 class chat_Probador {
-/*
-	static Usuario alguien = new Usuario("fede.markoo");
-
-	// Con esto printeo el mensaje recibido
-
-	static Thread thread = new Thread() {
-		public void run() {
-			String viejo = "";
-			while (true) {
-				String recibirMensaje = alguien.recibirMensaje();
-				if (!recibirMensaje.equals(viejo)) {
-					System.out.println(recibirMensaje);
-					viejo = recibirMensaje;
+	public static void main(String a[]) throws Exception {
+		Cliente cliente = new Cliente("localhost", 5050);
+		@SuppressWarnings("resource")
+		Scanner asd = new Scanner(System.in);
+		new Thread() {
+			public void run() {
+				while (true) {
+					try {
+						System.out.println(cliente.recibir());
+					} catch (Exception e) {
+					}
 				}
 			}
-		}
-	};
-*/
-	// Con esto le mando lo que ingreso por consola
-	public static void main(String a[]) {
-
-		System.out.println(123);
-		Asistente ada = new Asistente();
-		System.out.println(ada.escuchar("fede.markoo: buenas @ada todo bien"));
-	/*
-		Scanner entrada = new Scanner(System.in);
-		boolean a1 = true;
-		thread.start();
-		while (a1) {
-			String mensaje = entrada.nextLine();
-			alguien.enviarMensaje(mensaje);
-		}
-		entrada.close();
-	*/
+		}.start();
+		while (true)
+			try {
+				cliente.enviar(asd.nextLine());
+			} catch (Exception e) {
+			}
 	}
 }

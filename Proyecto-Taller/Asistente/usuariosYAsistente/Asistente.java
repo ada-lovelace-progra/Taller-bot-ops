@@ -32,8 +32,8 @@ public class Asistente extends UsuarioGenerico {
 		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
 		if (nombre == null)
 			obtenerNombreAsistente(entrada);
-
-		entrada = entrada.toLowerCase().replace("@" + nombre, "");
+		if (nombre != null)
+			entrada = entrada.toLowerCase().replace("@" + nombre, "");
 		// realmente creo que no hace falta el replace()... onda si usamos expreciones
 		// regulares le va a chupar un huevo si dice o no el @nombre pero no esta de mas
 
@@ -46,9 +46,10 @@ public class Asistente extends UsuarioGenerico {
 				// si es de la clase despedida y comienza con el codigo de salida seteo a
 				// respuesta para que solo tenga un eslabon y sea el de llamada
 				respuestaTemp = respuestaTemp.substring(4);
+				respuestaTemp = normalizarCadena(respuestaTemp);
 				respuesta = new Llamada();
 			}
-			return nombre + ": " + normalizarCadena(respuestaTemp) + RespondoA; // aca lo formateo lindo
+			return nombre + ": " + respuestaTemp + RespondoA; // aca lo formateo lindo
 		}
 		return null;
 	}
