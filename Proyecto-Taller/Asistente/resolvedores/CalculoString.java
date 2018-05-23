@@ -84,7 +84,14 @@
 //nuevo
 package resolvedores;
 
-public class CalculoString {
+public class CalculoString extends RespuestaGenerico{
+	
+	@Override
+	public String intentarResponder(String mensaje) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	private int cantChar(char a, String cad) 
 	{
 		int i = 0, j = cad.length();

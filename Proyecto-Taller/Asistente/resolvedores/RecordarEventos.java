@@ -4,7 +4,6 @@ public class RecordarEventos extends RespuestaGenerico {
 
 	public RecordarEventos() {
 		super();
-		nombreDeLaClase = "";
 	}
 
 	public String intentarResponder(String mensaje) {

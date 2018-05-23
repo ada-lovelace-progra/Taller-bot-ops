@@ -56,6 +56,7 @@ public class Hilo extends Thread {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void cerrar() throws Exception {
 		lista.remove(num - 1);
 		bufferDeEntrada.close();

@@ -4,12 +4,12 @@ public class Simpsons extends RespuestaGenerico {
 
 	public Simpsons() {
 		super();
-		nombreDeLaClase = "";
 	}
 
 	public String intentarResponder(String mensaje) {
+		if (consulta(mensaje))
+			return respuesta();
 		return null;
-
 	}
 
 }

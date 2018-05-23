@@ -1,0 +1,8 @@
+che decime la hora
+que hora es
+que hora es?
+.*a cuanto estamo.*
+.*hora.*
+@asistente que hora es?
+@asistente me dirias que hora es.*
+@asistente me dirias que hora es.*

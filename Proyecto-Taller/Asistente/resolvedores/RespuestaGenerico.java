@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 public abstract class RespuestaGenerico {
 
-	protected RespuestaGenerico Siguiente;
+	protected RespuestaGenerico Siguiente = null;
 	private ArrayList<String> peticiones = null, respuestas = null;
-	protected String nombreDeLaClase;
 	protected static double cordialidad;
+	public static String nombre;
 
 	public RespuestaGenerico() {
 		Siguiente = new Default();
@@ -22,23 +22,36 @@ public abstract class RespuestaGenerico {
 		this.Siguiente = sig;
 	}
 
+	public String intentar(String mensaje) {
+		String temp = intentarResponder(mensaje);
+		if (temp != null)
+			return temp;
+		else if (Siguiente != null) // esto va a ser null cuando es la clase default... la cual es la ultima
+			return Siguiente.intentar(mensaje);
+		else
+			return null;
+	}
+
 	public abstract String intentarResponder(String mensaje);
 
 	protected boolean consulta(String mensaje) {
 		if (peticiones == null)
-			cargarLista(nombreDeLaClase);
+			cargarLista(this.getClass().getSimpleName());
 		int SubIndice = 0;
+		String nombreLower = nombre.toLowerCase();
 		for (String temp : peticiones) {
-			if (mensaje.matches(".*" + temp + ".*")) {
+			String corregido = temp.replace("@asistente", "@" + nombreLower);
+			if (mensaje.matches(".*" + corregido + ".*")) {
 				setear_Cordialidad(SubIndice, peticiones.size());
 				return true;
 			}
+			SubIndice++;
 		}
 		return false;
 	}
 
 	protected String respuesta() {
-		String select = "respuestas_" + nombreDeLaClase;
+		String select = "respuestas_" + this.getClass().getSimpleName();
 		if (respuestas == null)
 			cargarLista(select);
 		if (respuestas == null)
@@ -83,7 +96,6 @@ public abstract class RespuestaGenerico {
 	private void setear_Cordialidad(double SubIndice, double TamArray) {
 		if (TamArray == 1)
 			return;
-		TamArray--;
 		double cordialidadTemp;
 		double CordialidadEnviada = SubIndice / TamArray;
 		if (cordialidad < 0)

@@ -4,11 +4,12 @@ public class Despedida extends RespuestaGenerico {
 
 	public Despedida() {
 		super();
-		nombreDeLaClase = "";
 	}
 
 	public String intentarResponder(String mensaje) {
-		return "quien te conoce?";
+		if (consulta(mensaje))
+			return "-1-2chau";
+		return null;
 	}
 
 }

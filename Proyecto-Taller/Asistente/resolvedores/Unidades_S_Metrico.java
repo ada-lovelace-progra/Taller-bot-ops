@@ -1,7 +1,13 @@
 package resolvedores;
 
-public class Unidades_S_Metrico {
-	
+public class Unidades_S_Metrico extends RespuestaGenerico {
+
+	@Override
+	public String intentarResponder(String mensaje) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public static String cambio(String cad) {
 		String regex = "(gramo)?(litro)?(metro)?+s?";
 		if (cad.matches("[0-9]+ .*")) {
@@ -62,5 +68,4 @@ public class Unidades_S_Metrico {
 			parseDouble /= 1000;
 		return parseDouble;
 	}
-
 }

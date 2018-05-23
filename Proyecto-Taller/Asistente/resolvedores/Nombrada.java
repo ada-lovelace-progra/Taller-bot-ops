@@ -1,8 +1,8 @@
 package resolvedores;
 
-public class Tiempo extends RespuestaGenerico {
+public class Nombrada extends RespuestaGenerico {
 
-	public Tiempo() {
+	public Nombrada() {
 		super();
 	}
 
