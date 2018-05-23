@@ -24,23 +24,15 @@ public class Hilo extends Thread {
 		try {
 			bufferDeEntrada = new DataInputStream(socket.getInputStream());
 			user = new Usuario(bufferDeEntrada.readUTF());
-			System.out.println("hola " + user.nombre);
+			System.out.println(user.nombre + " conectado");
 			while (true) {
 				String mensaje = bufferDeEntrada.readUTF();
 				System.out.println(user.nombre + " envia: " + mensaje);
 				responderATodos(mensaje);
-				asistente(mensaje);
+				asistente(user.nombre + ": " + mensaje);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void enviarATodos(String mensaje) throws IOException {
-		DataOutputStream bufferDeSalida;
-		for (Socket socketTemp : lista) {
-			bufferDeSalida = new DataOutputStream(socketTemp.getOutputStream());
-			bufferDeSalida.writeUTF(user.nombre + ": " + mensaje);
 		}
 	}
 
@@ -55,8 +47,13 @@ public class Hilo extends Thread {
 
 	private void asistente(String mensaje) throws Exception {
 		String respuetas = asistente.escuchar(mensaje);
-		if (respuetas != null)
-			enviarATodos(respuetas);
+		if (respuetas != null) {
+			DataOutputStream bufferDeSalida;
+			for (Socket socketTemp : lista) {
+				bufferDeSalida = new DataOutputStream(socketTemp.getOutputStream());
+				bufferDeSalida.writeUTF(respuetas);
+			}
+		}
 	}
 
 	private void cerrar() throws Exception {

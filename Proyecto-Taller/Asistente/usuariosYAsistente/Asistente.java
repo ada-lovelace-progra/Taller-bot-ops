@@ -1,5 +1,6 @@
 package usuariosYAsistente;
 
+import resolvedores.ChuckNorris;
 import resolvedores.Despedida;
 import resolvedores.Llamada;
 import resolvedores.RespuestaGenerico;
@@ -21,9 +22,11 @@ public class Asistente extends UsuarioGenerico {
 		// aca deberia armar la cadena y retornar el primer eslabon...
 		// pero como que faltan todos los eslabones....
 		Despedida despedida = new Despedida();
+		ChuckNorris chuck = new ChuckNorris();
+		chuck.siguiente(despedida);
 		// despedida.siguiente(new Default()); esta linea no hace falta en el ultimo
 		// eslabon porque se setea directamente en el constructor
-		return despedida;
+		return chuck;
 	}
 
 	public String escuchar(String entrada) {
@@ -32,24 +35,25 @@ public class Asistente extends UsuarioGenerico {
 		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
 		if (nombre == null)
 			obtenerNombreAsistente(entrada);
-		if (nombre != null)
+		if (nombre != null) {
 			entrada = entrada.toLowerCase().replace("@" + nombre, "");
-		// realmente creo que no hace falta el replace()... onda si usamos expreciones
-		// regulares le va a chupar un huevo si dice o no el @nombre pero no esta de mas
+			// realmente creo que no hace falta el replace()... onda si usamos expreciones
+			// regulares le va a chupar un huevo si dice o no el @nombre pero no esta de mas
 
-		String respuestaTemp = respuesta.intentarResponder(entrada);
-		if (respuestaTemp != null) {// con esto verifico si pudo responder
-			if (respuesta.getClass() == Llamada.class)
-				// si respueta es de de la clase llamada entonces estaba inactivo
-				respuesta = seteoCadenaDeRespuestas();
-			else if (/* respuesta.getClass() == Despedida.class && */ respuestaTemp.startsWith("-1-2")) {
-				// si es de la clase despedida y comienza con el codigo de salida seteo a
-				// respuesta para que solo tenga un eslabon y sea el de llamada
-				respuestaTemp = respuestaTemp.substring(4);
-				respuestaTemp = normalizarCadena(respuestaTemp);
-				respuesta = new Llamada();
+			String respuestaTemp = respuesta.intentarResponder(entrada);
+			if (respuestaTemp != null) {// con esto verifico si pudo responder
+				if (respuesta.getClass() == Llamada.class)
+					// si respueta es de de la clase llamada entonces estaba inactivo
+					respuesta = seteoCadenaDeRespuestas();
+				else if (respuestaTemp.startsWith("-1-2")) {
+					// si comienza con el codigo de salida seteo a
+					// respuesta para que solo tenga un eslabon y sea el de llamada
+					respuestaTemp = respuestaTemp.substring(4);
+					respuestaTemp = normalizarCadena(respuestaTemp);
+					respuesta = new Llamada();
+				}
+				return nombre + ": " + respuestaTemp + RespondoA; // aca lo formateo lindo
 			}
-			return nombre + ": " + respuestaTemp + RespondoA; // aca lo formateo lindo
 		}
 		return null;
 	}
@@ -57,18 +61,18 @@ public class Asistente extends UsuarioGenerico {
 	private void obtenerNombreAsistente(String entrada) {
 		/////////////////////////////////////////////////////////////////////////////
 		// nada.... es una garcha aveces regex....
-		Matcher asd = Pattern.compile(".*@(\\S+).*").matcher(entrada);
+		Matcher asd = Pattern.compile(".*@(\\S+) ?.*").matcher(entrada);
 		if (asd.find())
 			nombre = asd.group(1);
 		else {
-			asd = Pattern.compile(".*@(.*).*").matcher(entrada);
+			asd = Pattern.compile(".*@(.*) ?.*").matcher(entrada);
 			if (asd.find())
 				nombre = asd.group(1);
 		}
 		/////////////////////////////////////////////////////////////////////////////
 
 		if (nombre != null)
-			nombre = "@" + normalizarCadena(nombre);
+			nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
 		// lo formateo piola para que quede Ada o Jenkins... por si lo llaman ADA o ada
 	}
 

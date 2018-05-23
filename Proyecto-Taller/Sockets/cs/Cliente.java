@@ -16,10 +16,10 @@ public class Cliente {
 		dataOutputStream = new DataOutputStream(socket.getOutputStream());
 		dataOutputStream.flush();
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("ingrese su nombre de usuario...\n");
-		enviar(scanner.nextLine());
-		scanner.close();
+	}
+
+	public void nombre(String nombres) throws Exception {
+		enviar(nombres);
 	}
 
 	public void enviar(String mensaje) throws Exception {

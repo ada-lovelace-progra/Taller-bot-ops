@@ -8,8 +8,7 @@ public class Despedida extends RespuestaGenerico {
 	}
 
 	public String intentarResponder(String mensaje) {
-		return null;
-
+		return "quien te conoce?";
 	}
 
 }
