@@ -1,5 +1,7 @@
 package probadoresAntiLucas;
 
+import java.net.InetAddress;
+
 import cs.Servidor;
 
 public class serverTesteador {

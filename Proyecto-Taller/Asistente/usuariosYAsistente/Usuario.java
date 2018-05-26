@@ -1,5 +1,6 @@
 package usuariosYAsistente;
 
+import java.net.InetAddress;
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
@@ -13,7 +14,7 @@ public class Usuario extends UsuarioGenerico {
 
 	public Usuario(String NombreUsuario, int codChat) throws Exception {
 		nombre = NombreUsuario;
-		cliente = new Cliente("localhost", 5050);
+		cliente = new Cliente(InetAddress.getByName("LAB4A2").getHostAddress(), 5050);
 		cliente.enviar(String.format("%04d", codChat) + nombre);
 	}
 
