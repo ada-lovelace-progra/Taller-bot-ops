@@ -2,7 +2,6 @@ package cs;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Cliente {
 
@@ -15,11 +14,6 @@ public class Cliente {
 		dataInputStream = new DataInputStream(socket.getInputStream());
 		dataOutputStream = new DataOutputStream(socket.getOutputStream());
 		dataOutputStream.flush();
-
-	}
-
-	public void nombre(String nombres) throws Exception {
-		enviar(nombres);
 	}
 
 	public void enviar(String mensaje) throws Exception {
@@ -28,10 +22,7 @@ public class Cliente {
 	}
 
 	public String recibir() throws Exception {
-		String mensaje = dataInputStream.readUTF();
-		if(mensaje.contains("codigoDeDespedida"))
-			cerrar();
-		return mensaje;
+		return dataInputStream.readUTF();
 	}
 
 	public void cerrar() throws Exception {

@@ -1,37 +1,37 @@
 package probadoresAntiLucas;
 
 import java.util.Scanner;
-
-import cs.Cliente;
+import usuariosYAsistente.Usuario;
 
 class chat_Probador {
-	static Cliente cliente;
+	static Usuario usuario;
 
 	static Thread hilo = new Thread() {
 		public void run() {
-			while (true) {
+			while (true)
 				try {
-					System.out.println(cliente.recibir());
+					System.out.println(usuario.recibir());
 				} catch (Exception e) {
+					System.out.println("error rebiciendo");
+					return;
 				}
-			}
 		}
 	};
 
 	public static void main(String a[]) throws Exception {
-		cliente = new Cliente("localhost", 5050);
-		hilo.start();
 
 		@SuppressWarnings("resource")
 		Scanner consola = new Scanner(System.in);
-		cliente.nombre(consola.nextLine());
-		while (true)
-			try {
-				
-				String nextLine = consola.nextLine();  
-				cliente.enviar(nextLine);
-			} catch (Exception e) {
-				System.out.println("error");
-			}
+
+		String nombre = consola.nextLine();
+		int codChat = Integer.parseInt(consola.nextLine());
+		usuario = new Usuario(nombre, codChat);
+		String nextLine;
+		hilo.start();
+
+		while (true) {
+			nextLine = consola.nextLine();
+			usuario.enviar(codChat, nextLine);
+		}
 	}
 }

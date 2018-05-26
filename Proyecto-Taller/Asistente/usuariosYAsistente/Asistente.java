@@ -31,20 +31,20 @@ public class Asistente extends UsuarioGenerico {
 				if (respuesta.getClass() == Llamada.class) {
 					// si respueta es de de la clase llamada entonces estaba inactivo
 					respuesta = Crear.Cadena();
-					retorno = nombre + ": " + normalizarCadena(respuestaTemp) + RespondoA;
+					retorno = nombre + ": " + respuestaTemp + RespondoA;
 				} else if (respuestaTemp.startsWith("-1-2")) {
 					// si comienza con el codigo de salida seteo a
 					// respuesta para que solo tenga un eslabon y sea el de llamada
 					respuestaTemp = respuestaTemp.substring(4);
 					respuesta = new Llamada();
-					retorno = nombre + ": " + normalizarCadena(respuestaTemp) + RespondoA;
+					retorno = nombre + ": " + respuestaTemp + RespondoA;
 					nombre = null;
 				} else
-					retorno = nombre + ": " + normalizarCadena(respuestaTemp) + RespondoA;
+					retorno = nombre + ": " + respuestaTemp + RespondoA;
 			} else if (respuesta.getClass() == Llamada.class)
 				nombre = null;
 		}
-		return retorno;
+		return "----" + retorno;
 	}
 
 	private void obtenerNombreAsistente(String entrada) {
@@ -65,42 +65,4 @@ public class Asistente extends UsuarioGenerico {
 		// lo formateo piola para que quede Ada o Jenkins... por si lo llaman ADA o ada
 		RespuestaGenerico.nombre = nombre;
 	}
-
-	private String normalizarCadena(String cad) {
-		String retorno = "";
-		for (String temp : cad.split(".")) {
-			temp = temp.trim();
-			retorno += temp.substring(0, 1).toUpperCase() + temp.substring(1).toLowerCase() + ". ";
-		}
-		if (retorno == "")
-			retorno = cad.substring(0, 1).toUpperCase() + cad.substring(1).toLowerCase();
-		return retorno;
-	}
-
-	/*
-	 * DEJO ESTO DE GUIA PARA HACER LAS CLASES... case "simpsons":
-	 * cargarLista("respuestas_simpsons"); return (tabla.get("respuestas_"
-	 * +clave).get(tabla.get(clave).indexOf(cad)));
-	 * 
-	 * case "despedidas": activo = false; tabla.clear(); cargarLista("llamadas");
-	 * return (respuesta(clave));
-	 * 
-	 * case "cuenta": String aux = cad.substring(cad.lastIndexOf(" ")); return
-	 * ("la " + (aux.length() < 12 ? "cuenta" : "exprecion") + " da: " + new
-	 * CalculoString().calcularFormat(aux,"%.3f"));
-	 * 
-	 * case "fecha": return ("hoy es " + Fecha.getFechaCompleta() + RespondoA);
-	 * 
-	 * case "hora": return ("son las " + Fecha.getHora() + RespondoA);
-	 * 
-	 * case "todo_bien": String[] lista = { "todobien" };
-	 * cargarListaEsperadas(lista);
-	 * 
-	 * if (cad.matches(".*gracias.*")) { return ("no es nada" + RespondoA);
-	 * 
-	 * if (entrada.contains("@ada")) { return (respuesta("nose"));
-	 * 
-	 * if (consulta("nombrada", cad)) { return (respuesta("nombrada") + RespondoA);
-	 * 
-	 */
 }
