@@ -3,7 +3,7 @@ package tests;
 import java.util.ArrayList;
 
 import org.junit.*;
-import sockets.Servidor;
+import cs.Servidor;
 import usuariosYAsistente.Usuario;
 
 public class Asistente_SaludosTest {

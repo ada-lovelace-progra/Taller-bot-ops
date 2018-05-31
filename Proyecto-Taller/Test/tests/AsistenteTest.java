@@ -3,7 +3,7 @@ package tests;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.*;
-import sockets.Servidor;
+import cs.Servidor;
 import usuariosYAsistente.Usuario;
 
 public class AsistenteTest {
@@ -15,23 +15,18 @@ public class AsistenteTest {
 	public static void inicio() {
 		new Thread() {
 			public void run() {
-				Servidor server = new Servidor();
-				server.Conectar(5050);
-				while (true) {
-					String recibir = server.recibir();
-					System.out.println(recibir);
-				}
+			try {
+				new Servidor(5050);
+			} catch (Exception e) {
+			}
 			}
 		}.start();
-		user = new Usuario(USUARIO);
-		user.enviarMensaje("hola ada");
-		user.recibirMensaje();
 	}
 
 	@Test
 	public void agradecimiento() {
 
-		user.enviarMensaje("hola ada");
+		user.("hola ada");
 		user.recibirMensaje();
 
 		String[] mensajes = { "¡Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };

@@ -1,14 +1,14 @@
 package lucasTests;
 
 import org.junit.*;
-import sockets.Servidor;
+import cs.Servidor;
 import usuariosYAsistente.Usuario;
 
 public class Si_quieren_modificar_el_resto_de_los_test_Guiensen_de_este {
 
 	public final static String USUARIO = "delucas";
 
-	Usuario user = new Usuario(USUARIO);
+	Usuario user = new Usuario(USUARIO, 0);
 
 	@BeforeClass
 	public static void inicio() {
