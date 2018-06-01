@@ -3,7 +3,6 @@ package resolvedores;
 import pendientes.Agradecer;
 import pendientes.Despedida;
 import pendientes.Fecha;
-import pendientes.RecordarEventos;
 import pendientes.Tiempo;
 import pendientes.Unidades_S_Metrico;
 
@@ -15,7 +14,6 @@ public class Crear {
 		ChuckNorris chuck = new ChuckNorris();
 		Despedida despedida = new Despedida();
 		Fecha fecha = new Fecha();
-		RecordarEventos eventos = new RecordarEventos();
 		Simpsons simpsons = new Simpsons();
 		Tiempo tiempo = new Tiempo();
 		Unidades_S_Metrico unidades = new Unidades_S_Metrico();
@@ -24,8 +22,7 @@ public class Crear {
 		fecha.siguiente(tiempo);
 		tiempo.siguiente(simpsons);
 		simpsons.siguiente(chuck);
-		chuck.siguiente(eventos);
-		eventos.siguiente(calcular);
+		chuck.siguiente(calcular);
 		calcular.siguiente(unidades);
 		unidades.siguiente(despedida);
 		

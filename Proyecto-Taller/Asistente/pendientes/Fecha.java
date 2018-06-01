@@ -6,41 +6,62 @@ import java.util.GregorianCalendar;
 
 import resolvedores.RespuestaGenerico;
 
-public class Fecha extends RespuestaGenerico{
+public class Fecha extends RespuestaGenerico {
 
 	@Override
 	public String intentarResponder(String mensaje) {
-		// TODO Auto-generated method stub
+		if (consulta(mensaje)) {
+			if (mensaje.contains("ahora"))
+				return now();
+
+			if (mensaje.contains("getfecha"))
+				return getFecha();
+
+			if (mensaje.contains("dia"))
+				return getDiaDeLaSemana();
+
+			if (mensaje.contains("hoy"))
+				return getFechaCompleta();
+
+			if (mensaje.contains("hora"))
+				return getHora();
+
+			if (mensaje.contains("falta"))
+				return hasta(1, 1, 3001);
+
+			if (mensaje.contains("paso"))
+				return desde(3, 3, 2000);
+		}
 		return null;
 	}
-	
+
 	// devuelve fecha actual en formato hora:min:seg dia/mes/año
-	static public String now() {
+	private String now() {
 		return new SimpleDateFormat("hh:mm:ss - dd/MM/yyyy").format(new Date());
 	}
 
 	// devuelve hora:minutos
-	static public String getHora() {
+	private String getHora() {
 		return new SimpleDateFormat("HH:mm").format(new Date());
 	}
 
 	// devuelve fecha actual en formato dia/mes/año
-	static public String getFecha() {
+	public String getFecha() {
 		return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 	}
 
 	// devuelve la fecha actual en formato "viernes, 04 de mayo de 2018"
-	static public String getFechaCompleta() {
+	private String getFechaCompleta() {
 		return new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
 	}
 
 	// Devuelve dia de la semana actual
-	static public String getDiaDeLaSemana() {
+	private String getDiaDeLaSemana() {
 		return new SimpleDateFormat("EEEEEEEEE").format(new Date());
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
-	static public String hasta(int dia, int mes, int ano) {
+	private String hasta(int dia, int mes, int ano) {
 		Date actual = new Date();
 
 		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis());
@@ -59,7 +80,7 @@ public class Fecha extends RespuestaGenerico{
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
-	static public String desde(int dia, int mes, int ano) {
+	private String desde(int dia, int mes, int ano) {
 		Date actual = new Date();
 		@SuppressWarnings("deprecation")
 		Date FechaDada = new Date(ano - 1900, mes, dia);

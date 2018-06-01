@@ -1,6 +1,8 @@
 package resolvedores;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -68,16 +70,17 @@ public abstract class RespuestaGenerico {
 
 	private void cargarLista(String select) {
 		Scanner entrada = null;
+		String dir = null;
+		ArrayList<String> temp;
+		if (select.contains("respuesta")) {
+			temp = respuestas = new ArrayList<String>();
+			dir = "Respuestas\\" + select + ".dat";
+		} else {
+			temp = peticiones = new ArrayList<String>();
+			dir = "Peticiones\\" + select + ".dat";
+		}
 		try {
-			ArrayList<String> temp;
-			if (select.contains("respuesta")) {
-				temp = respuestas = new ArrayList<String>();
-				entrada = new Scanner(new File("Respuestas\\" + select + ".dat"));
-			} else {
-				temp = peticiones = new ArrayList<String>();
-				entrada = new Scanner(new File("Peticiones\\" + select + ".dat"));
-			}
-			
+			entrada = new Scanner(new File(dir));
 			while (entrada.hasNextLine()) {
 				String nextLine = entrada.nextLine();
 				if (nextLine.startsWith("\""))
@@ -89,6 +92,14 @@ public abstract class RespuestaGenerico {
 		} catch (Exception e) {
 			if (entrada != null)
 				entrada.close();
+			else {
+				try {
+					FileWriter file = new FileWriter(new File(dir));
+					file.write("");
+					file.close();
+				} catch (IOException e1) {
+				}
+			}
 			System.out.println("no se encontro el arhivo " + select);
 		}
 	}

@@ -50,7 +50,7 @@ public class Asistente extends UsuarioGenerico {
 	private void obtenerNombreAsistente(String entrada) {
 		/////////////////////////////////////////////////////////////////////////////
 		// nada.... es una garcha aveces regex....
-		Matcher asd = Pattern.compile(".*@(\\S+) ?.*").matcher(entrada);
+		Matcher asd = Pattern.compile(".*@([a-z]+) ?.*").matcher(entrada);
 		if (asd.find())
 			nombre = asd.group(1);
 		else {

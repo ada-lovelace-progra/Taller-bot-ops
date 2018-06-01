@@ -9,6 +9,8 @@ public class Agradecer extends RespuestaGenerico {
 	}
 
 	public String intentarResponder(String mensaje) {
+		if (consulta(mensaje))
+			return "De nada";
 		return null;
 	}
 
