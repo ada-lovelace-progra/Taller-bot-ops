@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.sun.corba.se.impl.corba.ExceptionListImpl;
+
 public abstract class RespuestaGenerico {
 
 	protected RespuestaGenerico Siguiente = null;
@@ -90,17 +92,29 @@ public abstract class RespuestaGenerico {
 			}
 			entrada.close();
 		} catch (Exception e) {
-			if (entrada != null)
-				entrada.close();
-			else {
-				try {
-					FileWriter file = new FileWriter(new File(dir));
-					file.write("");
-					file.close();
-				} catch (IOException e1) {
+			try {
+				entrada = new Scanner(new File(dir.replace("\\", "/")));
+				while (entrada.hasNextLine()) {
+					String nextLine = entrada.nextLine();
+					if (nextLine.startsWith("\""))
+						while (entrada.hasNextLine() && nextLine.endsWith("\""))
+							nextLine += "\n" + entrada.nextLine();
+					temp.add(nextLine);
 				}
+				entrada.close();
+			} catch (Exception e1) {
+				if (entrada != null)
+					entrada.close();
+				else {
+					try {
+						FileWriter file = new FileWriter(new File(dir));
+						file.write("");
+						file.close();
+					} catch (IOException e11) {
+					}
+				}
+				System.out.println("no se encontro el arhivo " + select);
 			}
-			System.out.println("no se encontro el arhivo " + select);
 		}
 	}
 
