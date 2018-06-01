@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Simpsons extends RespuestaGenerico {
 
 	public Simpsons() {
