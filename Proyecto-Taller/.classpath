@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry exported="true" kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="module" value="true"/>
+			<attribute name="module" value="true" />
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="src" path="Asistente"/>
+	<classpathentry exported="true" kind="con"
+		path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5" />
+	<classpathentry kind="src" path="Asistente" />
 	<classpathentry kind="src" path="Test">
 		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="ignore_optional_problems" value="true" />
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="Sockets"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="Sockets" />
+	<classpathentry kind="output" path="bin" />
 </classpath>
