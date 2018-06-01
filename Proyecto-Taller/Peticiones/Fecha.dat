@@ -1,10 +1,16 @@
 che decime la fecha
 que dia estamo
 que dia estamos
+dia
 a cuanto estamo
 fecha
 decime el dia
 dia hoy
+che decime la hora
+que hora es
+que hora es?
+a cuanto estamo
+hora
 dia (es)? hoy
 d..?.?a de la semana es hoy
 que dia es?
@@ -12,3 +18,6 @@ que dia es?
 @asistente me dirias que dia es
 @asistente me dirias que dia es
 @asistente me dirias que dia es hoy
+@asistente que hora es?
+@asistente me dirias que hora es.*
+@asistente me dirias que hora es.*

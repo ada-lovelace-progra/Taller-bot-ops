@@ -1,122 +1,83 @@
 package tests;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import resolvedores.CalculoString;
+import usuariosYAsistente.Asistente;
 
 public class CalculoStringTest {
-	static String cad = "";
 
-	@Test
-	public void suma() {
-		CalculoString cs = new CalculoString();
-		cad = "2+105+8.5+3";
-		double res = cs.calcular(cad);
+	private static final String USUARIO = "fede";
+	static Asistente ada;
 
-		Assert.assertEquals(118.5, res, 0.1);
+	@BeforeClass
+	public static void setup() {
+		ada = new Asistente();
+		escuchar("hola @ada");
+	}
+
+	private String formato(String mensaje) {
+		return "Ada: " + mensaje + " @" + USUARIO;
+	}
+
+	private static String escuchar(String mensaje) {
+		String escuchar = ada.escuchar(USUARIO + ": " + mensaje);
+		if (escuchar.length() > 5)
+			return escuchar.substring(4);
+		return null;
 	}
 
 	@Test
-	public void resta() {
-		CalculoString cs = new CalculoString();
-		cad = "2-6-100-4";
-		double res = cs.calcular(cad);
+	public void calculos() {
+		Assert.assertEquals("Ada: la cuenta da: 3 @" + USUARIO, escuchar("@ada calcula 1+2"));
 
-		Assert.assertEquals(-108, res, 0.1);
+		Assert.assertEquals("Ada: la cuenta da: 1 @" + USUARIO, escuchar("@ada cuanto es 5-2*2"));
+
+		Assert.assertEquals("Ada: la cuenta da: 42 @" + USUARIO, escuchar("@ada cuanto da 17+5^2"));
+
 	}
 
 	@Test
-	public void producto() {
-		CalculoString cs = new CalculoString();
-		cad = "0.1*100*(2*-5)";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(-100, res, 0.1);
+	public void calcularConNegativos() {
+		Assert.assertEquals("Ada: la exprecion da: 10 @" + USUARIO,
+				escuchar("@ada resolve -1*(((1+1)^3*10)/80-6)*2"));
 	}
 
 	@Test
-	public void division() {
-		CalculoString cs = new CalculoString();
-		cad = "(1024/2)/-512/-1";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(1, res, 0.1);
+	public void calculosCompuestos() {
+		Assert.assertEquals("Ada: la exprecion da: -112 @" + USUARIO,
+				escuchar("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3"));
 	}
 
 	@Test
-	public void potencia() {
-		CalculoString cs = new CalculoString();
-		cad = "(2^8)^-1";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(1 / 256, res, 0.1);
+	public void porcentaje() {
+		Assert.assertEquals("Ada: la cuenta da: 100 @" + USUARIO, escuchar("@ada cuanto da 25%400"));
 	}
 
 	@Test
-	public void mixta() {
-		CalculoString cs = new CalculoString();
-		cad = "2+(100/50)*4-10+100";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(100, res, 0.1);
-	}
-
-	@Test
-	public void reJodida() {
-		CalculoString cs = new CalculoString();
-		cad = "(((1+1)^3*10)/80-6)*2-100-5+3";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(-112, res, 0.1);
-	}
-
-	@Test
-	public void numeroUnico() {
-		CalculoString cs = new CalculoString();
-		cad = "3";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(3, res, 0.1);
-	}
-
-	@Test
-	public void primeroNegativo() {
-		CalculoString cs = new CalculoString();
-		cad = "-1*(((1+1)^3*10)/80-6)*2";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(10, res, 0.1);
-	}
-
-	@Test
-	public void logaritmo() {
-		CalculoString cs = new CalculoString();
-		cad = "log(1000)";
-		double res = cs.calcular(cad);
-
-		Assert.assertEquals(Math.log(1000), res, 0.1);
-	}
-
-	@Test
-	public void logaritmoConExtras() {
-		CalculoString cs = new CalculoString();
-		cad = "log(1000)";
-		double res = cs.calcular(cad + "+10");
-		Assert.assertEquals(Math.log(1000) + 10, res, 0.1);
-		res = cs.calcular(cad + "-10");
-		Assert.assertEquals(Math.log(1000) - 10, res, 0.1);
-		res = cs.calcular(cad + "*10");
-		Assert.assertEquals(Math.log(1000) * 10, res, 0.1);
-		res = cs.calcular(cad + "/10");
-		Assert.assertEquals(Math.log(1000) / 10, res, 0.1);
-		res = cs.calcular("5+" + cad + "+10");
-		Assert.assertEquals(5 + Math.log(1000) + 10, res, 0.1);
-		res = cs.calcular("5-" + cad + "-10");
-		Assert.assertEquals(5 - Math.log(1000) - 10, res, 0.1);
-		res = cs.calcular("5*" + cad + "*10");
-		Assert.assertEquals(5 * Math.log(1000) * 10, res, 0.1);
-		res = cs.calcular("5/" + cad + "/10");
-		Assert.assertEquals(5 / Math.log(1000) / 10, res, 0.1);
+	public void mixSupremo() {
+		Assert.assertEquals("Ada: la exprecion da: 15 @" + USUARIO, escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
 	}
 }
+
+/*
+ * @Test public void logaritmo() { CalculoString cs = new CalculoString(); cad =
+ * "log(1000)"; double res = cs.calcular(cad);
+ * 
+ * Assert.assertEquals(Math.log(1000), res, 0.1); }
+ * 
+ * @Test public void logaritmoConExtras() { CalculoString cs = new
+ * CalculoString(); cad = "log(1000)"; double res = cs.calcular(cad + "+10");
+ * Assert.assertEquals(Math.log(1000) + 10, res, 0.1); res = cs.calcular(cad +
+ * "-10"); Assert.assertEquals(Math.log(1000) - 10, res, 0.1); res =
+ * cs.calcular(cad + "*10"); Assert.assertEquals(Math.log(1000) * 10, res, 0.1);
+ * res = cs.calcular(cad + "/10"); Assert.assertEquals(Math.log(1000) / 10, res,
+ * 0.1); res = cs.calcular("5+" + cad + "+10"); Assert.assertEquals(5 +
+ * Math.log(1000) + 10, res, 0.1); res = cs.calcular("5-" + cad + "-10");
+ * Assert.assertEquals(5 - Math.log(1000) - 10, res, 0.1); res =
+ * cs.calcular("5*" + cad + "*10"); Assert.assertEquals(5 * Math.log(1000) * 10,
+ * res, 0.1); res = cs.calcular("5/" + cad + "/10"); Assert.assertEquals(5 /
+ * Math.log(1000) / 10, res, 0.1); } }
+ */

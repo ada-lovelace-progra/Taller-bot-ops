@@ -17,11 +17,11 @@ public class Fecha extends RespuestaGenerico {
 			if (mensaje.contains("getfecha"))
 				return getFecha();
 
+			if (mensaje.contains("semana"))
+				return getFechaCompleta();
+
 			if (mensaje.contains("dia"))
 				return getDiaDeLaSemana();
-
-			if (mensaje.contains("hoy"))
-				return getFechaCompleta();
 
 			if (mensaje.contains("hora"))
 				return getHora();

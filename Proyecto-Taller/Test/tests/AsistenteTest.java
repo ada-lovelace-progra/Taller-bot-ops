@@ -4,109 +4,149 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.*;
 import cs.Servidor;
+import usuariosYAsistente.Asistente;
 import usuariosYAsistente.Usuario;
 
 public class AsistenteTest {
 
-	public final static String USUARIO = "delucas";
-	static Usuario user;
+	private static final String USUARIO = "fede";
+	static Asistente ada;
 
 	@BeforeClass
-	public static void inicio() {
-		new Thread() {
-			public void run() {
-			try {
-				new Servidor(5050);
-			} catch (Exception e) {
-			}
-			}
-		}.start();
+	public static void setup() {
+		ada = new Asistente();
+		escuchar("hola @ada");
+	}
+
+	private String formato(String mensaje) {
+		return "Ada: " + mensaje + " @" + USUARIO;
+	}
+
+	private static String escuchar(String mensaje) {
+		String escuchar = ada.escuchar(USUARIO + ": " + mensaje);
+		if (escuchar.length() > 5)
+			return escuchar.substring(4);
+		return null;
 	}
 
 	@Test
 	public void agradecimiento() {
 
-		user.("hola ada");
-		user.recibirMensaje();
-
 		String[] mensajes = { "¡Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
 		for (String mensaje : mensajes) {
-			user.enviarMensaje(mensaje);
-			String recibirMensaje = user.recibirMensaje();
-			// System.out.println(recibirMensaje);
-			Assert.assertEquals("Ada Lovelace: no es nada @" + USUARIO, recibirMensaje);
+			Assert.assertEquals("Ada: De nada @" + USUARIO, escuchar("gracias @ada"));
 		}
 	}
 
 	@Test
 	public void calculos() {
-		user.enviarMensaje("@ada calcula 1+2");
-		Assert.assertEquals("Ada Lovelace: la cuenta da: 3 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la cuenta da: 3 @" + USUARIO, escuchar("@ada calcula 1+2"));
 
-		user.enviarMensaje("@ada cuanto es 5-2*2");
-		Assert.assertEquals("Ada Lovelace: la cuenta da: 1 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la cuenta da: 1 @" + USUARIO, escuchar("@ada cuanto es 5-2*2"));
 
-		user.enviarMensaje("@ada cuanto da 17+5^2");
-		Assert.assertEquals("Ada Lovelace: la cuenta da: 42 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la cuenta da: 42 @" + USUARIO, escuchar("@ada cuanto da 17+5^2"));
 
 	}
 
 	@Test
 	public void calcularConNegativos() {
-		user.enviarMensaje("@ada resolve -1*(((1+1)^3*10)/80-6)*2");
-		Assert.assertEquals("Ada Lovelace: la exprecion da: 10 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la exprecion da: 10 @" + USUARIO, escuchar("@ada resolve -1*(((1+1)^3*10)/80-6)*2"));
 	}
 
 	@Test
 	public void calculosCompuestos() {
-		user.enviarMensaje("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3");
-		Assert.assertEquals("Ada Lovelace: la exprecion da: -112 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la exprecion da: -112 @" + USUARIO,
+				escuchar("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3"));
 	}
 
 	@Test
 	public void porcentaje() {
-		user.enviarMensaje("@ada cuanto da 25%400");
-		Assert.assertEquals("Ada Lovelace: la cuenta da: 100 @" + USUARIO, user.recibirMensaje());
+		Assert.assertEquals("Ada: la cuenta da: 100 @" + USUARIO, escuchar("@ada cuanto da 25%400"));
 	}
 
 	@Test
 	public void mixSupremo() {
-		user.enviarMensaje("@ada cuanto es 10%((30+20)+((135-30)-5)^1)");
-		Assert.assertEquals("Ada Lovelace: la exprecion da: 15 @" + USUARIO, user.recibirMensaje());
-	}
-
-	@Test
-	public void fecha() {
-		String texto = "Ada Lovelace: hoy es "
-				+ new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy @").format(new Date()) + USUARIO;
-
-		user.enviarMensaje("@ada cual es la fecha de hoy?");
-		Assert.assertEquals(texto, user.recibirMensaje());
-		user.enviarMensaje("@ada dame la fecha");
-		Assert.assertEquals(texto, user.recibirMensaje());
+		Assert.assertEquals("Ada: la exprecion da: 15 @" + USUARIO, escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
 	}
 
 	@Test
 	public void hora() {
-		String[] mensajes = { "¿qué hora es, @ada?", "@ada, la hora por favor", "me decís la hora @ada?" };
-		for (String mensaje : mensajes) {
-			user.enviarMensaje(mensaje);
-			Assert.assertEquals(
-					"Ada Lovelace: son las " + new SimpleDateFormat("HH:mm").format(new Date()) + " @" + USUARIO,
-					user.recibirMensaje());
-		}
+		String hora = new SimpleDateFormat("HH:mm").format(new Date());
+		Assert.assertEquals(formato(hora), escuchar("@ada hora"));
 	}
 
 	@Test
 	public void dia() {
-		String[] mensajes = { "@ada que dia es hoy?", "@ada dia hoy", "@ada decime el dia" };
-		for (String mensaje : mensajes) {
-			user.enviarMensaje(mensaje);
-			// String esperado = "Ada Lovelace: hoy es " + new SimpleDateFormat("EEEEEEEEE").format(new Date());
-			String esperado = "Ada Lovelace: hoy es "
-					+ new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date()) + " @"
-					+ USUARIO;
-			Assert.assertEquals(esperado, user.recibirMensaje());
-		}
+		String dia = new SimpleDateFormat("EEEEEEEEE").format(new Date());
+		Assert.assertEquals(formato(dia), escuchar("@ada dia"));
 	}
+
+	@Test
+	public void fecha() {
+		String dia = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		Assert.assertEquals(formato(dia), escuchar("@ada getfecha"));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void hasta() {
+		Date fecha = new Date();
+		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 1;
+		Assert.assertEquals("1 dia", escuchar(""));
+
+		DifAno = 0;
+		DifMes = 6;
+		DifSem = 2;
+		DifDia = 0;
+		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
+
+		DifAno = 29;
+		DifMes = 1;
+		DifSem = 3;
+		DifDia = 4;
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
+
+		DifAno = 0;
+		DifMes = 9;
+		DifSem = 0;
+		DifDia = 4;
+		Assert.assertEquals("1 semana 9 meses", escuchar(""));
+		// Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
+		// DifMes, fecha.getYear() + DifAno + 1900));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void desde() {
+		Date fecha = new Date();
+		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 4;
+		Assert.assertEquals("4 dias", escuchar(""));
+
+		DifAno = 0;
+		DifMes = 9;
+		DifSem = 0;
+		DifDia = 4;
+		Assert.assertEquals(formato("1 semana 9 meses"), escuchar(""));
+
+		DifAno = 0;
+		DifMes = 6;
+		DifSem = 2;
+		DifDia = 0;
+		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
+		// Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
+		// DifMes, fecha.getYear() + DifAno + 1900));
+
+		DifAno = 29;
+		DifMes = 1;
+		DifSem = 3;
+		DifDia = 4;
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
+	}
+
+	@Test
+	public void fechaCompleta() {
+		String fecha = new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
+		Assert.assertEquals(formato(fecha), escuchar("@ada dia de la semana es hoy"));
+	}
+
 }

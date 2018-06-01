@@ -17,29 +17,36 @@ public class FechaTest {
 	@BeforeClass
 	public static void setup() {
 		ada = new Asistente();
-		ada.escuchar("hola @ada");
+		escuchar("hola @ada");
+	}
+
+	private String formato(String mensaje) {
+		return "Ada: " + mensaje + " @" + USUARIO;
 	}
 
 	private static String escuchar(String mensaje) {
 		String escuchar = ada.escuchar(USUARIO + ": " + mensaje);
-		if (escuchar.length() > 4)
+		if (escuchar.length() > 5)
 			return escuchar.substring(4);
 		return null;
 	}
 
 	@Test
 	public void hora() {
-		Assert.assertEquals(new SimpleDateFormat("HH:mm").format(new Date()), escuchar("@ada hora"));
+		String hora = new SimpleDateFormat("HH:mm").format(new Date());
+		Assert.assertEquals(formato(hora), escuchar("@ada hora"));
 	}
 
 	@Test
 	public void dia() {
-		Assert.assertEquals(new SimpleDateFormat("EEEEEEEEE").format(new Date()), escuchar(""));
+		String dia = new SimpleDateFormat("EEEEEEEEE").format(new Date());
+		Assert.assertEquals(formato(dia), escuchar("@ada dia"));
 	}
 
 	@Test
 	public void fecha() {
-		Assert.assertEquals(new SimpleDateFormat("dd/MM/yyyy").format(new Date()), escuchar(""));
+		String dia = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		Assert.assertEquals(formato(dia), escuchar("@ada getfecha"));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -81,7 +88,7 @@ public class FechaTest {
 		DifMes = 9;
 		DifSem = 0;
 		DifDia = 4;
-		Assert.assertEquals("1 semana 9 meses", escuchar(""));
+		Assert.assertEquals(formato("1 semana 9 meses"), escuchar(""));
 
 		DifAno = 0;
 		DifMes = 6;
@@ -101,7 +108,7 @@ public class FechaTest {
 	@Test
 	public void fechaCompleta() {
 		String fecha = new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
-		Assert.assertEquals(fecha, escuchar(""));
+		Assert.assertEquals(formato(fecha), escuchar("@ada dia de la semana es hoy"));
 	}
 
 }
