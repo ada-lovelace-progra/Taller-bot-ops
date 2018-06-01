@@ -1,4 +1,6 @@
-package resolvedores;
+package pendientes;
+
+import resolvedores.RespuestaGenerico;
 
 public class Nombrada extends RespuestaGenerico {
 

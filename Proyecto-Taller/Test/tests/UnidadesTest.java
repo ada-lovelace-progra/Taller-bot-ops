@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import resolvedores.Unidades_S_Metrico;
+import pendientes.Unidades_S_Metrico;
 
 class UnidadesTest {
 

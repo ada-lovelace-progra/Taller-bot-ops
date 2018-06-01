@@ -1,8 +1,10 @@
-package resolvedores;
+package pendientes;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import resolvedores.RespuestaGenerico;
 
 public class Fecha extends RespuestaGenerico{
 

@@ -1,9 +1,10 @@
-package resolvedores;
+package pendientes;
+
+import resolvedores.RespuestaGenerico;
 
 public class RecordarEventos extends RespuestaGenerico {
 
 	public RecordarEventos() {
-		super();
 	}
 
 	public String intentarResponder(String mensaje) {

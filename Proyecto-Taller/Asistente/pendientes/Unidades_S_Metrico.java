@@ -1,7 +1,9 @@
-package resolvedores;
+package pendientes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import resolvedores.RespuestaGenerico;
 
 public class Unidades_S_Metrico extends RespuestaGenerico {
 

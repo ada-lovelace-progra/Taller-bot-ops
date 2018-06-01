@@ -1,5 +1,12 @@
 package resolvedores;
 
+import pendientes.Agradecer;
+import pendientes.Despedida;
+import pendientes.Fecha;
+import pendientes.RecordarEventos;
+import pendientes.Tiempo;
+import pendientes.Unidades_S_Metrico;
+
 public class Crear {
 
 	static public RespuestaGenerico Cadena() {

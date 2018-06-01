@@ -14,7 +14,7 @@ public class Simpsons extends RespuestaGenerico {
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje))
 			return respuesta();
-		if(mensaje.matches(".*simpsons.*frase.*"))
+		if(mensaje.matches(".*simpsons.*"))
 			return obtenerYReordenar();
 		return null;
 	}

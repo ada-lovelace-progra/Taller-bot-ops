@@ -5,7 +5,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import resolvedores.Fecha;
+import pendientes.Fecha;
 
 public class FechaTest {
 
