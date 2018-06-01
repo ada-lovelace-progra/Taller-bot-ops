@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import usuariosYAsistente.Asistente;
 
-public class Agradecer {
+public class AgradecerTest {
 
 	public final static String USUARIO = "delucas";
 
@@ -27,7 +27,7 @@ public class Agradecer {
 	public void agradecimiento() {
 		String[] mensajes = { "¡Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("Ada: De nada @delucas", escucha(mensaje));
+			Assert.assertEquals("Ada: De nada! @delucas", escucha(mensaje));
 		}
 	}
 

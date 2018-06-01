@@ -1,6 +1,4 @@
-package pendientes;
-
-import resolvedores.RespuestaGenerico;
+package resolvedores;
 
 public class Agradecer extends RespuestaGenerico {
 
@@ -10,7 +8,7 @@ public class Agradecer extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje))
-			return "De nada";
+			return respuesta();
 		return null;
 	}
 

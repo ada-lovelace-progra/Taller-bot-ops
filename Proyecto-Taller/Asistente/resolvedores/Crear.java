@@ -1,6 +1,5 @@
 package resolvedores;
 
-import pendientes.Agradecer;
 import pendientes.Despedida;
 import pendientes.Fecha;
 import pendientes.Tiempo;
