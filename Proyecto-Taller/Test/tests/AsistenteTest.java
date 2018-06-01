@@ -32,9 +32,22 @@ public class AsistenteTest {
 	@Test
 	public void agradecimiento() {
 
-		String[] mensajes = { "¡Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
+		String[] mensajes = { "ï¿½Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("Ada: De nada @" + USUARIO, escuchar("gracias @ada"));
+			Assert.assertEquals("Ada: De nada! @" + USUARIO, escuchar( mensaje ));
+		}
+	}
+	
+	
+	@Test
+	public void asimov() {
+		String resp =
+				"1- Un robot no debe daï¿½ar a un ser humano o, por su inacciï¿½n, dejar que un ser humano sufra daï¿½o.\r\n"
+						+ "2- Un robot debe obedecer las ï¿½rdenes que le son dadas por un ser humano, excepto si estas ï¿½rdenes entran en conflicto con la Primera Ley.\r\n"
+						+ "3- Un robot debe proteger su propia existencia, hasta donde esta protecciï¿½n no entre en conflicto con la Primera o la Segunda Ley.";
+		String[] mensajes = { "@ada cuales son las leyes de la robotica ?","que decia Isaac Asimov @ada" };
+		for (String mensaje : mensajes) {
+			Assert.assertEquals("Ada: " + resp + " @" + USUARIO, escuchar(  mensaje ));
 		}
 	}
 
@@ -104,7 +117,7 @@ public class AsistenteTest {
 		DifMes = 1;
 		DifSem = 3;
 		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 aï¿½os", escuchar(""));
 
 		DifAno = 0;
 		DifMes = 9;
@@ -140,7 +153,7 @@ public class AsistenteTest {
 		DifMes = 1;
 		DifSem = 3;
 		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
+		Assert.assertEquals("4 dias 3 semanas 1 mes 29 aï¿½os", escuchar(""));
 	}
 
 	@Test

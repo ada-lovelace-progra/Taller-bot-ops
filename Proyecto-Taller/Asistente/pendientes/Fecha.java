@@ -35,7 +35,7 @@ public class Fecha extends RespuestaGenerico {
 		return null;
 	}
 
-	// devuelve fecha actual en formato hora:min:seg dia/mes/año
+	// devuelve fecha actual en formato hora:min:seg dia/mes/aï¿½o
 	private String now() {
 		return new SimpleDateFormat("hh:mm:ss - dd/MM/yyyy").format(new Date());
 	}
@@ -45,7 +45,7 @@ public class Fecha extends RespuestaGenerico {
 		return new SimpleDateFormat("HH:mm").format(new Date());
 	}
 
-	// devuelve fecha actual en formato dia/mes/año
+	// devuelve fecha actual en formato dia/mes/aï¿½o
 	public String getFecha() {
 		return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 	}
@@ -76,7 +76,7 @@ public class Fecha extends RespuestaGenerico {
 		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
 				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
 				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
-				+ (anos > 0 ? " " + anos + " año" : "") + (anos > 1 ? "s" : "")).trim();
+				+ (anos > 0 ? " " + anos + " aï¿½o" : "") + (anos > 1 ? "s" : "")).trim();
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
@@ -100,7 +100,7 @@ public class Fecha extends RespuestaGenerico {
 		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
 				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
 				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
-				+ (anos > 0 ? " " + anos + " año" : "") + (anos > 1 ? "s" : "")).trim();
+				+ (anos > 0 ? " " + anos + " aï¿½o" : "") + (anos > 1 ? "s" : "")).trim();
 	}
 
 }
