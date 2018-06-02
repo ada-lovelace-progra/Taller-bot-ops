@@ -1,8 +1,10 @@
 package pendientes;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +31,7 @@ public class Fecha extends RespuestaGenerico {
 				return getHora();
 
 			else if (mensaje.contains("falta")) {
-				Matcher asd = Pattern.compile("([0-9])/([0-9])/([0-9])").matcher(mensaje);
+				Matcher asd = Pattern.compile(".* ([0-9]+)/([0-9]+)/([0-9]+).*").matcher(mensaje);
 				if (asd.find()) {
 					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
 							ano = Integer.parseInt(asd.group(3));
@@ -37,7 +39,7 @@ public class Fecha extends RespuestaGenerico {
 				}
 			}
 
-			else if (mensaje.contains("paso")) {
+			if (mensaje.contains("paso")) {
 				Matcher asd = Pattern.compile("([0-9])/([0-9])/([0-9])").matcher(mensaje);
 				if (asd.find()) {
 					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
@@ -76,37 +78,51 @@ public class Fecha extends RespuestaGenerico {
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String hasta(int dia, int mes, int ano) {
-		Date actual = new Date();
-
-		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis());
-		Date hasta = new Date(FechaDada.getTime() - actual.getTime());
-
-		// return new SimpleDateFormat ("dd/MM/yyyy").format(hasta);
-		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(hasta).split("/");
-		int dias = Integer.parseInt(aux[0]);
-		int semanas = dias / 7;
-		dias %= 7;
-		int meses = Integer.parseInt(aux[1]) - 1;
-		int anos = Integer.parseInt(aux[2]) - 1970;
-		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
-				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
-				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
-				+ (anos > 0 ? " " + anos + " a�o" : "") + (anos > 1 ? "s" : "")).trim();
+		SimpleDateFormat myFormat = new SimpleDateFormat("dd MM yyyy");
+		String inputString1 = dia + " " + mes + " " + ano;
+		String inputString2 = myFormat.format(new Date());
+		Date date1;
+		try {
+			date1 = myFormat.parse(inputString1);
+			Date date2 = myFormat.parse(inputString2);
+			long diff = date1.getTime() - date2.getTime();
+			long dias = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+			return "falta" + (dias != 1 ? "n " : " ") + dias + " dia" + (dias != 1 ? "s" : "");
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String desde(int dia, int mes, int ano) {
-		Date actual = new Date();
 
-		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis());
-
-		Date desde = new Date(actual.getTime() - FechaDada.getTime());
-
-		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
-		return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
-		// despues lo vemos esto
-
-		// String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
+		SimpleDateFormat myFormat = new SimpleDateFormat("dd MM yyyy");
+		String inputString1 = dia + " " + mes + " " + ano;
+		String inputString2 = myFormat.format(new Date());
+		Date date1;
+		try {
+			date1 = myFormat.parse(inputString1);
+			Date date2 = myFormat.parse(inputString2);
+			long diff = date2.getTime() - date1.getTime();
+			long dias = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+			return "pas" + (dias != 1 ? "aron " : "o ") + dias + " dia" + (dias != 1 ? "s" : "");
+		} catch (ParseException e) {
+			return null;
+		}
+		//
+		// Date actual = new Date();
+		//
+		// Date FechaDada = new Date(new GregorianCalendar(ano, mes,
+		// dia).getTimeInMillis());
+		//
+		// Date desde = new Date(actual.getTime() - FechaDada.getTime());
+		//
+		// // return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
+		// return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
+		// // despues lo vemos esto
+		//
+		// // String[] aux = new
+		// SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
 		// int dias = Integer.parseInt(aux[0]);
 		// int semanas = dias / 7;
 		// dias %= 7;

@@ -101,58 +101,64 @@ public class AsistenteTest {
 
 	@SuppressWarnings("deprecation")
 	@Test
-	public void hasta() {
+	public void desde() {
 		Date fecha = new Date();
-		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 1;
-		Assert.assertEquals("1 dia", escuchar(""));
+		int ano = 0, mes = 0, dia = 1;
+		String mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes)
+				+ "/" + (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("paso 1 dia"), escuchar(mensaje));
 
-		DifAno = 0;
-		DifMes = 6;
-		DifSem = 2;
-		DifDia = 0;
-		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
+		dia = 20;
+		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("pasaron 20 dias"), escuchar(mensaje));
 
-		DifAno = 29;
-		DifMes = 1;
-		DifSem = 3;
-		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 a�os", escuchar(""));
+		ano = 23;
+		mes = 0;
+		dia = 0;
 
-		DifAno = 0;
-		DifMes = 9;
-		DifSem = 0;
-		DifDia = 4;
-		Assert.assertEquals("1 semana 9 meses", escuchar(""));
-		// Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
-		// DifMes, fecha.getYear() + DifAno + 1900));
+		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("pasaron 8401 dias"), escuchar(mensaje));
+
+		ano = 29;
+		mes = 1;
+		dia = 4;
+
+		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("pasaron 189 dias"), escuchar("@ada cuanto paso para el 8/12/2018"));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Test
-	public void desde() {
+	public void hasta() {
 		Date fecha = new Date();
-		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 4;
-		Assert.assertEquals("4 dias", escuchar(""));
+		int ano = 0, mes = 0, dia = 1;
+		String mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes)
+				+ "/" + (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("falta 1 dia"), escuchar(mensaje));
 
-		DifAno = 0;
-		DifMes = 9;
-		DifSem = 0;
-		DifDia = 4;
-		Assert.assertEquals(formato("1 semana 9 meses"), escuchar(""));
+		dia = 20;
+		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("faltan 20 dias"), escuchar(mensaje));
 
-		DifAno = 0;
-		DifMes = 6;
-		DifSem = 2;
-		DifDia = 0;
-		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
-		// Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
-		// DifMes, fecha.getYear() + DifAno + 1900));
+		ano = 23;
+		mes = 0;
+		dia = 0;
 
-		DifAno = 29;
-		DifMes = 1;
-		DifSem = 3;
-		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 a�os", escuchar(""));
+		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("faltan 8401 dias"), escuchar(mensaje));
+
+		ano = 29;
+		mes = 1;
+		dia = 4;
+
+		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
+				+ (fecha.getYear() + 1900 + ano);
+		Assert.assertEquals(formato("faltan 10626 dias"), escuchar(mensaje));
 	}
 
 	@Test
