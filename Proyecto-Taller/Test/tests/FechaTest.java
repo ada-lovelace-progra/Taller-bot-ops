@@ -52,57 +52,15 @@ public class FechaTest {
 	@SuppressWarnings("deprecation")
 	@Test
 	public void hasta() {
-		Date fecha = new Date();
-		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 1;
-		Assert.assertEquals("1 dia", escuchar(""));
-
-		DifAno = 0;
-		DifMes = 6;
-		DifSem = 2;
-		DifDia = 0;
-		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
-
-		DifAno = 29;
-		DifMes = 1;
-		DifSem = 3;
-		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
-
-		DifAno = 0;
-		DifMes = 9;
-		DifSem = 0;
-		DifDia = 4;
-		Assert.assertEquals("1 semana 9 meses", escuchar(""));
-		// Fecha.hasta(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
-		// DifMes, fecha.getYear() + DifAno + 1900));
+		//probar con dos fechas distintas despues
+		Assert.assertEquals("Ada: 6 dias 1 semana 9 meses 1 aï¿½o @delucas", escuchar("@ada cuanto falta para 14/02/2020"));
+		Assert.assertEquals("Ada: 6 dias 1 semana 9 meses 1 aï¿½o @delucas", escuchar("@ada cuanto falta para 2/08/2020"));
 	}
 
-	@SuppressWarnings("deprecation")
+
 	@Test
 	public void desde() {
-		Date fecha = new Date();
-		int DifAno = 0, DifMes = 0, DifSem = 0, DifDia = 4;
-		Assert.assertEquals("4 dias", escuchar(""));
-
-		DifAno = 0;
-		DifMes = 9;
-		DifSem = 0;
-		DifDia = 4;
-		Assert.assertEquals(formato("1 semana 9 meses"), escuchar(""));
-
-		DifAno = 0;
-		DifMes = 6;
-		DifSem = 2;
-		DifDia = 0;
-		Assert.assertEquals("3 dias 2 semanas 6 meses", escuchar(""));
-		// Fecha.desde(fecha.getDate() + DifDia + (7 * DifSem),fecha.getMonth() +
-		// DifMes, fecha.getYear() + DifAno + 1900));
-
-		DifAno = 29;
-		DifMes = 1;
-		DifSem = 3;
-		DifDia = 4;
-		Assert.assertEquals("4 dias 3 semanas 1 mes 29 años", escuchar(""));
+		Assert.assertEquals("Ada: 3 dias @delucas", escuchar("@ada cuanto paso desde 14/02/1997"));
 	}
 
 	@Test

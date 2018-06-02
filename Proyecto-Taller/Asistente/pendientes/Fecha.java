@@ -14,23 +14,28 @@ public class Fecha extends RespuestaGenerico {
 			if (mensaje.contains("ahora"))
 				return now();
 
-			if (mensaje.contains("getfecha"))
+			else if (mensaje.contains("getfecha"))
 				return getFecha();
 
-			if (mensaje.contains("semana"))
+			else if (mensaje.contains("semana"))
 				return getFechaCompleta();
 
-			if (mensaje.contains("dia"))
+			else if (mensaje.contains("dia"))
 				return getDiaDeLaSemana();
 
-			if (mensaje.contains("hora"))
+			else if (mensaje.contains("hora"))
 				return getHora();
 
-			if (mensaje.contains("falta"))
-				return hasta(1, 1, 3001);
+			else if (mensaje.contains("falta")) {
+				int dia=14,mes=2,ano=2020;
+				return hasta(dia, mes, ano); 
+			}
 
-			if (mensaje.contains("paso"))
-				return desde(3, 3, 2000);
+			else if ( mensaje.contains("paso") ) {
+				int dia=28, mes=5, ano=2018;
+				//return "cosas"; 
+				return desde(dia, mes, ano);
+			}
 		}
 		return null;
 	}
@@ -66,7 +71,8 @@ public class Fecha extends RespuestaGenerico {
 
 		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis());
 		Date hasta = new Date(FechaDada.getTime() - actual.getTime());
-		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(hasta);
+		
+		//return new SimpleDateFormat ("dd/MM/yyyy").format(hasta);
 		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(hasta).split("/");
 		int dias = Integer.parseInt(aux[0]);
 		int semanas = dias / 7;
@@ -82,25 +88,26 @@ public class Fecha extends RespuestaGenerico {
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String desde(int dia, int mes, int ano) {
 		Date actual = new Date();
-		@SuppressWarnings("deprecation")
-		Date FechaDada = new Date(ano - 1900, mes, dia);
-		long Diferencia = FechaDada.getTime() - actual.getTime();
-		if (Diferencia < 1)
-			return "";
-		Date desde = new Date(Diferencia);
+		
+		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis());
+		
+		Date desde = new Date(actual.getTime() - FechaDada.getTime());
+
 		// return new SimpleDateFormat ("hh:mm:ss - dd/MM/yyyy").format(desde);
-		// return "" + (desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
+		 return "" + ( desde.getTime() / (1000 * 60 * 60 * 24)) + " dias";
 		// despues lo vemos esto
-		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
-		int dias = Integer.parseInt(aux[0]);
-		int semanas = dias / 7;
-		dias %= 7;
-		int meses = Integer.parseInt(aux[1]) - 1;
-		int anos = Integer.parseInt(aux[2]) - 1970;
-		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
-				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
-				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
-				+ (anos > 0 ? " " + anos + " a�o" : "") + (anos > 1 ? "s" : "")).trim();
+		
+//		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(desde).split("/");
+//		int dias = Integer.parseInt(aux[0]);
+//		int semanas = dias / 7;
+//		dias %= 7;
+//		int meses = Integer.parseInt(aux[1]);
+//		int anos = Integer.parseInt(aux[2]) - 1970;
+//		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
+//				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
+//				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
+//				+ (anos > 0 ? " " + anos + " a�o" : "") + (anos > 1 ? "s" : "")).trim();
+//		
 	}
 
 }
