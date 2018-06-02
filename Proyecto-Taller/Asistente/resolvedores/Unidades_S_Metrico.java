@@ -1,12 +1,10 @@
-package pendientes;
+package resolvedores;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import resolvedores.RespuestaGenerico;
 
 public class Unidades_S_Metrico extends RespuestaGenerico {
 	
@@ -139,62 +137,62 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 		Scanner sc=null;
 		try
 		{
-			sc = new Scanner(new File("Respuestas\\masaSA.dat"));
+			sc = new Scanner(new File("Respuestas\\Unidades\\masaSA.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.masaSA.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
-			sc = new Scanner(new File("Respuestas\\masaSI.dat"));
+			sc = new Scanner(new File("Respuestas\\Unidades\\masaSI.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.masaSI.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\longitudSI.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\longitudSI.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.longitudSI.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\longitudSA.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\longitudSA.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.longitudSA.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\capacidadSI.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\capacidadSI.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.capacidadSI.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\capacidadSA.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\capacidadSA.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.capacidadSA.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\tiempo.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\tiempo.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.tiempo.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\conversion.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\conversion.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();
 				this.conversion.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
 			
-			sc=new Scanner(new File("Respuestas\\abreviacion.dat"));
+			sc=new Scanner(new File("Respuestas\\Unidades\\abreviacion.dat"));
 			while(sc.hasNextLine())
 			{
 				String linea = sc.nextLine();

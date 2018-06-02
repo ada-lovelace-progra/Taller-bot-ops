@@ -1,7 +1,5 @@
 package resolvedores;
 
-import pendientes.Unidades_S_Metrico;
-
 public class Crear {
 
 	static public RespuestaGenerico Cadena() {
@@ -10,10 +8,10 @@ public class Crear {
 		ChuckNorris chuck = new ChuckNorris();
 		Despedida despedida = new Despedida();
 		Fecha fecha = new Fecha();
+		LeyesRobotica asimov = new LeyesRobotica();
+		RecordarEventos eventos = new RecordarEventos();
 		Simpsons simpsons = new Simpsons();
 		Unidades_S_Metrico unidades = new Unidades_S_Metrico();
-		RecordarEventos eventos = new RecordarEventos();
-		LeyesRobotica asimov = new LeyesRobotica();
 
 		eventos.siguiente(agradecer);
 		agradecer.siguiente(fecha);
