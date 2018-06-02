@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.sun.corba.se.impl.corba.ExceptionListImpl;
 
 public abstract class RespuestaGenerico {
 
