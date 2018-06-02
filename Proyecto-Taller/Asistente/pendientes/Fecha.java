@@ -29,7 +29,7 @@ public class Fecha extends RespuestaGenerico {
 				return getHora();
 
 			else if (mensaje.contains("falta")) {
-				Matcher asd = Pattern.compile("([0-9]+) ?(\\S+) a (\\S+)").matcher(mensaje);
+				Matcher asd = Pattern.compile("([0-9])/([0-9])/([0-9])").matcher(mensaje);
 				if (asd.find()) {
 					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
 							ano = Integer.parseInt(asd.group(3));
@@ -38,7 +38,7 @@ public class Fecha extends RespuestaGenerico {
 			}
 
 			else if (mensaje.contains("paso")) {
-				Matcher asd = Pattern.compile("([0-9]+) ?(\\S+) a (\\S+)").matcher(mensaje);
+				Matcher asd = Pattern.compile("([0-9])/([0-9])/([0-9])").matcher(mensaje);
 				if (asd.find()) {
 					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
 							ano = Integer.parseInt(asd.group(3));
