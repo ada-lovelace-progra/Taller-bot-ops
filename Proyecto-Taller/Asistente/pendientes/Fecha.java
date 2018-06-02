@@ -44,17 +44,27 @@ public class Fecha extends RespuestaGenerico {
 					return desde(dia, mes, ano);
 				}
 			} else if (mensaje.contains("dentro")) {
-				//agregar regex
-				int dia = 2;
-				return dentrodeDias(dia);
-				//return dentrodeMeses(dia);
-
+				Matcher asd = Pattern.compile(".* ([0-9]+) ([a-z]+).*").matcher(mensaje);
+				if (asd.find()) {
+					int dia = Integer.parseInt(asd.group(1));
+					switch (asd.group(2)) {
+					case "dias":
+						return dentrodeDias(dia);
+					case "meses":
+						return dentrodeMeses(dia);
+					}
+				}
 			} else if (mensaje.contains("hace")) {
-				//agregar regex
-				int dia = 5;
-				return haceDias(dia);
-				//return haceMeses(dia)
-
+				Matcher asd = Pattern.compile(".* ([0-9]+) ([a-z]+).*").matcher(mensaje);
+				if (asd.find()) {
+					int dia = Integer.parseInt(asd.group(1));
+					switch (asd.group(2)) {
+					case "dias":
+						return haceDias(dia);
+					case "meses":
+						return haceMeses(dia);
+					}
+				}
 			} else if (mensaje.contains("dia"))
 				return getDiaDeLaSemana();
 		}
