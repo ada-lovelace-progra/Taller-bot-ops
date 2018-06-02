@@ -1,20 +1,17 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.Test;
+
+import org.junit.*;
 
 import resolvedores.Unidades_S_Metrico;
 import usuariosYAsistente.Asistente;
 
 
-class UnidadesTest {
+public class UnidadesTest {
 	
 	private static final String USUARIO = "ash";
 	static Asistente ada;
@@ -37,62 +34,52 @@ class UnidadesTest {
 	}	
 	
 	@Test
-	void mismoSistema() {
-		setup();
+	public void mismoSistema() {
 		Assert.assertEquals("Ada: 1000.0 gr es equivalente a 1.0 kg @" + USUARIO, escuchar("@ada pasar 1000 gr a kg"));
 	}
 	
 	@Test
-	void distintosSistemas() {
-		setup();
+	public void distintosSistemas() {
 		Assert.assertEquals("Ada: No se puede convertir de gr a pt @" + USUARIO, escuchar("@ada converti 1000 gr a pt"));
 	}
 	
 	@Test
-	void tiempo() {
-		setup();
+	public void tiempo() {
 		Assert.assertEquals("Ada: 60.0 min es equivalente a 3600.0 s @" + USUARIO, escuchar("@ada converti 60 min a s"));
 	}
 	
 	@Test
-	void capacidad() {
-		setup();
+	public void capacidad() {
 		Assert.assertEquals("Ada: 120.0 pt es equivalente a 15.0 gal @" + USUARIO, escuchar("@ada pasa 120 pt a gal"));
 	}
 	
 	@Test
-	void capacidadDistinta() {
-		setup();
+	public void capacidadDistinta() {
 		Assert.assertEquals("Ada: 120.0 pt es equivalente a 68.19 l @" + USUARIO, escuchar("@ada pasa 120 pt a l"));
 	}
 	
 	@Test
-	void masaDistinta() {
-		setup();
+	public void masaDistinta() {
 		Assert.assertEquals("Ada: 12.0 gr es equivalente a 0.42 oz @" + USUARIO, escuchar("@ada pasa 12 gr a oz"));
 	}
 	
 	@Test
-	void longitud() {
-		setup();
+	public void longitud() {
 		Assert.assertEquals("Ada: 12.0 km es equivalente a 12000.0 m @" + USUARIO, escuchar("@ada convertir 12 km a m"));
 	}
 	
 	@Test
-	void longitudDistinta() {
-		setup();
+	public void longitudDistinta() {
 		Assert.assertEquals("Ada: 254.0 km es equivalente a 277776.94 yd @" + USUARIO, escuchar("@ada convertir 254 km a yd"));
 	}
 	
 	@Test
-	void cualquiera() {
-		setup();
+	public void cualquiera() {
 		Assert.assertEquals("Ada: No se puede convertir de km a mi @" + USUARIO, escuchar("@ada convertir 254 km a mi"));
 	}
 	
 	@Test
-	void tiempos() {
-		setup();
+	public void tiempos() {
 		Assert.assertEquals("Ada: 3.5 h es equivalente a 12600.0 s @" + USUARIO, escuchar("@ada pasar de 3.5 h a s"));
 	}
 

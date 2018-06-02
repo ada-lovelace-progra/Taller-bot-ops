@@ -9,7 +9,7 @@ import usuariosYAsistente.Asistente;
 public class RecordarEventosTest {
 
 	public final static String USUARIO = "delucas";
-///////////NO ME ANDA EL PUTO JUNIT EL TEST  DE ESTE ESTA EN AGRADECER
+///////////NO ME ANDA EL MALDITO JUNIT EL TEST  DE ESTE ESTA EN AGRADECER
 	static Asistente ada;
 
 	@BeforeClass
