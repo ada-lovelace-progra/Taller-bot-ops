@@ -1,4 +1,4 @@
-package pendientes;
+package resolvedores;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,8 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.joda.time.*;
 import org.joda.time.format.*;
-
-import resolvedores.RespuestaGenerico;
 
 public class Fecha extends RespuestaGenerico {
 

@@ -1,7 +1,5 @@
 package resolvedores;
 
-import pendientes.Despedida;
-import pendientes.Fecha;
 import pendientes.Unidades_S_Metrico;
 
 public class Crear {

@@ -1,6 +1,4 @@
-package pendientes;
-
-import resolvedores.RespuestaGenerico;
+package resolvedores;
 
 public class Despedida extends RespuestaGenerico {
 

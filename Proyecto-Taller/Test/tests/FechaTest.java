@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pendientes.Fecha;
+import resolvedores.Fecha;
 import usuariosYAsistente.Asistente;
 
 public class FechaTest {
