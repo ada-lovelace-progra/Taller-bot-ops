@@ -49,7 +49,6 @@ public class FechaTest {
 		Assert.assertEquals(formato(dia), escuchar("@ada getfecha"));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void hasta() {
 		//probar cuando facu cumple 23
@@ -58,7 +57,6 @@ public class FechaTest {
 		//para el proximo mundial que juegue chile
 		Assert.assertEquals("Ada: faltan 1472 dias @delucas", escuchar("@ada cuanto falta para la fecha 14/06/2022"));
 	}
-
 
 	@Test
 	public void desde() {
@@ -69,6 +67,16 @@ public class FechaTest {
 	public void fechaCompleta() {
 		String fecha = new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
 		Assert.assertEquals(formato(fecha), escuchar("@ada dia de la semana es hoy"));
+	}
+	
+	@Test
+	public void dentrodeDias() {
+		Assert.assertEquals("Ada: va a ser 04/06/2018 @delucas", escuchar("@ada dia dentro de 2 dias"));
+	}
+	
+	@Test
+	public void haceDias() {
+		Assert.assertEquals("Ada: 28/05/2018 @delucas", escuchar("@ada dia hace 5 dias"));
 	}
 
 }

@@ -1,11 +1,14 @@
 package pendientes;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.joda.time.*;
+import org.joda.time.format.*;
 
 import resolvedores.RespuestaGenerico;
 
@@ -23,9 +26,6 @@ public class Fecha extends RespuestaGenerico {
 			else if (mensaje.contains("semana"))
 				return getFechaCompleta();
 
-			else if (mensaje.contains("dia"))
-				return getDiaDeLaSemana();
-
 			else if (mensaje.contains("hora"))
 				return getHora();
 
@@ -36,18 +36,30 @@ public class Fecha extends RespuestaGenerico {
 							ano = Integer.parseInt(asd.group(3));
 					return hasta(dia, mes, ano);
 				}
-			}
-
-			else if (mensaje.contains("paso")) {
+			} else if (mensaje.contains("paso")) {
 				Matcher asd = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*").matcher(mensaje);
 				if (asd.find()) {
 					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
 							ano = Integer.parseInt(asd.group(3));
 					return desde(dia, mes, ano);
 				}
-			}
+			} else if (mensaje.contains("dentro")) {
+				//agregar regex
+				int dia = 2;
+				return dentrodeDias(dia);
+				//return dentrodeMeses(dia);
+
+			} else if (mensaje.contains("hace")) {
+				//agregar regex
+				int dia = 5;
+				return haceDias(dia);
+				//return haceMeses(dia)
+
+			} else if (mensaje.contains("dia"))
+				return getDiaDeLaSemana();
 		}
 		return null;
+
 	}
 
 	// devuelve fecha actual en formato hora:min:seg dia/mes/a�o
@@ -70,6 +82,37 @@ public class Fecha extends RespuestaGenerico {
 		return new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
 	}
 
+	///////////////////////////////////////
+	// devuelve la fecha dentro de X dias
+	private String dentrodeDias(int dia) {
+		DateTime dateTime = new DateTime();
+		dateTime = dateTime.plusDays(dia);
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
+		return "va a ser " + dtfOut.print(dateTime);
+	}
+
+	private String dentrodeMeses(int mes) {
+		DateTime dateTime = new DateTime();
+		dateTime = dateTime.plusMonths(mes);
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
+		return "va a ser " + dtfOut.print(dateTime);
+	}
+
+	private String haceDias(int dia) {
+		DateTime dateTime = new DateTime();
+		dateTime = dateTime.plusDays(dia * (-1));
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
+		return "" + dtfOut.print(dateTime);
+	}
+
+	private String haceMeses(int mes) {
+		DateTime dateTime = new DateTime();
+		dateTime = dateTime.plusMonths(mes * (-1));
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
+		return "" + dtfOut.print(dateTime);
+	}
+	///////////////////////////////////////// 7
+
 	// Devuelve dia de la semana actual
 	private String getDiaDeLaSemana() {
 		return new SimpleDateFormat("EEEEEEEEE").format(new Date());
@@ -77,36 +120,20 @@ public class Fecha extends RespuestaGenerico {
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String hasta(int dia, int mes, int ano) {
-
 		DateTime startDate = new DateTime();
-	    DateTime endDate = new DateTime( ano, mes, dia, 0, 0, 0, 0);
-	    Days d = Days.daysBetween(startDate, endDate);
-	    int days = d.getDays();
-	    return "faltan " + days + " dias";
-	    
-//		Date actual = new Date();
-//		Date FechaDada = new Date(new GregorianCalendar(ano, mes, dia).getTimeInMillis() );
-//		Date hasta = new Date(FechaDada.getTime() - actual.getTime());
-//		// return new SimpleDateFormat ("dd/MM/yyyy").format(hasta);
-//		String[] aux = new SimpleDateFormat("dd/MM/yyyy").format(hasta).split("/");
-//		int dias = Integer.parseInt(aux[0]);
-//		int semanas = dias / 7;
-//		dias %= 7;
-//		int meses = Integer.parseInt(aux[1]) - 1;
-//		int anos = Integer.parseInt(aux[2]) - 1970;
-//		return "" + ((dias > 0 ? dias + " dia" : "") + (dias > 1 ? "s" : "")
-//				+ (semanas > 0 ? " " + semanas + " semana" : "") + (semanas > 1 ? "s" : "")
-//				+ (meses > 0 ? " " + meses + " mes" : "") + (meses > 1 ? "es" : "")
-//				+ (anos > 0 ? " " + anos + " a�o" : "") + (anos > 1 ? "s" : "")).trim();
+		DateTime endDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
+		Days d = Days.daysBetween(startDate, endDate);
+		int days = d.getDays();
+		return "faltan " + days + " dias";
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String desde(int dia, int mes, int ano) {
 		DateTime startDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
-	    DateTime endDate = new DateTime();
-	    Days d = Days.daysBetween(startDate, endDate);
-	    int days = d.getDays();
-	    return "" + days + " dias";
+		DateTime endDate = new DateTime();
+		Days d = Days.daysBetween(startDate, endDate);
+		int days = d.getDays();
+		return "" + days + " dias";
 	}
 
 }
