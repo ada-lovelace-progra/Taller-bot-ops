@@ -48,6 +48,14 @@ public class AsistenteTest {
 			Assert.assertEquals("Ada: " + resp + " @" + USUARIO, escuchar(mensaje));
 		}
 	}
+	
+	@Test
+	public void chuck() {
+		String[] mensajes = { "@ada tirame un dato de chuck norris", "que haria chuck @ada" };
+		for (String mensaje : mensajes) {
+			Assert.assertNotNull(escuchar(mensaje));
+		}
+	}
 
 	@Test
 	public void calculos() {
