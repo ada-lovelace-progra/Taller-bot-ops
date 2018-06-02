@@ -34,20 +34,18 @@ public class AsistenteTest {
 
 		String[] mensajes = { "ï¿½Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("Ada: De nada! @" + USUARIO, escuchar( mensaje ));
+			Assert.assertEquals("Ada: De nada! @" + USUARIO, escuchar(mensaje));
 		}
 	}
-	
-	
+
 	@Test
 	public void asimov() {
-		String resp =
-				"1- Un robot no debe daï¿½ar a un ser humano o, por su inacciï¿½n, dejar que un ser humano sufra daï¿½o.\r\n"
-						+ "2- Un robot debe obedecer las ï¿½rdenes que le son dadas por un ser humano, excepto si estas ï¿½rdenes entran en conflicto con la Primera Ley.\r\n"
-						+ "3- Un robot debe proteger su propia existencia, hasta donde esta protecciï¿½n no entre en conflicto con la Primera o la Segunda Ley.";
-		String[] mensajes = { "@ada cuales son las leyes de la robotica ?","que decia Isaac Asimov @ada" };
+		String resp = "1- Un robot no debe dañar a un ser humano o, por su inacción, dejar que un ser humano sufra daño.\r\n"
+				+ "2- Un robot debe obedecer las órdenes que le son dadas por un ser humano, excepto si estas órdenes entran en conflicto con la Primera Ley.\r\n"
+				+ "3- Un robot debe proteger su propia existencia, hasta donde esta protección no entre en conflicto con la Primera o la Segunda Ley.";
+		String[] mensajes = { "@ada cuales son las leyes de la robotica ?", "que decia Isaac Asimov @ada" };
 		for (String mensaje : mensajes) {
-			Assert.assertEquals("Ada: " + resp + " @" + USUARIO, escuchar(  mensaje ));
+			Assert.assertEquals("Ada: " + resp + " @" + USUARIO, escuchar(mensaje));
 		}
 	}
 
@@ -79,7 +77,8 @@ public class AsistenteTest {
 
 	@Test
 	public void mixSupremo() {
-		Assert.assertEquals("Ada: la exprecion da: 15 @" + USUARIO, escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
+		Assert.assertEquals("Ada: la exprecion da: 15 @" + USUARIO,
+				escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
 	}
 
 	@Test
