@@ -40,9 +40,9 @@ public class AsistenteTest {
 
 	@Test
 	public void asimov() {
-		String resp = "1- Un robot no debe dañar a un ser humano o, por su inacción, dejar que un ser humano sufra daño.\r\n"
-				+ "2- Un robot debe obedecer las órdenes que le son dadas por un ser humano, excepto si estas órdenes entran en conflicto con la Primera Ley.\r\n"
-				+ "3- Un robot debe proteger su propia existencia, hasta donde esta protección no entre en conflicto con la Primera o la Segunda Ley.";
+		String resp = "1- Un robot no debe daï¿½ar a un ser humano o, por su inacciï¿½n, dejar que un ser humano sufra daï¿½o.\r\n"
+				+ "2- Un robot debe obedecer las ï¿½rdenes que le son dadas por un ser humano, excepto si estas ï¿½rdenes entran en conflicto con la Primera Ley.\r\n"
+				+ "3- Un robot debe proteger su propia existencia, hasta donde esta protecciï¿½n no entre en conflicto con la Primera o la Segunda Ley.";
 		String[] mensajes = { "@ada cuales son las leyes de la robotica ?", "que decia Isaac Asimov @ada" };
 		for (String mensaje : mensajes) {
 			Assert.assertEquals("Ada: " + resp + " @" + USUARIO, escuchar(mensaje));
@@ -97,68 +97,6 @@ public class AsistenteTest {
 	public void fecha() {
 		String dia = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 		Assert.assertEquals(formato(dia), escuchar("@ada getfecha"));
-	}
-
-	@SuppressWarnings("deprecation")
-	@Test
-	public void desde() {
-		Date fecha = new Date();
-		int ano = 0, mes = 0, dia = 1;
-		String mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes)
-				+ "/" + (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("paso 1 dia"), escuchar(mensaje));
-
-		dia = 20;
-		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("pasaron 20 dias"), escuchar(mensaje));
-
-		ano = 23;
-		mes = 0;
-		dia = 0;
-
-		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("pasaron 8401 dias"), escuchar(mensaje));
-
-		ano = 29;
-		mes = 1;
-		dia = 4;
-
-		mensaje = "@ada cuanto paso desde el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("pasaron 189 dias"), escuchar("@ada cuanto paso para el 8/12/2018"));
-	}
-
-	@SuppressWarnings("deprecation")
-	@Test
-	public void hasta() {
-		Date fecha = new Date();
-		int ano = 0, mes = 0, dia = 1;
-		String mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes)
-				+ "/" + (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("falta 1 dia"), escuchar(mensaje));
-
-		dia = 20;
-		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("faltan 20 dias"), escuchar(mensaje));
-
-		ano = 23;
-		mes = 0;
-		dia = 0;
-
-		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("faltan 8401 dias"), escuchar(mensaje));
-
-		ano = 29;
-		mes = 1;
-		dia = 4;
-
-		mensaje = "@ada cuanto falta para el " + (fecha.getDate() + dia) + "/" + (fecha.getMonth() + 1 + mes) + "/"
-				+ (fecha.getYear() + 1900 + ano);
-		Assert.assertEquals(formato("faltan 10626 dias"), escuchar(mensaje));
 	}
 
 	@Test

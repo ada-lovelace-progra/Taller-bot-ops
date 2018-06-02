@@ -13,12 +13,14 @@ public class Crear {
 		Simpsons simpsons = new Simpsons();
 		Unidades_S_Metrico unidades = new Unidades_S_Metrico();
 		RecordarEventos eventos = new RecordarEventos();
+		LeyesRobotica asimov = new LeyesRobotica();
 
 		eventos.siguiente(agradecer);
 		agradecer.siguiente(fecha);
 		fecha.siguiente(simpsons);
 		simpsons.siguiente(chuck);
-		chuck.siguiente(calcular);
+		chuck.siguiente(asimov);
+		asimov.siguiente(calcular);
 		calcular.siguiente(unidades);
 		unidades.siguiente(despedida);
 
