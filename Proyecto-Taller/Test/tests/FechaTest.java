@@ -52,15 +52,17 @@ public class FechaTest {
 	@SuppressWarnings("deprecation")
 	@Test
 	public void hasta() {
-		//probar con dos fechas distintas despues
-		Assert.assertEquals("Ada: 6 dias 1 semana 9 meses 1 a�o @delucas", escuchar("@ada cuanto falta para 14/02/2020"));
-		Assert.assertEquals("Ada: 6 dias 1 semana 9 meses 1 a�o @delucas", escuchar("@ada cuanto falta para 2/08/2020"));
+		//probar cuando facu cumple 23
+		Assert.assertEquals("Ada: faltan 621 dias @delucas", escuchar("@ada cuanto falta para la fecha 14/02/2020"));
+		
+		//para el proximo mundial que juegue chile
+		Assert.assertEquals("Ada: faltan 1472 dias @delucas", escuchar("@ada cuanto falta para la fecha 14/06/2022"));
 	}
 
 
 	@Test
 	public void desde() {
-		Assert.assertEquals("Ada: 3 dias @delucas", escuchar("@ada cuanto paso desde 14/02/1997"));
+		Assert.assertEquals("Ada: 7778 dias @delucas", escuchar("@ada cuanto paso desde la fecha 14/02/1997"));
 	}
 
 	@Test
