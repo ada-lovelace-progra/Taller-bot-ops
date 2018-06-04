@@ -14,12 +14,12 @@ public class Usuario extends UsuarioGenerico {
 		cliente.enviar(codChat + nombre);
 	}
 
-	public Usuario(String NombreUsuario) throws Exception {
+	public Usuario(String NombreUsuario){
 		nombre = NombreUsuario;
 	}
 
 	public void nuevoChat(int codChat) throws Exception, UnknownHostException {
-		cliente = new Cliente(InetAddress.getByName("LAB4A2").getHostAddress(), 5050);
+		cliente = new Cliente(InetAddress.getByName("Fede-Net").getHostAddress(), 5050);
 		cliente.enviar(String.format("%04d", codChat) + nombre);
 	}
 
