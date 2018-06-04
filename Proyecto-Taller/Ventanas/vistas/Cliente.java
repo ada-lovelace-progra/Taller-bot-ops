@@ -25,6 +25,10 @@ import java.awt.Component;
 
 public class Cliente extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	Usuario user;
@@ -147,7 +151,7 @@ public class Cliente extends JFrame {
 
 		String nombreTab = "nose";
 
-		JList list = new JList();
+		JList<String> list = new JList<String>();
 		list.setBounds(10, 26, 81, 224);
 		Chat.add(list);
 
@@ -167,13 +171,12 @@ public class Cliente extends JFrame {
 
 	private void nuevaPesatana(String nombreTab, JPanel panel, int codChat) throws UnknownHostException, Exception {
 		user.nuevoChat(codChat);
-		String listaMensaje = "";
 		JButton btnNewButton = new JButton("Enviar");
 		btnNewButton.setBounds(404, 165, 41, 68);
 		panel.add(btnNewButton);
 
 		TextArea mensajes = new TextArea();
-		mensajes.setBounds(0, -1, 445, 160);
+		mensajes.setBounds(0, 0, 445, 160);
 		mensajes.setEditable(false);
 		panel.add(mensajes);
 
@@ -200,12 +203,7 @@ public class Cliente extends JFrame {
 			public void run() {
 				while (true)
 					try {
-						String anterior = mensajes.getText();
-						if (!anterior.equals("")) 
-							anterior += "\n";
-						
-						anterior += user.recibir();
-						mensajes.setText(anterior);
+						mensajes.append(user.recibir()+"\n");
 					} catch (Exception e) {
 					}
 			}
@@ -217,19 +215,10 @@ public class Cliente extends JFrame {
 	private void enviarMensaje(TextArea aEnviar, TextArea mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
 		aEnviar.setText("");
-
-		if (!mensaje.equals("\r\n")) {
-			String anterior = mensajes.getText();
-			if (!anterior.equals("")) {
-				anterior += "\n";
-			}
-			anterior += mensaje;
-			mensajes.setText(anterior);
-			try {
-				user.enviar(codChat, mensaje);
-			} catch (Exception e) {
-			}
+		mensajes.append(user.nombre + ": " + mensaje+"\n");
+		try {
+			user.enviar(codChat, mensaje);
+		} catch (Exception e) {
 		}
 	}
-
 }
