@@ -1,6 +1,8 @@
 package usuariosYAsistente;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
@@ -12,8 +14,11 @@ public class Usuario extends UsuarioGenerico {
 		cliente.enviar(codChat + nombre);
 	}
 
-	public Usuario(String NombreUsuario, int codChat) throws Exception {
+	public Usuario(String NombreUsuario) throws Exception {
 		nombre = NombreUsuario;
+	}
+
+	public void nuevoChat(int codChat) throws Exception, UnknownHostException {
 		cliente = new Cliente(InetAddress.getByName("LAB4A2").getHostAddress(), 5050);
 		cliente.enviar(String.format("%04d", codChat) + nombre);
 	}

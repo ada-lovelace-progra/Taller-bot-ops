@@ -25,7 +25,8 @@ class chat_Probador {
 
 		String nombre = consola.nextLine();
 		int codChat = Integer.parseInt(consola.nextLine());
-		usuario = new Usuario(nombre, codChat);
+		usuario = new Usuario(nombre);
+		usuario.nuevoChat(codChat);
 		String nextLine;
 		hilo.start();
 
