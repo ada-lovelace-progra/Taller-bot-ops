@@ -1,6 +1,8 @@
 package vistas;
 
 import java.awt.EventQueue;
+import java.awt.List;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -32,6 +34,7 @@ public class Cliente extends JFrame {
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	Usuario user;
+	private List Conectados;
 	private JPasswordField iniPass;
 	private JTextField regEmail;
 	private JPasswordField regPass;
@@ -151,9 +154,12 @@ public class Cliente extends JFrame {
 
 		String nombreTab = "nose";
 
-		JList<String> list = new JList<String>();
-		list.setBounds(10, 26, 81, 224);
-		Chat.add(list);
+		Conectados = new List();
+		Conectados.setBounds(10, 26, 81, 224);
+		Chat.add(Conectados);
+
+		cargaDeConectados.start();
+		;
 
 		JLabel lblNewLabel = new JLabel("Conectados");
 		lblNewLabel.setBounds(10, 0, 81, 24);
@@ -168,6 +174,29 @@ public class Cliente extends JFrame {
 
 		nuevaPesatana(nombreTab, panel, 23);
 	}
+
+	Thread cargaDeConectados = new Thread() {
+
+		public void run() {
+			try {
+				user.nuevoChat(0);
+			} catch (Exception e1) {
+			}
+			try {
+				while (true) {
+					List ConectadosTemp = new List();
+					while (!user.recibir().equals("primercontacto"))
+						;
+					String temp = user.recibir();
+					do {
+						ConectadosTemp.add(temp);
+						temp = user.recibir();
+					} while (!temp.equals("ultimocontacto"));
+				}
+			} catch (Exception e) {
+			}
+		}
+	};
 
 	private void nuevaPesatana(String nombreTab, JPanel panel, int codChat) throws UnknownHostException, Exception {
 		user.nuevoChat(codChat);
@@ -203,7 +232,7 @@ public class Cliente extends JFrame {
 			public void run() {
 				while (true)
 					try {
-						mensajes.append(user.recibir()+"\n");
+						mensajes.append(user.recibir() + "\n");
 					} catch (Exception e) {
 					}
 			}
@@ -215,7 +244,7 @@ public class Cliente extends JFrame {
 	private void enviarMensaje(TextArea aEnviar, TextArea mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
 		aEnviar.setText("");
-		mensajes.append(user.nombre + ": " + mensaje+"\n");
+		mensajes.append(user.nombre + ": " + mensaje + "\n");
 		try {
 			user.enviar(codChat, mensaje);
 		} catch (Exception e) {

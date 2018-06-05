@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Map.Entry;
 
 import usuariosYAsistente.Asistente;
 
@@ -25,6 +26,8 @@ class Hilo extends Thread {
 	private Socket socket;
 	static private Hashtable<String, ArrayList<Socket>> lista = new Hashtable<String, ArrayList<Socket>>();
 	static private Hashtable<String, Asistente> asistentePorCodChat = new Hashtable<String, Asistente>();
+	static private String usuariosConectados = "";
+	private String codChat;
 
 	public Hilo(Socket server) throws Exception {
 		socket = server;
@@ -32,26 +35,38 @@ class Hilo extends Thread {
 		bufferDeEntrada = new DataInputStream(socket.getInputStream());
 		String readUTF = bufferDeEntrada.readUTF();
 
-		String codChat = readUTF.substring(0, 4);
+		codChat = readUTF.substring(0, 4);
 		if (!lista.containsKey(codChat)) {
 			lista.put(codChat, new ArrayList<Socket>());
 			asistentePorCodChat.put(codChat, new Asistente());
 		}
 		lista.get(codChat).add(socket);
-		System.out.println(readUTF.substring(4) + " conectado en el puerto: " + socket.getPort()
-				+ " pidio Sala de Chat: " + codChat);
+		String usuario = readUTF.substring(4);
+
+		if (!usuariosConectados.contains(usuario)) {
+			usuariosConectados += usuario + "\n";
+		}
+		System.out
+				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
 	}
 
 	public void run() {
 		try {
-			while (true) {
-				String mensaje = bufferDeEntrada.readUTF();
-				System.out.println(
-						 "Chat: " + mensaje.substring(0, 4) +
-						" Usuario: " + mensaje.substring(4, mensaje.indexOf(":")) +
-						" Mensaje: " + mensaje.substring(mensaje.indexOf(":")));
-				reenviarATodos(mensaje);
-				asistente(mensaje.substring(4), mensaje.substring(0, 4));
+			if (!codChat.equals("0000"))
+				while (true) {
+					String mensaje = bufferDeEntrada.readUTF();
+					System.out.println("Chat: " + mensaje.substring(0, 4) + " Usuario: "
+							+ mensaje.substring(4, mensaje.indexOf(":")) + " Mensaje: "
+							+ mensaje.substring(mensaje.indexOf(":")));
+					reenviarATodos(mensaje);
+					asistente(mensaje.substring(4), mensaje.substring(0, 4));
+				}
+			else {
+				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
+				while (true) {
+					bufferDeSalida.writeUTF(usuariosConectados);
+					Thread.sleep(300);
+				}
 			}
 		} catch (Exception e) {
 		}
