@@ -23,6 +23,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class Cliente extends JFrame {
 
@@ -65,7 +67,12 @@ public class Cliente extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		iniciarSesion();
+		// iniciarSesion();
+		try {
+			sesionIniciada();
+		} catch (Exception e) {
+		}
+
 	}
 
 	private void iniciarSesion() {
@@ -154,6 +161,13 @@ public class Cliente extends JFrame {
 		String nombreTab = "nose";
 
 		Conectados = new List();
+		Conectados.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (Conectados.getSelectedItems().length > 0) {
+					
+				}
+			}
+		});
 		Conectados.setBounds(10, 26, 81, 224);
 		Chat.add(Conectados);
 
@@ -168,10 +182,9 @@ public class Cliente extends JFrame {
 		tabbedPane.setBounds(100, 0, 460, 261);
 		Chat.add(tabbedPane);
 
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-
-		nuevaPesatana(nombreTab, panel, 23);
+		nuevaPesatana(nombreTab);
+		nuevaPesatana(nombreTab);
+		nuevaPesatana(nombreTab);
 	}
 
 	Thread cargaDeConectados = new Thread() {
@@ -197,8 +210,10 @@ public class Cliente extends JFrame {
 		}
 	};
 
-	private void nuevaPesatana(String nombreTab, JPanel panel, int codChat) throws UnknownHostException, Exception {
-		user.nuevoChat(codChat);
+	private void nuevaPesatana(String nombreTab) throws UnknownHostException, Exception {
+		int codChat = user.pedirNuevoChat();
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
 		JButton btnNewButton = new JButton("Enviar");
 		btnNewButton.setBounds(404, 165, 41, 68);
 		panel.add(btnNewButton);
@@ -242,11 +257,13 @@ public class Cliente extends JFrame {
 
 	private void enviarMensaje(TextArea aEnviar, TextArea mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
-		aEnviar.setText("");
-		mensajes.append(user.nombre + ": " + mensaje + "\n");
-		try {
-			user.enviar(codChat, mensaje);
-		} catch (Exception e) {
+		if (mensaje.length() > 0) {
+			aEnviar.setText("");
+			mensajes.append(user.nombre + ": " + mensaje + "\n");
+			try {
+				user.enviar(codChat, mensaje);
+			} catch (Exception e) {
+			}
 		}
 	}
 }

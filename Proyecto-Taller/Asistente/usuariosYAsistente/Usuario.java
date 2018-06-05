@@ -11,17 +11,36 @@ public class Usuario extends UsuarioGenerico {
 		nombre = NombreUsuario;
 	}
 
+	public int pedirNuevoChat() {
+		int codChat = obtenerCodChat();
+		if (!cliente.containsKey(codChat)) {
+			// for (String ip : listarIPs())
+			try {
+				cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
+				// Cliente temp = new Cliente(ip, 5050);
+				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+				return codChat;
+			} catch (Exception e) {
+			}
+		}
+		return -1;
+	}
+
 	public void nuevoChat(int codChat) {
 		if (!cliente.containsKey(codChat)) {
 			// for (String ip : listarIPs())
 			try {
-				cliente.put(codChat, new Cliente(InetAddress.getByName("Fede-Net").getHostAddress(), 5050));
+				cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
 				// Cliente temp = new Cliente(ip, 5050);
 				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
 				return;
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	private int obtenerCodChat() {
+		return 23;
 	}
 
 	public void enviar(String codChat, String mensaje) throws Exception {
