@@ -6,7 +6,6 @@ import java.awt.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import java.awt.TextArea;
 import javax.swing.JButton;
@@ -184,14 +183,31 @@ public class Cliente extends JFrame {
 			}
 			try {
 				while (true) {
+
+					String temp = user.recibir(0);
+					String[] split = temp.split("\\?");
 					List ConectadosTemp = new List();
-					while (!user.recibir().equals("primercontacto"))
-						;
-					String temp = user.recibir();
-					do {
-						ConectadosTemp.add(temp);
-						temp = user.recibir();
-					} while (!temp.equals("ultimocontacto"));
+
+					for (String string : ConectadosTemp.getItems()) {
+						if (!temp.contains(string))
+							ConectadosTemp.remove(string);
+					}
+
+					for (String cad : split) {
+						boolean op = true;
+						for (String string2 : ConectadosTemp.getItems())
+							if (cad == string2)
+								op = false;
+
+						if (op)
+							ConectadosTemp.add(cad);
+					}
+					if (ConectadosTemp.getItems().length!=Conectados.getItems().length) {
+						Conectados.removeAll();
+						for (String string2 : ConectadosTemp.getItems()) {
+							Conectados.add(string2);
+						}
+					}
 				}
 			} catch (Exception e) {
 			}
@@ -232,7 +248,7 @@ public class Cliente extends JFrame {
 			public void run() {
 				while (true)
 					try {
-						mensajes.append(user.recibir() + "\n");
+						mensajes.append(user.recibir(codChat) + "\n");
 					} catch (Exception e) {
 					}
 			}

@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Map.Entry;
 
 import usuariosYAsistente.Asistente;
 
@@ -44,7 +43,7 @@ class Hilo extends Thread {
 		String usuario = readUTF.substring(4);
 
 		if (!usuariosConectados.contains(usuario)) {
-			usuariosConectados += usuario + "\n";
+			usuariosConectados += usuario + "?";
 		}
 		System.out
 				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
@@ -64,7 +63,7 @@ class Hilo extends Thread {
 			else {
 				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
 				while (true) {
-					bufferDeSalida.writeUTF(usuariosConectados);
+					bufferDeSalida.writeUTF("----"+usuariosConectados);
 					Thread.sleep(300);
 				}
 			}

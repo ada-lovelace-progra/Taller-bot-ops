@@ -10,7 +10,7 @@ class chat_Probador {
 		public void run() {
 			while (true)
 				try {
-					System.out.println(usuario.recibir());
+					System.out.println(usuario.recibir(22));
 				} catch (Exception e) {
 					System.out.println("error rebiciendo");
 					return;
