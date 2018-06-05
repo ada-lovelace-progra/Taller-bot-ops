@@ -182,31 +182,14 @@ public class Cliente extends JFrame {
 			} catch (Exception e1) {
 			}
 			try {
+				String anterior = null;
 				while (true) {
-
-					String temp = user.recibir(0);
-					String[] split = temp.split("\\?");
-					List ConectadosTemp = new List();
-
-					for (String string : ConectadosTemp.getItems()) {
-						if (!temp.contains(string))
-							ConectadosTemp.remove(string);
-					}
-
-					for (String cad : split) {
-						boolean op = true;
-						for (String string2 : ConectadosTemp.getItems())
-							if (cad == string2)
-								op = false;
-
-						if (op)
-							ConectadosTemp.add(cad);
-					}
-					if (ConectadosTemp.getItems().length!=Conectados.getItems().length) {
+					String nuevo = user.recibir(0);
+					if (!nuevo.equals(anterior)) {
 						Conectados.removeAll();
-						for (String string2 : ConectadosTemp.getItems()) {
-							Conectados.add(string2);
-						}
+						for (String user : nuevo.split("\\?"))
+							Conectados.add(user);
+						anterior = nuevo;
 					}
 				}
 			} catch (Exception e) {

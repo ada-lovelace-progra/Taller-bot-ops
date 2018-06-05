@@ -1,9 +1,7 @@
 package usuariosYAsistente;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Hashtable;
-
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
@@ -13,10 +11,16 @@ public class Usuario extends UsuarioGenerico {
 		nombre = NombreUsuario;
 	}
 
-	public void nuevoChat(int codChat) throws Exception, UnknownHostException {
+	public void nuevoChat(int codChat) {
 		if (!cliente.containsKey(codChat)) {
-			cliente.put(codChat, new Cliente(InetAddress.getByName("Fede-Net").getHostAddress(), 5050));
-			cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+			// for (String ip : listarIPs())
+			try {
+				cliente.put(codChat, new Cliente(InetAddress.getByName("Fede-Net").getHostAddress(), 5050));
+				// Cliente temp = new Cliente(ip, 5050);
+				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+				return;
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -30,6 +34,11 @@ public class Usuario extends UsuarioGenerico {
 
 	public String recibir(int codChat) throws Exception {
 		String recibir = cliente.get(codChat).recibir();
+		if (recibir.endsWith("-99-00")) {
+			cliente.get(codChat).cerrar();
+			cliente.remove(codChat);
+			return "";
+		}
 		return recibir.substring(4);
 	}
 }
