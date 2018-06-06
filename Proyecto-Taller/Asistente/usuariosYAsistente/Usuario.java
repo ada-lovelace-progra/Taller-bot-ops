@@ -19,7 +19,9 @@ public class Usuario extends UsuarioGenerico {
 			String codTemp = recibir(0);
 			if (codTemp != "----") {
 				codChat = Integer.parseInt(codTemp);
-				nuevoChat(codChat);
+				cliente.put(codChat, clienteTemp);
+				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+
 				return codChat;
 			}
 		} catch (Exception e) {
