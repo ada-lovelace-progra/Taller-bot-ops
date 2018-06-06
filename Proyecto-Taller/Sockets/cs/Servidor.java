@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import usuariosYAsistente.Asistente;
 
 public class Servidor {
@@ -22,6 +21,7 @@ public class Servidor {
 
 class Hilo extends Thread {
 	private DataInputStream bufferDeEntrada = null;
+	private DataOutputStream bufferDeSalida = null;
 	private Socket socket;
 	static private Hashtable<String, ArrayList<Socket>> lista = new Hashtable<String, ArrayList<Socket>>();
 	static private Hashtable<String, Asistente> asistentePorCodChat = new Hashtable<String, Asistente>();
@@ -32,23 +32,38 @@ class Hilo extends Thread {
 	private Thread mandarConectador = new Thread() {
 		public void run() {
 			try {
-				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
 				while (true) {
 					bufferDeSalida.writeUTF("----" + usuariosConectados);
 					Thread.sleep(300);
 				}
 			} catch (Exception e) {
 			}
+		}
+	};
 
+	private Thread peticionesNuevoChat = new Thread() {
+		public void run() {
+			while (true) {
+				try {
+					String leer = bufferDeEntrada.readUTF();
+					if (leer.contains("nuevoChat")) {
+						String codChatNuevo = obtenerCodChat();
+						Socket socketTemp = usuarios.get(leer.substring(13));
+						bufferDeSalida.writeUTF(codChatNuevo);
+						DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
+						bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
+					}
+				} catch (IOException e) {
+				}
+			}
 		}
 	};
 
 	public Hilo(Socket server) throws Exception {
 		socket = server;
-
+		bufferDeSalida = new DataOutputStream(socket.getOutputStream());
 		bufferDeEntrada = new DataInputStream(socket.getInputStream());
 		String readUTF = bufferDeEntrada.readUTF();
-
 		codChat = readUTF.substring(0, 4);
 		if (!lista.containsKey(codChat)) {
 			lista.put(codChat, new ArrayList<Socket>());
@@ -79,20 +94,8 @@ class Hilo extends Thread {
 					asistente(mensaje.substring(4), mensaje.substring(0, 4));
 				}
 			else {
-				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
-				DataInputStream bufferDeEntrada = new DataInputStream(socket.getInputStream());
 				mandarConectador.start();
-				while (true) {
-					/// pedido de nuevo chat
-					String leer = bufferDeEntrada.readUTF();
-					if (leer.contains("nuevoChat")) {
-						String codChatNuevo = obtenerCodChat();
-						new DataOutputStream(usuarios.get(leer.substring(13)).getOutputStream())
-								.writeUTF("levantarConexion" + codChatNuevo + codChat);
-						bufferDeSalida.writeUTF(codChat);
-					}
-					//////////////////////
-				}
+				peticionesNuevoChat.start();
 			}
 		} catch (Exception e) {
 		}
@@ -127,6 +130,7 @@ class Hilo extends Thread {
 	@SuppressWarnings("unused")
 	private void cerrar() throws Exception {
 		bufferDeEntrada.close();
+		bufferDeSalida.close();
 		socket.close();
 	}
 }

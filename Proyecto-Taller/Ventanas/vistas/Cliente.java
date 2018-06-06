@@ -130,9 +130,18 @@ public class Cliente extends JFrame {
 		InisioSesion.add(iniciar);
 
 		JButton registrar = new JButton("Registrarse e Iniciar Sesion");
+
+		registrar.setBounds(260, 146, 173, 23);
+		InisioSesion.add(registrar);
+		InisioSesion.setFocusTraversalPolicy(new FocusTraversalOnArray(
+				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, regPass, registrar }));
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(
+				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, label, registrar }));
+
 		registrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				user = new Usuario(regUser.getText());
+				user.nuevoChat(0);
 				contentPane.removeAll();
 				try {
 					sesionIniciada();
@@ -140,16 +149,9 @@ public class Cliente extends JFrame {
 				}
 			}
 		});
-		registrar.setBounds(260, 146, 173, 23);
-		InisioSesion.add(registrar);
-		InisioSesion.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, regPass, registrar }));
-		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, label, registrar }));
 	}
 
 	private void sesionIniciada() throws Exception {
-		user.nuevoChat(0);
 		JLayeredPane Chat = new JLayeredPane();
 		Chat.setBounds(0, 0, 552, 261);
 		contentPane.add(Chat);

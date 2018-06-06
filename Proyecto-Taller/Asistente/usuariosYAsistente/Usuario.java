@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
+	private static final String HOST_NAME = "Fede-Net";
 	private Hashtable<Integer, Cliente> cliente = new Hashtable<>();
 
 	public Usuario(String NombreUsuario) {
@@ -14,14 +15,14 @@ public class Usuario extends UsuarioGenerico {
 	public int pedirNuevoChat(String userAConectar) {
 		int codChat = 0;
 		try {
-			Cliente clienteTemp = new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050);
-			clienteTemp.enviar("0000nuevoChat" + userAConectar);
+			cliente.get(0).enviar("0000nuevoChat" + userAConectar);
 			String codTemp = recibir(0);
 			if (codTemp != "----") {
+				Cliente clienteTemp = new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050);
+				clienteTemp.enviar(String.format("%04d", codChat) + nombre);
 				codChat = Integer.parseInt(codTemp);
 				cliente.put(codChat, clienteTemp);
 				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
-
 				return codChat;
 			}
 		} catch (Exception e) {
@@ -31,15 +32,10 @@ public class Usuario extends UsuarioGenerico {
 
 	public void nuevoChat(int codChat) {
 		try {
-			cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
+			cliente.put(codChat, new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050));
 			cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
-			return;
 		} catch (Exception e) {
 		}
-	}
-
-	public void enviar(String codChat, String mensaje) throws Exception {
-		enviar(codChat, mensaje);
 	}
 
 	public void enviar(int codChat, String mensaje) throws Exception {
@@ -53,7 +49,9 @@ public class Usuario extends UsuarioGenerico {
 			cliente.remove(codChat);
 			return "";
 		} else if (recibir.contains("levantarConexion")) {
-			nuevoChat(Integer.parseInt(recibir.substring(20)));
+			String subCadena = recibir.substring(20);
+			nuevoChat(Integer.parseInt(subCadena));
+			return subCadena;
 		} else if (recibir.length() == 4)
 			return recibir;
 		return recibir.substring(4);
