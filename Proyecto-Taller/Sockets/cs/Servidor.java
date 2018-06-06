@@ -25,8 +25,23 @@ class Hilo extends Thread {
 	private Socket socket;
 	static private Hashtable<String, ArrayList<Socket>> lista = new Hashtable<String, ArrayList<Socket>>();
 	static private Hashtable<String, Asistente> asistentePorCodChat = new Hashtable<String, Asistente>();
+	static private Hashtable<String, Socket> usuarios = new Hashtable<String, Socket>();
 	static private String usuariosConectados = "";
 	private String codChat;
+
+	private Thread mandarConectador = new Thread() {
+		public void run() {
+			try {
+				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
+				while (true) {
+					bufferDeSalida.writeUTF("----" + usuariosConectados);
+					Thread.sleep(300);
+				}
+			} catch (Exception e) {
+			}
+
+		}
+	};
 
 	public Hilo(Socket server) throws Exception {
 		socket = server;
@@ -45,6 +60,9 @@ class Hilo extends Thread {
 		if (!usuariosConectados.contains(usuario)) {
 			usuariosConectados += usuario + "?";
 		}
+		if (codChat.equals("0000")) {
+			usuarios.put(usuario, socket);
+		}
 		System.out
 				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
 	}
@@ -62,13 +80,26 @@ class Hilo extends Thread {
 				}
 			else {
 				DataOutputStream bufferDeSalida = new DataOutputStream(socket.getOutputStream());
+				DataInputStream bufferDeEntrada = new DataInputStream(socket.getInputStream());
+				mandarConectador.start();
 				while (true) {
-					bufferDeSalida.writeUTF("----"+usuariosConectados);
-					Thread.sleep(300);
+					/// pedido de nuevo chat
+					String leer = bufferDeEntrada.readUTF();
+					if (leer.contains("nuevoChat")) {
+						String codChatNuevo = obtenerCodChat();
+						new DataOutputStream(usuarios.get(leer.substring(13)).getOutputStream())
+								.writeUTF("levantarConexion" + codChatNuevo + codChat);
+						bufferDeSalida.writeUTF(codChat);
+					}
+					//////////////////////
 				}
 			}
 		} catch (Exception e) {
 		}
+	}
+
+	private String obtenerCodChat() {
+		return "0023";
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {

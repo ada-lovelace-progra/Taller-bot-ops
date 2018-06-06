@@ -11,36 +11,29 @@ public class Usuario extends UsuarioGenerico {
 		nombre = NombreUsuario;
 	}
 
-	public int pedirNuevoChat() {
-		int codChat = obtenerCodChat();
-		if (!cliente.containsKey(codChat)) {
-			// for (String ip : listarIPs())
-			try {
-				cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
-				// Cliente temp = new Cliente(ip, 5050);
-				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+	public int pedirNuevoChat(String userAConectar) {
+		int codChat = 0;
+		try {
+			Cliente clienteTemp = new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050);
+			clienteTemp.enviar("0000nuevoChat" + userAConectar);
+			String codTemp = recibir(0);
+			if (codTemp != "----") {
+				codChat = Integer.parseInt(codTemp);
+				nuevoChat(codChat);
 				return codChat;
-			} catch (Exception e) {
 			}
+		} catch (Exception e) {
 		}
 		return -1;
 	}
 
 	public void nuevoChat(int codChat) {
-		if (!cliente.containsKey(codChat)) {
-			// for (String ip : listarIPs())
-			try {
-				cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
-				// Cliente temp = new Cliente(ip, 5050);
-				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
-				return;
-			} catch (Exception e) {
-			}
+		try {
+			cliente.put(codChat, new Cliente(InetAddress.getByName("LAB4B2").getHostAddress(), 5050));
+			cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+			return;
+		} catch (Exception e) {
 		}
-	}
-
-	private int obtenerCodChat() {
-		return 23;
 	}
 
 	public void enviar(String codChat, String mensaje) throws Exception {
@@ -57,7 +50,10 @@ public class Usuario extends UsuarioGenerico {
 			cliente.get(codChat).cerrar();
 			cliente.remove(codChat);
 			return "";
-		}
+		} else if (recibir.contains("levantarConexion")) {
+			nuevoChat(Integer.parseInt(recibir.substring(20)));
+		} else if (recibir.length() == 4)
+			return recibir;
 		return recibir.substring(4);
 	}
 }

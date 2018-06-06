@@ -67,12 +67,7 @@ public class Cliente extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// iniciarSesion();
-		try {
-			sesionIniciada();
-		} catch (Exception e) {
-		}
-
+		iniciarSesion();
 	}
 
 	private void iniciarSesion() {
@@ -154,17 +149,21 @@ public class Cliente extends JFrame {
 	}
 
 	private void sesionIniciada() throws Exception {
+		user.nuevoChat(0);
 		JLayeredPane Chat = new JLayeredPane();
 		Chat.setBounds(0, 0, 552, 261);
 		contentPane.add(Chat);
 
-		String nombreTab = "nose";
-
 		Conectados = new List();
 		Conectados.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if (Conectados.getSelectedItems().length > 0) {
-					
+				int cant = Conectados.getSelectedItems().length;
+				if (cant == 1) {
+					try {
+						int codChat = user.pedirNuevoChat(Conectados.getSelectedItem());
+						nuevaPesatana(codChat + "", codChat);
+					} catch (Exception e1) {
+					}
 				}
 			}
 		});
@@ -182,18 +181,11 @@ public class Cliente extends JFrame {
 		tabbedPane.setBounds(100, 0, 460, 261);
 		Chat.add(tabbedPane);
 
-		nuevaPesatana(nombreTab);
-		nuevaPesatana(nombreTab);
-		nuevaPesatana(nombreTab);
 	}
 
 	Thread cargaDeConectados = new Thread() {
 
 		public void run() {
-			try {
-				user.nuevoChat(0);
-			} catch (Exception e1) {
-			}
 			try {
 				String anterior = null;
 				while (true) {
@@ -210,8 +202,7 @@ public class Cliente extends JFrame {
 		}
 	};
 
-	private void nuevaPesatana(String nombreTab) throws UnknownHostException, Exception {
-		int codChat = user.pedirNuevoChat();
+	private void nuevaPesatana(String nombreTab, int codChat) throws UnknownHostException, Exception {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		JButton btnNewButton = new JButton("Enviar");
