@@ -143,7 +143,6 @@ public class Cliente extends JFrame {
 		registrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					zumbido.start();
 					sesionIniciada();
 				} catch (Exception e) {
 				}
@@ -181,7 +180,7 @@ public class Cliente extends JFrame {
 		Conectados.setBounds(10, 26, 81, 224);
 		Chat.add(Conectados);
 
-		cargaDeConectados.start();
+		new cargaDeConectados().start();
 
 		JLabel lblNewLabel = new JLabel("Conectados");
 		lblNewLabel.setBounds(10, 0, 81, 24);
@@ -190,32 +189,7 @@ public class Cliente extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(100, 0, 460, 261);
 		Chat.add(tabbedPane);
-
-		boolean a = false;
-		while (a)
-			while (!user.pila.isEmpty())
-				nuevaPesatana("ni ideaa", Integer.parseInt(user.pila.pop()));
 	}
-
-	private Thread cargaDeConectados = new Thread() {
-
-		public void run() {
-			try {
-				String anterior = null;
-				while (true) {
-					String nuevo = user.recibir(0);
-					if (nuevo.contains("?"))
-						if (!nuevo.equals(anterior)) {
-							Conectados.removeAll();
-							for (String user : nuevo.split("\\?"))
-								Conectados.add(user);
-							anterior = nuevo;
-						}
-				}
-			} catch (Exception e) {
-			}
-		}
-	};
 
 	private void nuevaPesatana(String nombreTab, int codChat) throws UnknownHostException, Exception {
 		JPanel panel = new JPanel();
@@ -252,8 +226,12 @@ public class Cliente extends JFrame {
 			public void run() {
 				while (true)
 					try {
-						mensajes.append(user.recibir(codChat) + "\n");
+						String recibido = user.recibir(codChat);
+						if (recibido.contains(":zumbido:"))
+							new zumbido().start();
+						mensajes.append(recibido + "\n");
 					} catch (Exception e) {
+						System.out.println("error recibiendo el mensaje");
 					}
 			}
 		}.start();
@@ -273,8 +251,9 @@ public class Cliente extends JFrame {
 		}
 	}
 
-	private Thread zumbido = new Thread() {
+	class zumbido extends Thread {
 		public void run() {
+			System.out.println("iniciado vibrado");
 			int veces = 50;
 			int x = (int) ventana.getLocation().getY();
 			int y = (int) ventana.getLocation().getX();
@@ -285,9 +264,34 @@ public class Cliente extends JFrame {
 				try {
 					Thread.sleep(50);
 				} catch (Exception e) {
+					System.out.println("error 'vibrando'");
 				}
 			}
 			ventana.setLocation(x, y);
 		}
-	};
+	}
+
+	class cargaDeConectados extends Thread {
+		public void run() {
+			try {
+				String anterior = null;
+				while (true) {
+					String nuevo = user.recibir(0);
+					if (nuevo.contains("?")) {
+						if (!nuevo.equals(anterior)) {
+							Conectados.removeAll();
+							for (String user : nuevo.split("\\?"))
+								if (!user.equals(Usuario))
+									Conectados.add(user);
+							anterior = nuevo;
+						}
+					} else
+						nuevaPesatana("Pestana Pedida", Integer.parseInt(nuevo.substring(16)));
+
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
 }

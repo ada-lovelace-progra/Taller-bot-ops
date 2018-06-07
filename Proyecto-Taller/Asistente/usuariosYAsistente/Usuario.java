@@ -2,14 +2,11 @@ package usuariosYAsistente;
 
 import java.net.InetAddress;
 import java.util.Hashtable;
-import java.util.Stack;
-
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
 	private static final String HOST_NAME = "Fede-Net";
 	private Hashtable<Integer, Cliente> cliente = new Hashtable<>();
-	public Stack<String> pila = new Stack<>();
 	private String codTemp;
 	public static String usuariosConectados = "";
 
@@ -34,7 +31,6 @@ public class Usuario extends UsuarioGenerico {
 				clienteTemp.enviar(codTemp + nombre);
 				cliente.put(codChat, clienteTemp);
 				cliente.get(codChat).enviar(codTemp + nombre);
-				pila.push(codTemp);
 				return codChat;
 			}
 		} catch (Exception e) {
@@ -63,7 +59,7 @@ public class Usuario extends UsuarioGenerico {
 			return "";
 		}
 		if (codChat == 0) {
-			System.out.println(recibir);
+			// System.out.println(recibir);
 			if (recibir.matches("[0-9]+")) {
 				codTemp = recibir;
 				System.out.println(codTemp);
@@ -72,7 +68,7 @@ public class Usuario extends UsuarioGenerico {
 				System.out.println("levantando");
 				String subCadena = recibir.substring(16);
 				nuevoChat(Integer.parseInt(subCadena));
-				return subCadena;
+				return recibir;
 			} else if (recibir.contains("?")) {
 				return recibir.substring(4);
 			}

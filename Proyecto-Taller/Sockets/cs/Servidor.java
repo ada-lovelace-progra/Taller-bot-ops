@@ -67,27 +67,6 @@ class Hilo extends Thread {
 		}
 	};
 
-	private void peticionesNuevoChat(String leer) {
-		String temp = leer;
-		try {
-			if (temp.contains("nuevoChat")) { // si es peticion entro
-				String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
-				String usuarioBuscado = temp.substring(13); // a este flaco estoy llamando
-				Socket socketTemp = usuarios.get(usuarioBuscado); // aca traigo el socket de dicho usuario
-				// agarro el bufferDeSalida del usuario llamado
-				DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
-				// y por ese buffer le mando el comando para que levante y el codigo de chat
-				// nuevo
-				bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
-				bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
-														// nuevo
-				System.out.println(codChatNuevo);
-			}
-		} catch (Exception e) {
-			System.out.println("error procesando peticion nuevo Chat");
-		}
-	}
-
 	public void run() {
 
 		if (!codChat.equals("0000"))
@@ -114,13 +93,38 @@ class Hilo extends Thread {
 				while (true) {
 					leer = bufferDeEntrada.readUTF();
 					System.out.println(leer);
-					peticionesNuevoChat(leer);
+					new peticionesNuevoChat().start();
 				}
 			} catch (Exception e) {
 				// mandarConectador.interrupt();
 				System.out.println("falla en procesamiento por CodChat 0000 " + e.getMessage() + e.getCause());
 			}
 	}
+	
+	class peticionesNuevoChat extends Thread {
+		public void run() {
+			String temp=leer;
+			try {
+				if (temp.contains("nuevoChat")) { // si es peticion entro
+					String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
+					String usuarioBuscado = temp.substring(13); // a este flaco estoy llamando
+					Socket socketTemp = usuarios.get(usuarioBuscado); // aca traigo el socket de dicho usuario
+					// agarro el bufferDeSalida del usuario llamado
+					DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
+					// y por ese buffer le mando el comando para que levante y el codigo de chat
+					// nuevo
+					bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
+					bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
+															// nuevo
+					System.out.println(codChatNuevo);
+				}
+			} catch (Exception e) {
+				System.out.println("error procesando peticion nuevo Chat");
+			}
+		}
+	}
+
+
 
 	private String obtenerCodChat() {
 		return "0023";
