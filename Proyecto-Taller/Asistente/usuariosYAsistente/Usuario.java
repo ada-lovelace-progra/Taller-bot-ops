@@ -2,27 +2,39 @@ package usuariosYAsistente;
 
 import java.net.InetAddress;
 import java.util.Hashtable;
+import java.util.Stack;
+
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
 	private static final String HOST_NAME = "Fede-Net";
 	private Hashtable<Integer, Cliente> cliente = new Hashtable<>();
+	public Stack<String> pila = new Stack<>();
+	private String codTemp;
+	public static String usuariosConectados = "";
 
 	public Usuario(String NombreUsuario) {
 		nombre = NombreUsuario;
+		usuariosConectados += nombre + "?";
 	}
 
 	public int pedirNuevoChat(String userAConectar) {
 		int codChat = 0;
 		try {
+			System.out.println("Solicitando nuevo Chat");
+			codTemp = "0000";
 			cliente.get(0).enviar("0000nuevoChat" + userAConectar);
-			String codTemp = recibir(0);
+			while (codTemp == "0000") {
+				System.out.print(".");
+				Thread.sleep(300);
+			}
 			if (codTemp != "----") {
-				Cliente clienteTemp = new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050);
-				clienteTemp.enviar(String.format("%04d", codChat) + nombre);
 				codChat = Integer.parseInt(codTemp);
+				Cliente clienteTemp = new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050);
+				clienteTemp.enviar(codTemp + nombre);
 				cliente.put(codChat, clienteTemp);
-				cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
+				cliente.get(codChat).enviar(codTemp + nombre);
+				pila.push(codTemp);
 				return codChat;
 			}
 		} catch (Exception e) {
@@ -32,6 +44,7 @@ public class Usuario extends UsuarioGenerico {
 
 	public void nuevoChat(int codChat) {
 		try {
+			System.out.println("intentando levantar conexion... CodChat: " + codChat);
 			cliente.put(codChat, new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050));
 			cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
 		} catch (Exception e) {
@@ -48,12 +61,22 @@ public class Usuario extends UsuarioGenerico {
 			cliente.get(codChat).cerrar();
 			cliente.remove(codChat);
 			return "";
-		} else if (recibir.contains("levantarConexion")) {
-			String subCadena = recibir.substring(20);
-			nuevoChat(Integer.parseInt(subCadena));
-			return subCadena;
-		} else if (recibir.length() == 4)
-			return recibir;
+		}
+		if (codChat == 0) {
+			System.out.println(recibir);
+			if (recibir.matches("[0-9]+")) {
+				codTemp = recibir;
+				System.out.println(codTemp);
+				return "";
+			} else if (recibir.contains("levantarConexion")) {
+				System.out.println("levantando");
+				String subCadena = recibir.substring(16);
+				nuevoChat(Integer.parseInt(subCadena));
+				return subCadena;
+			} else if (recibir.contains("?")) {
+				return recibir.substring(4);
+			}
+		}
 		return recibir.substring(4);
 	}
 }

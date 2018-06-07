@@ -35,6 +35,8 @@ public class Cliente extends JFrame {
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	Usuario user;
+	String Usuario;
+	private static Cliente ventana;
 	private List Conectados;
 	private JPasswordField iniPass;
 	private JTextField regEmail;
@@ -48,8 +50,8 @@ public class Cliente extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Cliente frame = new Cliente();
-					frame.setVisible(true);
+					ventana = new Cliente();
+					ventana.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -140,10 +142,8 @@ public class Cliente extends JFrame {
 
 		registrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				user = new Usuario(regUser.getText());
-				user.nuevoChat(0);
-				contentPane.removeAll();
 				try {
+					zumbido.start();
 					sesionIniciada();
 				} catch (Exception e) {
 				}
@@ -152,6 +152,14 @@ public class Cliente extends JFrame {
 	}
 
 	private void sesionIniciada() throws Exception {
+		Usuario = regUser.getText();
+		ventana.setTitle(Usuario);
+		user = new Usuario(Usuario);
+		user.nuevoChat(0);
+		user.enviar(0, "refresh");
+
+		contentPane.removeAll();
+
 		JLayeredPane Chat = new JLayeredPane();
 		Chat.setBounds(0, 0, 552, 261);
 		contentPane.add(Chat);
@@ -163,7 +171,8 @@ public class Cliente extends JFrame {
 				if (cant == 1) {
 					try {
 						int codChat = user.pedirNuevoChat(Conectados.getSelectedItem());
-						nuevaPesatana(codChat + "", codChat);
+						if (codChat != -1)
+							nuevaPesatana(codChat + "", codChat);
 					} catch (Exception e1) {
 					}
 				}
@@ -173,7 +182,6 @@ public class Cliente extends JFrame {
 		Chat.add(Conectados);
 
 		cargaDeConectados.start();
-		;
 
 		JLabel lblNewLabel = new JLabel("Conectados");
 		lblNewLabel.setBounds(10, 0, 81, 24);
@@ -183,21 +191,26 @@ public class Cliente extends JFrame {
 		tabbedPane.setBounds(100, 0, 460, 261);
 		Chat.add(tabbedPane);
 
+		boolean a = false;
+		while (a)
+			while (!user.pila.isEmpty())
+				nuevaPesatana("ni ideaa", Integer.parseInt(user.pila.pop()));
 	}
 
-	Thread cargaDeConectados = new Thread() {
+	private Thread cargaDeConectados = new Thread() {
 
 		public void run() {
 			try {
 				String anterior = null;
 				while (true) {
 					String nuevo = user.recibir(0);
-					if (!nuevo.equals(anterior)) {
-						Conectados.removeAll();
-						for (String user : nuevo.split("\\?"))
-							Conectados.add(user);
-						anterior = nuevo;
-					}
+					if (nuevo.contains("?"))
+						if (!nuevo.equals(anterior)) {
+							Conectados.removeAll();
+							for (String user : nuevo.split("\\?"))
+								Conectados.add(user);
+							anterior = nuevo;
+						}
 				}
 			} catch (Exception e) {
 			}
@@ -250,7 +263,7 @@ public class Cliente extends JFrame {
 
 	private void enviarMensaje(TextArea aEnviar, TextArea mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
-		if (mensaje.length() > 0) {
+		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
 			aEnviar.setText("");
 			mensajes.append(user.nombre + ": " + mensaje + "\n");
 			try {
@@ -259,4 +272,22 @@ public class Cliente extends JFrame {
 			}
 		}
 	}
+
+	private Thread zumbido = new Thread() {
+		public void run() {
+			int veces = 50;
+			int x = (int) ventana.getLocation().getY();
+			int y = (int) ventana.getLocation().getX();
+			while (veces-- != 0) {
+				int x1 = (int) (Math.random() * 20 - 10);
+				int y1 = (int) (Math.random() * 20 - 10);
+				ventana.setLocation(x + x1, y + y1);
+				try {
+					Thread.sleep(50);
+				} catch (Exception e) {
+				}
+			}
+			ventana.setLocation(x, y);
+		}
+	};
 }

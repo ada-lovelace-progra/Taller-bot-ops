@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 import usuariosYAsistente.Asistente;
 
 public class Servidor {
@@ -28,36 +29,7 @@ class Hilo extends Thread {
 	static private Hashtable<String, Socket> usuarios = new Hashtable<String, Socket>();
 	static private String usuariosConectados = "";
 	private String codChat;
-
-	private Thread mandarConectador = new Thread() {
-		public void run() {
-			try {
-				while (true) {
-					bufferDeSalida.writeUTF("----" + usuariosConectados);
-					Thread.sleep(300);
-				}
-			} catch (Exception e) {
-			}
-		}
-	};
-
-	private Thread peticionesNuevoChat = new Thread() {
-		public void run() {
-			while (true) {
-				try {
-					String leer = bufferDeEntrada.readUTF();
-					if (leer.contains("nuevoChat")) {
-						String codChatNuevo = obtenerCodChat();
-						Socket socketTemp = usuarios.get(leer.substring(13));
-						bufferDeSalida.writeUTF(codChatNuevo);
-						DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
-						bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
-					}
-				} catch (IOException e) {
-				}
-			}
-		}
-	};
+	private String leer;
 
 	public Hilo(Socket server) throws Exception {
 		socket = server;
@@ -82,23 +54,72 @@ class Hilo extends Thread {
 				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
 	}
 
-	public void run() {
-		try {
-			if (!codChat.equals("0000"))
+	private Thread mandarConectador = new Thread() {
+		public void run() {
+			try {
 				while (true) {
-					String mensaje = bufferDeEntrada.readUTF();
-					System.out.println("Chat: " + mensaje.substring(0, 4) + " Usuario: "
-							+ mensaje.substring(4, mensaje.indexOf(":")) + " Mensaje: "
-							+ mensaje.substring(mensaje.indexOf(":")));
-					reenviarATodos(mensaje);
-					asistente(mensaje.substring(4), mensaje.substring(0, 4));
+					bufferDeSalida.writeUTF("----" + usuariosConectados);
+					Thread.sleep(5000);
 				}
-			else {
-				mandarConectador.start();
-				peticionesNuevoChat.start();
+			} catch (Exception e) {
+				System.out.println("error mandando usuariosConectados");
+			}
+		}
+	};
+
+	private void peticionesNuevoChat(String leer) {
+		String temp = leer;
+		try {
+			if (temp.contains("nuevoChat")) { // si es peticion entro
+				String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
+				String usuarioBuscado = temp.substring(13); // a este flaco estoy llamando
+				Socket socketTemp = usuarios.get(usuarioBuscado); // aca traigo el socket de dicho usuario
+				// agarro el bufferDeSalida del usuario llamado
+				DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
+				// y por ese buffer le mando el comando para que levante y el codigo de chat
+				// nuevo
+				bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
+				bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
+														// nuevo
+				System.out.println(codChatNuevo);
 			}
 		} catch (Exception e) {
+			System.out.println("error procesando peticion nuevo Chat");
 		}
+	}
+
+	public void run() {
+
+		if (!codChat.equals("0000"))
+			try {
+				while (true) {
+					String mensaje = bufferDeEntrada.readUTF();
+					if (mensaje.contains(":")) {
+						System.out.println("Chat: " + mensaje.substring(0, 4) + " Usuario: "
+								+ mensaje.substring(4, mensaje.indexOf(":")) + " Mensaje: "
+								+ mensaje.substring(mensaje.indexOf(":")));
+						reenviarATodos(mensaje);
+						asistente(mensaje.substring(4), mensaje.substring(0, 4));
+					}
+				}
+			} catch (Exception e) {
+				System.out.println("error con cod Chat: " + codChat + e.getMessage() + e.getCause());
+			}
+		else
+			try {
+				try {
+					mandarConectador.start();
+				} catch (Exception e) {
+				}
+				while (true) {
+					leer = bufferDeEntrada.readUTF();
+					System.out.println(leer);
+					peticionesNuevoChat(leer);
+				}
+			} catch (Exception e) {
+				// mandarConectador.interrupt();
+				System.out.println("falla en procesamiento por CodChat 0000 " + e.getMessage() + e.getCause());
+			}
 	}
 
 	private String obtenerCodChat() {
