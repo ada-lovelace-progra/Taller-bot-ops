@@ -25,7 +25,7 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 		}
 		return null;
 	}
-//([0-9]+) ?(\\S+) a (\\S+)
+
 	public String cambio(String entrada) {
 		Matcher asd = Pattern.compile("([0-9]?.[0-9]+) (\\S+) a (\\S+)").matcher(entrada);
 		String unidadLLegada = null;
@@ -143,6 +143,7 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 				String linea = sc.nextLine();
 				this.masaSA.put(linea.substring(0,  linea.indexOf('|')), Double.parseDouble(linea.substring(linea.indexOf('|')+1)));
 			}
+			
 			sc = new Scanner(new File("Respuestas\\Unidades\\masaSI.dat"));
 			while(sc.hasNextLine())
 			{
@@ -209,3 +210,4 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 		}
 	}
 }
+
