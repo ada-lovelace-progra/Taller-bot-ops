@@ -30,6 +30,7 @@ class Hilo extends Thread {
 	static private String usuariosConectados = "";
 	private String codChat;
 	private String leer;
+	private int codChatLibres = 5;
 
 	public Hilo(Socket server) throws Exception {
 		socket = server;
@@ -100,10 +101,10 @@ class Hilo extends Thread {
 				System.out.println("falla en procesamiento por CodChat 0000 " + e.getMessage() + e.getCause());
 			}
 	}
-	
+
 	class peticionesNuevoChat extends Thread {
 		public void run() {
-			String temp=leer;
+			String temp = leer;
 			try {
 				if (temp.contains("nuevoChat")) { // si es peticion entro
 					String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
@@ -124,10 +125,8 @@ class Hilo extends Thread {
 		}
 	}
 
-
-
 	private String obtenerCodChat() {
-		return "0023";
+		return String.format("%04d", codChatLibres++);
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {
