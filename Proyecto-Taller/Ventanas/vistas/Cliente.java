@@ -174,6 +174,7 @@ public class Cliente extends JFrame {
 							nuevaPesatana(codChat + "", codChat);
 					} catch (Exception e1) {
 					}
+					Conectados.deselect(Conectados.getSelectedIndex());
 				}
 			}
 		});
