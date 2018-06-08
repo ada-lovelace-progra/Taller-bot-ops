@@ -6,6 +6,9 @@ import java.awt.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.JTabbedPane;
 import java.awt.TextArea;
 import javax.swing.JButton;
@@ -16,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -24,6 +28,7 @@ import usuariosYAsistente.Usuario;
 import javax.swing.JLayeredPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
@@ -40,14 +45,15 @@ public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
-	Usuario user;
-	String Usuario;
+	private Usuario user;
+	private String Usuario;
 	private static Cliente ventana;
 	private List Conectados;
 	private JPasswordField iniPass;
 	private JTextField regEmail;
 	private JPasswordField regPass;
 	private JTextField regUser;
+	private HTMLEditorKit editorKit;
 
 	private String text;
 
@@ -200,6 +206,42 @@ public class Cliente extends JFrame {
 		Chat.add(tabbedPane);
 	}
 
+	private void enviarMensaje(TextArea aEnviar, JEditorPane mensajes, int codChat) {
+		String mensaje =aEnviar.getText();
+		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
+			aEnviar.setText("");
+			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
+			try {
+				editorKit.insertHTML(doc, doc.getLength(),Usuario+": "+  mensaje, 0, 0, null);
+			} catch (Exception e1) {
+			}
+			try {
+				user.enviar(codChat, mensaje);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	class zumbido extends Thread {
+		public void run() {
+			System.out.println("iniciado vibrado");
+			int veces = 50;
+			int x = (int) ventana.getLocation().getY();
+			int y = (int) ventana.getLocation().getX();
+			while (veces-- != 0) {
+				int x1 = (int) (Math.random() * 20 - 10);
+				int y1 = (int) (Math.random() * 20 - 10);
+				ventana.setLocation(x + x1, y + y1);
+				try {
+					Thread.sleep(50);
+				} catch (Exception e) {
+					System.out.println("error 'vibrando'");
+				}
+			}
+			ventana.setLocation(x, y);
+		}
+	}
+
 	private void nuevaPesatana(String nombreTab, int codChat) throws UnknownHostException, Exception {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -207,7 +249,7 @@ public class Cliente extends JFrame {
 		btnNewButton.setBounds(404, 165, 41, 68);
 		panel.add(btnNewButton);
 
-		JEditorPane mensajes = new JEditorPane();
+		JTextPane mensajes = new JTextPane();
 		mensajes.setBounds(0, 0, 445, 160);
 		mensajes.setEditable(false);
 		panel.add(mensajes);
@@ -240,20 +282,25 @@ public class Cliente extends JFrame {
 						String recibido = user.recibir(codChat);
 						if (recibido.contains(":zumbido:"))
 							new zumbido().start();
-						text.replace("<aReemplazar>", "<p>" + recibido + "</p>\n\t<aReemplazar>");
-						mensajes.setText(text);// (recibido + "\n");
+						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
+						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
 					} catch (Exception e) {
 						System.out.println("error recibiendo el mensaje");
 					}
 			}
 
-			private void cargaContenidoDeChat(JEditorPane mensajes) {
+			private void cargaContenidoDeChat(JTextPane textPane) {
 				try {
-					Scanner leer = new Scanner(new File("HTMLChat.txt"));
-					while (leer.hasNextLine())
-						text += leer.nextLine() + "\n";
-					leer.close();
-					mensajes.setContentType("text/html");
+					// Scanner leer = new Scanner(new File("HTMLChat.txt"));
+					// while (leer.hasNextLine())
+					// text += leer.nextLine() + "\n";
+					// leer.close();
+					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
+					textPane.setContentType("text/html");
+					textPane.setEditable(true);
+					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
+					editorKit = (HTMLEditorKit) textPane.getEditorKit();
+					editorKit.insertHTML(doc, doc.getLength(), text, 0, 0, null);
 				} catch (Exception e) {
 				}
 			}
@@ -261,39 +308,6 @@ public class Cliente extends JFrame {
 		}.start();
 
 		tabbedPane.addTab(nombreTab, null, panel, null);
-	}
-
-	private void enviarMensaje(TextArea aEnviar, JEditorPane mensajes, int codChat) {
-		String mensaje = aEnviar.getText();
-		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
-			aEnviar.setText("");
-			text.replace("<aReemplazar>", "<p>" + mensaje + "</p>\n\t<aReemplazar>");
-			mensajes.setText(text);
-			try {
-				user.enviar(codChat, mensaje);
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	class zumbido extends Thread {
-		public void run() {
-			System.out.println("iniciado vibrado");
-			int veces = 50;
-			int x = (int) ventana.getLocation().getY();
-			int y = (int) ventana.getLocation().getX();
-			while (veces-- != 0) {
-				int x1 = (int) (Math.random() * 20 - 10);
-				int y1 = (int) (Math.random() * 20 - 10);
-				ventana.setLocation(x + x1, y + y1);
-				try {
-					Thread.sleep(50);
-				} catch (Exception e) {
-					System.out.println("error 'vibrando'");
-				}
-			}
-			ventana.setLocation(x, y);
-		}
 	}
 
 	class cargaDeConectados extends Thread {
