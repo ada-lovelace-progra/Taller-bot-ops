@@ -9,11 +9,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import java.awt.TextArea;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.UnknownHostException;
+import java.util.Scanner;
+
 import javax.swing.JLabel;
 import usuariosYAsistente.Usuario;
 import javax.swing.JLayeredPane;
@@ -22,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
 import java.awt.Component;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -42,6 +48,8 @@ public class Cliente extends JFrame {
 	private JTextField regEmail;
 	private JPasswordField regPass;
 	private JTextField regUser;
+
+	private String text;
 
 	/**
 	 * Launch the application.
@@ -199,7 +207,7 @@ public class Cliente extends JFrame {
 		btnNewButton.setBounds(404, 165, 41, 68);
 		panel.add(btnNewButton);
 
-		TextArea mensajes = new TextArea();
+		JEditorPane mensajes = new JEditorPane();
 		mensajes.setBounds(0, 0, 445, 160);
 		mensajes.setEditable(false);
 		panel.add(mensajes);
@@ -224,27 +232,43 @@ public class Cliente extends JFrame {
 		});
 
 		new Thread() {
+
 			public void run() {
+				cargaContenidoDeChat(mensajes);
 				while (true)
 					try {
 						String recibido = user.recibir(codChat);
 						if (recibido.contains(":zumbido:"))
 							new zumbido().start();
-						mensajes.append(recibido + "\n");
+						text.replace("<aReemplazar>", "<p>" + recibido + "</p>\n\t<aReemplazar>");
+						mensajes.setText(text);// (recibido + "\n");
 					} catch (Exception e) {
 						System.out.println("error recibiendo el mensaje");
 					}
 			}
+
+			private void cargaContenidoDeChat(JEditorPane mensajes) {
+				try {
+					Scanner leer = new Scanner(new File("HTMLChat.txt"));
+					while (leer.hasNextLine())
+						text += leer.nextLine() + "\n";
+					leer.close();
+					mensajes.setContentType("text/html");
+				} catch (Exception e) {
+				}
+			}
+
 		}.start();
 
 		tabbedPane.addTab(nombreTab, null, panel, null);
 	}
 
-	private void enviarMensaje(TextArea aEnviar, TextArea mensajes, int codChat) {
+	private void enviarMensaje(TextArea aEnviar, JEditorPane mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
 			aEnviar.setText("");
-			mensajes.append(user.nombre + ": " + mensaje + "\n");
+			text.replace("<aReemplazar>", "<p>" + mensaje + "</p>\n\t<aReemplazar>");
+			mensajes.setText(text);
 			try {
 				user.enviar(codChat, mensaje);
 			} catch (Exception e) {

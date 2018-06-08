@@ -5,8 +5,8 @@ import java.util.Hashtable;
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
-//	private static final String HOST_NAME = "Fede-Net";
-	private static final String HOST_NAME = "LAB4B2";
+	private static final String HOST_NAME = "Fede-Net";
+//	private static final String HOST_NAME = "LAB4B2";
 	private Hashtable<Integer, Cliente> cliente = new Hashtable<>();
 	private String codTemp;
 	public static String usuariosConectados = "";
