@@ -1,12 +1,9 @@
 package usuariosYAsistente;
 
-import java.net.InetAddress;
 import java.util.Hashtable;
 import cs.Cliente;
 
 public class Usuario extends UsuarioGenerico {
-	private static final String HOST_NAME = "Fede-Net";
-//	private static final String HOST_NAME = "LAB4B2";
 	private Hashtable<Integer, Cliente> cliente = new Hashtable<>();
 	private String codTemp;
 	public static String usuariosConectados = "";
@@ -28,7 +25,7 @@ public class Usuario extends UsuarioGenerico {
 			}
 			if (codTemp != "----") {
 				codChat = Integer.parseInt(codTemp);
-				Cliente clienteTemp = new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050);
+				Cliente clienteTemp = new Cliente(5050);
 				clienteTemp.enviar(codTemp + nombre);
 				cliente.put(codChat, clienteTemp);
 				cliente.get(codChat).enviar(codTemp + nombre);
@@ -42,7 +39,7 @@ public class Usuario extends UsuarioGenerico {
 	public void nuevoChat(int codChat) {
 		try {
 			System.out.println("intentando levantar conexion... CodChat: " + codChat);
-			cliente.put(codChat, new Cliente(InetAddress.getByName(HOST_NAME).getHostAddress(), 5050));
+			cliente.put(codChat, new Cliente(5050));
 			cliente.get(codChat).enviar(String.format("%04d", codChat) + nombre);
 		} catch (Exception e) {
 		}

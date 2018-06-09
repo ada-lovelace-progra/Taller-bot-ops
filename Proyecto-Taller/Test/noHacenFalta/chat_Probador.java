@@ -1,4 +1,4 @@
-package probadoresAntiLucas;
+package noHacenFalta;
 
 import java.util.Scanner;
 import usuariosYAsistente.Usuario;

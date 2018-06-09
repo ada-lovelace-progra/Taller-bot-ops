@@ -6,11 +6,12 @@ import java.awt.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.JTabbedPane;
 import java.awt.TextArea;
+
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 
@@ -18,10 +19,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
 import usuariosYAsistente.Usuario;
@@ -207,15 +209,12 @@ public class Cliente extends JFrame {
 	}
 
 	private void enviarMensaje(TextArea aEnviar, JEditorPane mensajes, int codChat) {
-		String mensaje =aEnviar.getText();
+		String mensaje = aEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
 			aEnviar.setText("");
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 			try {
-				editorKit.insertHTML(doc, doc.getLength(),Usuario+": "+  mensaje, 0, 0, null);
-			} catch (Exception e1) {
-			}
-			try {
+				editorKit.insertHTML(doc, doc.getLength(), Usuario + ": " + mensaje, 0, 0, null);
 				user.enviar(codChat, mensaje);
 			} catch (Exception e) {
 			}
@@ -280,6 +279,11 @@ public class Cliente extends JFrame {
 				while (true)
 					try {
 						String recibido = user.recibir(codChat);
+						if (esImagen(recibido)) {
+							recibido = codificarImagen(recibido);
+						} else if (esYoutube(recibido)) {
+							recibido = codificarYoutube(recibido);
+						}
 						if (recibido.contains(":zumbido:"))
 							new zumbido().start();
 						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
@@ -289,12 +293,73 @@ public class Cliente extends JFrame {
 					}
 			}
 
+			private String codificarYoutube(String recibido) {
+				String ini = "<iframe width=\"560\" height=\"315\" src=\"";
+				String fin = "\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+
+				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+				String link = "";
+				if (asd.find()) {
+					link = asd.group(1);
+					return recibido.replace(link, ini + link + fin);
+				}
+				asd = Pattern.compile("(http\\S+)").matcher(recibido);
+				if (asd.find()) {
+					link = asd.group(1);
+					return recibido.replace(link, ini + link + fin);
+				}
+				return null;
+			}
+
+			private boolean esYoutube(String recibido) {
+				return recibido.contains("youtu");
+			}
+
+			private String codificarImagen(String recibido) {
+				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+				String link = "";
+				if (asd.find()) {
+					link = asd.group(1);
+					return recibido.replace(link, "<img src=\"" + link + "\">");
+				}
+				asd = Pattern.compile("(http\\S+)").matcher(recibido);
+				if (asd.find()) {
+					link = asd.group(1);
+					return recibido.replace(link, "<img src=\"" + link + "\">");
+				}
+				return recibido;
+			}
+
+			private boolean esImagen(String recibido) {
+				if (esLink(recibido))
+					return recibido.contains("jpg") || recibido.contains("gif") || recibido.contains("png")
+							|| recibido.contains("img") || comprobarQueEsImagenDeFormaFea(recibido);
+				else
+					return false;
+			}
+
+			private boolean comprobarQueEsImagenDeFormaFea(String recibido) {
+				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+				String link = "";
+				if (asd.find()) {
+					link = asd.group(1);
+				}
+
+				try {
+					ImageIO.read(new URL(link));
+				} catch (Exception e) {
+					return false;
+				}
+				return true;
+			}
+
+			private boolean esLink(String recibido) {
+				return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
+						|| recibido.contains(".com");
+			}
+
 			private void cargaContenidoDeChat(JTextPane textPane) {
 				try {
-					// Scanner leer = new Scanner(new File("HTMLChat.txt"));
-					// while (leer.hasNextLine())
-					// text += leer.nextLine() + "\n";
-					// leer.close();
 					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
 					textPane.setContentType("text/html");
 					textPane.setEditable(true);
