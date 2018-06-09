@@ -3,9 +3,7 @@ package tests;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.*;
-import cs.Servidor;
 import usuariosYAsistente.Asistente;
-import usuariosYAsistente.Usuario;
 
 public class AsistenteTest {
 

@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import resolvedores.CalculoString;
 import usuariosYAsistente.Asistente;
 
 public class CalculoStringTest {
@@ -16,10 +15,6 @@ public class CalculoStringTest {
 	public static void setup() {
 		ada = new Asistente();
 		escuchar("hola @ada");
-	}
-
-	private String formato(String mensaje) {
-		return "Ada: " + mensaje + " @" + USUARIO;
 	}
 
 	private static String escuchar(String mensaje) {

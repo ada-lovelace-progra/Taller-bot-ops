@@ -1,13 +1,8 @@
 package tests;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-
 import org.junit.*;
 
-import resolvedores.Unidades_S_Metrico;
 import usuariosYAsistente.Asistente;
 
 
@@ -20,10 +15,6 @@ public class UnidadesTest {
 	public static void setup() {
 		ada = new Asistente();
 		ada.escuchar(USUARIO + ": " + "hola @ada");
-	}
-
-	private String formato(String mensaje) {
-		return "Ada: " + mensaje + " @" + USUARIO;
 	}
 
 	private static String escuchar(String mensaje) {

@@ -3,9 +3,7 @@ package tests;
 import java.util.ArrayList;
 
 import org.junit.*;
-import cs.Servidor;
 import usuariosYAsistente.Asistente;
-import usuariosYAsistente.Usuario;
 
 public class SaludosTest {
 
