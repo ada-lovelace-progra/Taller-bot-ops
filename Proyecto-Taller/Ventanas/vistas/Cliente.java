@@ -39,10 +39,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
 public class Cliente extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
@@ -57,10 +53,14 @@ public class Cliente extends JFrame {
 	private HTMLEditorKit editorKit;
 
 	private String text;
+	private JLayeredPane InisioSesion;
+	private JLayeredPane Chat;
+	private JLabel lblNewLabel;
+	private JPanel panel;
+	private JButton btnNewButton;
+	private JTextPane mensajes;
+	private TextArea aEnviar;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -74,12 +74,10 @@ public class Cliente extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Cliente() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 568, 300);
+		setAllBounds();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -88,14 +86,13 @@ public class Cliente extends JFrame {
 	}
 
 	private void iniciarSesion() {
-		JLayeredPane InisioSesion = new JLayeredPane();
-		InisioSesion.setBounds(0, 0, 552, 261);
+		InisioSesion = new JLayeredPane();
 		contentPane.add(InisioSesion);
 		InisioSesion.setLayout(null);
 
 		iniPass = new JPasswordField();
 		InisioSesion.setLayer(iniPass, 0);
-		iniPass.setBounds(11, 70, 144, 20);
+
 		InisioSesion.add(iniPass);
 
 		JTextField iniEmail = new JTextField();
@@ -165,6 +162,54 @@ public class Cliente extends JFrame {
 		});
 	}
 
+	private int XTot = 0, YTot = 0;
+
+	private void setAllBounds() {
+		new Thread() {
+			public void run() {
+				while (true) {
+					int x = getWidth();
+					int y = getHeight();
+					if (XTot == 0)
+						XTot = x;
+					if (YTot == 0)
+						YTot = y;
+					double YRelacion = (double) y / (double) YTot, XRelacion = (double) x / (double) XTot;
+
+					if (InisioSesion != null)
+						InisioSesion.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (552 * XRelacion),
+								(int) (261 * YRelacion));
+					if (Chat != null)
+						Chat.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (552 * XRelacion),
+								(int) (261 * YRelacion));
+					if (lblNewLabel != null)
+						lblNewLabel.setBounds((int) (10 * XRelacion), (int) (0 * YRelacion), (int) (81 * XRelacion),
+								(int) (24 * YRelacion));
+					if (tabbedPane != null)
+						tabbedPane.setBounds((int) (100 * XRelacion), (int) (0 * YRelacion), (int) (460 * XRelacion),
+								(int) (261 * YRelacion));
+					if (btnNewButton != null)
+						btnNewButton.setBounds((int) (404 * XRelacion), (int) (165 * YRelacion), (int) (41 * XRelacion),
+								(int) (68 * YRelacion));
+					if (mensajes != null)
+						mensajes.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (445 * XRelacion),
+								(int) (160 * YRelacion));
+					if (aEnviar != null)
+						aEnviar.setBounds((int) (0 * XRelacion), (int) (165 * YRelacion), (int) (398 * XRelacion),
+								(int) (68 * YRelacion));
+					if (Conectados != null)
+						Conectados.setBounds((int) (10 * XRelacion), (int) (26 * YRelacion), (int) (81 * XRelacion),
+								(int) (224 * YRelacion));
+
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		}.start();
+	}
+
 	private void sesionIniciada() throws Exception {
 		Usuario = regUser.getText();
 		ventana.setTitle(Usuario);
@@ -174,8 +219,8 @@ public class Cliente extends JFrame {
 
 		contentPane.removeAll();
 
-		JLayeredPane Chat = new JLayeredPane();
-		Chat.setBounds(0, 0, 552, 261);
+		Chat = new JLayeredPane();
+
 		contentPane.add(Chat);
 
 		Conectados = new List();
@@ -193,17 +238,14 @@ public class Cliente extends JFrame {
 				}
 			}
 		});
-		Conectados.setBounds(10, 26, 81, 224);
 		Chat.add(Conectados);
 
 		new cargaDeConectados().start();
 
-		JLabel lblNewLabel = new JLabel("Conectados");
-		lblNewLabel.setBounds(10, 0, 81, 24);
+		lblNewLabel = new JLabel("Conectados");
 		Chat.add(lblNewLabel);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(100, 0, 460, 261);
 		Chat.add(tabbedPane);
 	}
 
@@ -325,18 +367,16 @@ public class Cliente extends JFrame {
 	}
 
 	private void nuevaPesatana(String nombreTab, int codChat) throws UnknownHostException, Exception {
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(null);
-		JButton btnNewButton = new JButton("Enviar");
-		btnNewButton.setBounds(404, 165, 41, 68);
+		btnNewButton = new JButton("Enviar");
 		panel.add(btnNewButton);
 
-		JTextPane mensajes = new JTextPane();
-		mensajes.setBounds(0, 0, 445, 160);
+		mensajes = new JTextPane();
 		mensajes.setEditable(false);
 		panel.add(mensajes);
 
-		TextArea aEnviar = new TextArea();
+		aEnviar = new TextArea();
 		aEnviar.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyChar() == '\n')
@@ -346,7 +386,6 @@ public class Cliente extends JFrame {
 			}
 		});
 
-		aEnviar.setBounds(0, 165, 398, 68);
 		panel.add(aEnviar);
 
 		btnNewButton.addActionListener(new ActionListener() {
