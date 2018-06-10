@@ -211,6 +211,10 @@ public class Cliente extends JFrame {
 		String mensaje = aEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
 			aEnviar.setText("");
+			if (esImagen(mensaje)) {
+				mensaje = codificarImagen(mensaje);
+			}
+			mensaje = codificarYoutube(mensaje);
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 			try {
 				editorKit.insertHTML(doc, doc.getLength(), Usuario + ": " + mensaje, 0, 0, null);
@@ -218,6 +222,86 @@ public class Cliente extends JFrame {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	private String codificarYoutube(String recibido) {
+		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
+		String link = "";
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(";" + link + ";",
+					"<a href=\"www.youtube.com/watch?v=dQw4w9WgXcQ\">" + link + "</a>");
+		}
+		return recibido;
+	}
+
+	@SuppressWarnings("unused")
+	private String codificarYoutube2(String recibido) {
+
+		// https://stackoverflow.com/questions/21385904/how-to-insert-an-iframe-a-youtube-video-inside-a-jeditorpane
+
+		String ini = "<iframe width=\"560\" height=\"315\" src=\"";
+		String fin = "\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+
+		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		String link = "";
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(link, ini + link + fin);
+		}
+		asd = Pattern.compile("(http\\S+)").matcher(recibido);
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(link, ini + link + fin);
+		}
+		return recibido;
+	}
+
+	@SuppressWarnings("unused")
+	private boolean esYoutube2(String recibido) {
+		return recibido.contains("youtu");
+	}
+
+	private String codificarImagen(String recibido) {
+		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		String link = "";
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
+		}
+		asd = Pattern.compile("(http\\S+)").matcher(recibido);
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(link, "<img src=\"" + link + "\">");
+		}
+		return recibido;
+	}
+
+	private boolean esImagen(String recibido) {
+		if (esLink(recibido))
+			return recibido.contains("jpg") || recibido.contains("gif") || recibido.contains("png")
+					|| recibido.contains("img") || comprobarQueEsImagenDeFormaFea(recibido);
+		else
+			return false;
+	}
+
+	private boolean comprobarQueEsImagenDeFormaFea(String recibido) {
+		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		String link = "";
+		if (asd.find()) {
+			link = asd.group(1);
+			try {
+				ImageIO.read(new URL(link));
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean esLink(String recibido) {
+		return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
+				|| recibido.contains(".com");
 	}
 
 	class zumbido extends Thread {
@@ -275,86 +359,17 @@ public class Cliente extends JFrame {
 
 			public void run() {
 				cargaContenidoDeChat(mensajes);
-				while (true)
-					try {
+				try {
+					while (true) {
 						String recibido = user.recibir(codChat);
-						if (esImagen(recibido)) {
-							recibido = codificarImagen(recibido);
-						} else if (esYoutube(recibido)) {
-							recibido = codificarYoutube(recibido);
-						}
 						if (recibido.contains(":zumbido:"))
 							new zumbido().start();
 						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
-					} catch (Exception e) {
-						System.out.println("error recibiendo el mensaje");
 					}
-			}
-
-			private String codificarYoutube(String recibido) {
-				String ini = "<iframe width=\"560\" height=\"315\" src=\"";
-				String fin = "\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
-
-				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
-				String link = "";
-				if (asd.find()) {
-					link = asd.group(1);
-					return recibido.replace(link, ini + link + fin);
-				}
-				asd = Pattern.compile("(http\\S+)").matcher(recibido);
-				if (asd.find()) {
-					link = asd.group(1);
-					return recibido.replace(link, ini + link + fin);
-				}
-				return null;
-			}
-
-			private boolean esYoutube(String recibido) {
-				return recibido.contains("youtu");
-			}
-
-			private String codificarImagen(String recibido) {
-				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
-				String link = "";
-				if (asd.find()) {
-					link = asd.group(1);
-					return recibido.replace(link, "<img src=\"" + link + "\">");
-				}
-				asd = Pattern.compile("(http\\S+)").matcher(recibido);
-				if (asd.find()) {
-					link = asd.group(1);
-					return recibido.replace(link, "<img src=\"" + link + "\">");
-				}
-				return recibido;
-			}
-
-			private boolean esImagen(String recibido) {
-				if (esLink(recibido))
-					return recibido.contains("jpg") || recibido.contains("gif") || recibido.contains("png")
-							|| recibido.contains("img") || comprobarQueEsImagenDeFormaFea(recibido);
-				else
-					return false;
-			}
-
-			private boolean comprobarQueEsImagenDeFormaFea(String recibido) {
-				Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
-				String link = "";
-				if (asd.find()) {
-					link = asd.group(1);
-				}
-
-				try {
-					ImageIO.read(new URL(link));
 				} catch (Exception e) {
-					return false;
+					System.out.println("error recibiendo el mensaje");
 				}
-				return true;
-			}
-
-			private boolean esLink(String recibido) {
-				return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
-						|| recibido.contains(".com");
 			}
 
 			private void cargaContenidoDeChat(JTextPane textPane) {
