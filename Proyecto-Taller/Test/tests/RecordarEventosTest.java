@@ -24,7 +24,6 @@ public class RecordarEventosTest {
 	@Test
 	public void PruebaEvento() {
 		//el archivo donde agrega los eventos esta en la carpeta Respuestas/respuestas_RecordarEventos.dat
-		System.out.println("adkjdsa");
 		Assert.assertEquals("Ada: Evento agregado @delucas", escucha("@ada me agregas este evento : Fiesta en lo de pepe 2/08/2018 "));
 		Assert.assertEquals("Ada: El proximo evento es (pinponeada en lo de facu 3/06/2018) y falta/n  (1) dias @delucas", escucha("@ada cual es mi proximo evento?"));
 	}
