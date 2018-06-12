@@ -60,7 +60,7 @@ class Hilo extends Thread {
 			try {
 				while (true) {
 					bufferDeSalida.writeUTF("----" + usuariosConectados);
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 				}
 			} catch (Exception e) {
 				System.out.println("error mandando usuariosConectados");

@@ -6,6 +6,8 @@ import java.awt.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.JTabbedPane;
@@ -19,7 +21,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +42,10 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
+import com.sun.java_cup.internal.runtime.Scanner;
+
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
@@ -257,6 +268,9 @@ public class Cliente extends JFrame {
 				mensaje = codificarImagen(mensaje);
 			}
 			mensaje = codificarYoutube(mensaje);
+			if (esLink(mensaje)) {
+				mensaje = codificarLink(mensaje);
+			}
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 			try {
 				editorKit.insertHTML(doc, doc.getLength(), Usuario + ": " + mensaje, 0, 0, null);
@@ -277,24 +291,53 @@ public class Cliente extends JFrame {
 		return recibido;
 	}
 
-	@SuppressWarnings("unused")
-	private String codificarYoutube2(String recibido) {
+	private String obtenerTituloYVistaPrevia(String url) {
+		System.out.println("Leyendo Pagina : " + url);
+		StringBuffer resultado = new StringBuffer();
 
-		// https://stackoverflow.com/questions/21385904/how-to-insert-an-iframe-a-youtube-video-inside-a-jeditorpane
+		try {
+			URL urlPagina = new URL(url);
+			URLConnection urlConexion = urlPagina.openConnection();
+			urlConexion.connect();
 
-		String ini = "<iframe width=\"560\" height=\"315\" src=\"";
-		String fin = "\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+			BufferedReader lector = new BufferedReader(new InputStreamReader(urlConexion.getInputStream(), "UTF-8"));
+			String linea = "";
+			while ((linea = lector.readLine()) != null) {
+				resultado.append(String.valueOf(linea));
+				resultado.append("\n");
+			}
+		} catch (Exception e) {
+		}
 
-		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		System.out.println("Contenido : \n\n" + resultado.toString());
+		return resultado.toString();
+	}
+
+	private String codificarLink(String recibido) {
+		String ini = "<a href=\"";
+		String fin = "\">";
+		Matcher asd = Pattern.compile("(http\\S+)").matcher(recibido);
 		String link = "";
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, ini + link + fin);
+			return recibido.replace(link, ini + link + fin + link);
+			// return recibido.replace(link, ini + link + fin +
+			// obtenerTituloYVistaPrevia(link));
+			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
 		}
-		asd = Pattern.compile("(http\\S+)").matcher(recibido);
+		asd = Pattern.compile("(www\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, ini + link + fin);
+			return recibido.replace(link, ini + link + fin + link);
+			// return recibido.replace(link, ini + link + fin
+			// +obtenerTituloYVistaPrevia(link));
+		}
+		asd = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
+		if (asd.find()) {
+			link = asd.group(1);
+			return recibido.replace(link, ini + "www."+link + fin + link);
+			// return recibido.replace(link, ini + link + fin
+			// +obtenerTituloYVistaPrevia(link));
 		}
 		return recibido;
 	}
@@ -374,6 +417,43 @@ public class Cliente extends JFrame {
 
 		mensajes = new JTextPane();
 		mensajes.setEditable(false);
+		mensajes.addHyperlinkListener(new HyperlinkListener() {
+			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
+				String url = null;
+				URL uURL = hLinkEv.getURL();
+				if (uURL != null)
+					url = uURL.toString();
+				else
+					url = hLinkEv.getDescription();
+
+				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+
+					System.out.println("url: " + url);
+					if (Desktop.isDesktopSupported())
+						try {
+							Desktop.getDesktop().browse(new URI(url));
+							;
+						} catch (Exception e1) {
+							System.out.println("fallo Desktop");
+							try {
+								new ProcessBuilder(url).start();
+							} catch (Exception e2) {
+								System.out.println("fallto tmabien forma fea...");
+								try {
+									String comando = url;
+									Runtime.getRuntime().exec("start explorer");
+									Runtime.getRuntime().exec(comando);
+								} catch (Exception e3) {
+									System.out.println("se acabo todo... todillo");
+								}
+							}
+						}
+					else {
+						System.out.println("Desktop not suported");
+					}
+				}
+			}
+		});
 		panel.add(mensajes);
 
 		aEnviar = new TextArea();
@@ -415,7 +495,6 @@ public class Cliente extends JFrame {
 				try {
 					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
 					textPane.setContentType("text/html");
-					textPane.setEditable(true);
 					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
 					editorKit = (HTMLEditorKit) textPane.getEditorKit();
 					editorKit.insertHTML(doc, doc.getLength(), text, 0, 0, null);
