@@ -22,10 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -41,8 +39,6 @@ import javax.swing.JTextPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-
-import com.sun.java_cup.internal.runtime.Scanner;
 
 import java.awt.Component;
 import java.awt.Desktop;
@@ -267,8 +263,9 @@ public class Cliente extends JFrame {
 			if (esImagen(mensaje)) {
 				mensaje = codificarImagen(mensaje);
 			}
-			mensaje = codificarYoutube(mensaje);
-			if (esLink(mensaje)) {
+			if (mensaje.matches(".*;.*;.*"))
+				mensaje = codificarYoutube(mensaje);
+			else if (esLink(mensaje)) {
 				mensaje = codificarLink(mensaje);
 			}
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
@@ -291,7 +288,9 @@ public class Cliente extends JFrame {
 		return recibido;
 	}
 
+	@SuppressWarnings("unused")
 	private String obtenerTituloYVistaPrevia(String url) {
+		url = url.substring(0, url.length() - 2);
 		System.out.println("Leyendo Pagina : " + url);
 		StringBuffer resultado = new StringBuffer();
 
@@ -309,8 +308,7 @@ public class Cliente extends JFrame {
 		} catch (Exception e) {
 		}
 
-		System.out.println("Contenido : \n\n" + resultado.toString());
-		return resultado.toString();
+		return resultado.substring(resultado.indexOf("<p>"), resultado.indexOf("</p>") + 4);
 	}
 
 	private String codificarLink(String recibido) {
@@ -320,24 +318,24 @@ public class Cliente extends JFrame {
 		String link = "";
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, ini + link + fin + link);
-			// return recibido.replace(link, ini + link + fin +
-			// obtenerTituloYVistaPrevia(link));
+			// return recibido.replace(link, ini + link + fin + link);
+			return recibido.replace(link,
+					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
 			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
 		}
 		asd = Pattern.compile("(www\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, ini + link + fin + link);
-			// return recibido.replace(link, ini + link + fin
-			// +obtenerTituloYVistaPrevia(link));
+			// return recibido.replace(link, ini + link + fin + link);
+			return recibido.replace(link,
+					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
 		}
 		asd = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, ini + "www."+link + fin + link);
-			// return recibido.replace(link, ini + link + fin
-			// +obtenerTituloYVistaPrevia(link));
+			// return recibido.replace(link, ini + "www." + link + fin + link);
+			return recibido.replace(link,
+					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
 		}
 		return recibido;
 	}
@@ -435,22 +433,20 @@ public class Cliente extends JFrame {
 							;
 						} catch (Exception e1) {
 							System.out.println("fallo Desktop");
+						}
+					else
+						try {
+							new ProcessBuilder(url).start();
+						} catch (Exception e2) {
+							System.out.println("fallto tmabien forma fea...");
 							try {
-								new ProcessBuilder(url).start();
-							} catch (Exception e2) {
-								System.out.println("fallto tmabien forma fea...");
-								try {
-									String comando = url;
-									Runtime.getRuntime().exec("start explorer");
-									Runtime.getRuntime().exec(comando);
-								} catch (Exception e3) {
-									System.out.println("se acabo todo... todillo");
-								}
+								String comando = url;
+								Runtime.getRuntime().exec("start ");
+								Runtime.getRuntime().exec(comando);
+							} catch (Exception e3) {
+								System.out.println("se acabo todo... todillo");
 							}
 						}
-					else {
-						System.out.println("Desktop not suported");
-					}
 				}
 			}
 		});
@@ -458,6 +454,7 @@ public class Cliente extends JFrame {
 
 		aEnviar = new TextArea();
 		aEnviar.addKeyListener(new KeyAdapter() {
+
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyChar() == '\n')
 					enviarMensaje(aEnviar, mensajes, codChat);

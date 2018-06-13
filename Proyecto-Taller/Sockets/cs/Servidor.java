@@ -96,8 +96,7 @@ class Hilo extends Thread {
 					System.out.println(leer);
 					new peticionesNuevoChat().start();
 				}
-			} catch (Exception e) {
-				// mandarConectador.interrupt();
+			} catch (Exception e) { 
 				System.out.println("falla en procesamiento por CodChat 0000 " + e.getMessage() + e.getCause());
 			}
 	}
@@ -126,7 +125,7 @@ class Hilo extends Thread {
 	}
 
 	private String obtenerCodChat() {
-		return String.format("%04d", codChatLibres++);
+		return String.format("%04d",(int) (Math.random() * 999) + codChatLibres++);
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {
