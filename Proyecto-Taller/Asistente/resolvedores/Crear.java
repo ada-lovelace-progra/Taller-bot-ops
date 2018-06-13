@@ -12,9 +12,13 @@ public class Crear {
 		RecordarEventos eventos = new RecordarEventos();
 		Simpsons simpsons = new Simpsons();
 		Unidades_S_Metrico unidades = new Unidades_S_Metrico();
-
+		BuscarInformacionWikiGoogle wikipediaGoogle = new BuscarInformacionWikiGoogle();
+		Giphy gif = new Giphy();
+		
 		eventos.siguiente(agradecer);
-		agradecer.siguiente(fecha);
+		agradecer.siguiente(gif);
+		gif.siguiente(wikipediaGoogle);
+		wikipediaGoogle.siguiente(fecha);
 		fecha.siguiente(simpsons);
 		simpsons.siguiente(chuck);
 		chuck.siguiente(asimov);

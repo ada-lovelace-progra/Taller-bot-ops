@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public abstract class RespuestaGenerico {
 
 	protected RespuestaGenerico Siguiente = null;
@@ -27,9 +26,11 @@ public abstract class RespuestaGenerico {
 
 	public String intentar(String mensaje) {
 		String temp = intentarResponder(mensaje);
-		if (temp != null)
+		if (temp != null) {
+			// String siguitentePosibilidad = Siguiente.intentar(mensaje);
+			// return temp + (siguitentePosibilidad == null ? "" : siguitentePosibilidad);
 			return temp;
-		else if (Siguiente != null) // esto va a ser null cuando es la clase default... la cual es la ultima
+		} else if (Siguiente != null) // esto va a ser null cuando es la clase default... la cual es la ultima
 			return Siguiente.intentar(mensaje);
 		else
 			return null;
@@ -64,7 +65,7 @@ public abstract class RespuestaGenerico {
 
 	private int subindice(ArrayList<String> temp) {
 		int tamArray = temp.size() - 1;
-		int desface = (int) ((Math.random() * 10) % 3) - 1;
+		int desface = (int) (Math.random() * 5) - 2;
 		int i = (int) (cordialidad * tamArray) + desface;
 		return i > -1 ? i < tamArray ? i : tamArray : 0;
 	}

@@ -38,9 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -154,10 +151,6 @@ public class Cliente extends JFrame {
 
 		registrar.setBounds(260, 146, 173, 23);
 		InisioSesion.add(registrar);
-		InisioSesion.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, regPass, registrar }));
-		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { iniEmail, iniPass, iniciar, regEmail, regUser, label, registrar }));
 
 		registrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -288,28 +281,6 @@ public class Cliente extends JFrame {
 		return recibido;
 	}
 
-	@SuppressWarnings("unused")
-	private String obtenerTituloYVistaPrevia(String url) {
-		url = url.substring(0, url.length() - 2);
-		System.out.println("Leyendo Pagina : " + url);
-		StringBuffer resultado = new StringBuffer();
-
-		try {
-			URL urlPagina = new URL(url);
-			URLConnection urlConexion = urlPagina.openConnection();
-			urlConexion.connect();
-
-			BufferedReader lector = new BufferedReader(new InputStreamReader(urlConexion.getInputStream(), "UTF-8"));
-			String linea = "";
-			while ((linea = lector.readLine()) != null) {
-				resultado.append(String.valueOf(linea));
-				resultado.append("\n");
-			}
-		} catch (Exception e) {
-		}
-
-		return resultado.substring(resultado.indexOf("<p>"), resultado.indexOf("</p>") + 4);
-	}
 
 	private String codificarLink(String recibido) {
 		String ini = "<a href=\"";
@@ -319,23 +290,20 @@ public class Cliente extends JFrame {
 		if (asd.find()) {
 			link = asd.group(1);
 			// return recibido.replace(link, ini + link + fin + link);
-			return recibido.replace(link,
-					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
+			return recibido.replace(link, ini + link + fin);
 			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
 		}
 		asd = Pattern.compile("(www\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
 			// return recibido.replace(link, ini + link + fin + link);
-			return recibido.replace(link,
-					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
+			return recibido.replace(link, ini + link + fin);
 		}
 		asd = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
 			// return recibido.replace(link, ini + "www." + link + fin + link);
-			return recibido.replace(link,
-					ini + link + fin + (link.contains("wikipedia") ? obtenerTituloYVistaPrevia(link) : ""));
+			return recibido.replace(link, ini + link + fin);
 		}
 		return recibido;
 	}
