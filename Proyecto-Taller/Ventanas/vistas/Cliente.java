@@ -31,8 +31,10 @@ import javax.swing.JLabel;
 import usuariosYAsistente.Usuario;
 import javax.swing.JLayeredPane;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.JEditorPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import java.awt.Desktop;
@@ -59,8 +61,12 @@ public class Cliente extends JFrame {
 	private JLabel lblNewLabel;
 	private JPanel panel;
 	private JButton btnNewButton;
-	private JTextPane mensajes;
+	private JEditorPane mensajes;
 	private TextArea aEnviar;
+
+	private JScrollPane mensajesScroll;
+
+	private int posicionScrollbar=0;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -160,7 +166,6 @@ public class Cliente extends JFrame {
 	}
 
 	private int XTot = 0, YTot = 0;
-
 	private void setAllBounds() {
 		new Thread() {
 			public void run() {
@@ -190,6 +195,9 @@ public class Cliente extends JFrame {
 								(int) (68 * YRelacion));
 					if (mensajes != null)
 						mensajes.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (445 * XRelacion),
+								(int) (160 * YRelacion));
+					if (mensajesScroll!= null)
+						mensajesScroll.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (445 * XRelacion),
 								(int) (160 * YRelacion));
 					if (aEnviar != null)
 						aEnviar.setBounds((int) (0 * XRelacion), (int) (165 * YRelacion), (int) (398 * XRelacion),
@@ -250,10 +258,9 @@ public class Cliente extends JFrame {
 		String mensaje = aEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
 			aEnviar.setText("");
-			if (esImagen(mensaje)) {
+			if (esImagen(mensaje))
 				mensaje = codificarImagen(mensaje);
-			}
-			if (mensaje.matches(".*;.*;.*"))
+			else if (mensaje.matches(".*;.*;.*"))
 				mensaje = codificarYoutube(mensaje);
 			else if (esLink(mensaje)) {
 				mensaje = codificarLink(mensaje);
@@ -262,6 +269,8 @@ public class Cliente extends JFrame {
 			try {
 				editorKit.insertHTML(doc, doc.getLength(), Usuario + ": " + mensaje, 0, 0, null);
 				user.enviar(codChat, mensaje);
+				posicionScrollbar++;
+				mensajesScroll.getVerticalScrollBar().setValue(posicionScrollbar);
 			} catch (Exception e) {
 			}
 		}
@@ -277,7 +286,6 @@ public class Cliente extends JFrame {
 		}
 		return recibido;
 	}
-
 
 	private String codificarLink(String recibido) {
 		String ini = "<a href=\"";
@@ -320,7 +328,7 @@ public class Cliente extends JFrame {
 		asd = Pattern.compile("(http\\S+)").matcher(recibido);
 		if (asd.find()) {
 			link = asd.group(1);
-			return recibido.replace(link, "<img src=\"" + link + "\">");
+			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
 		}
 		return recibido;
 	}
@@ -378,7 +386,7 @@ public class Cliente extends JFrame {
 		btnNewButton = new JButton("Enviar");
 		panel.add(btnNewButton);
 
-		mensajes = new JTextPane();
+		mensajes = new JEditorPane();
 		mensajes.setEditable(false);
 		mensajes.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
@@ -415,7 +423,8 @@ public class Cliente extends JFrame {
 				}
 			}
 		});
-		panel.add(mensajes);
+		mensajesScroll=new JScrollPane(mensajes);
+		panel.add(mensajesScroll);
 
 		aEnviar = new TextArea();
 		aEnviar.addKeyListener(new KeyAdapter() {
@@ -453,7 +462,7 @@ public class Cliente extends JFrame {
 				}
 			}
 
-			private void cargaContenidoDeChat(JTextPane textPane) {
+			private void cargaContenidoDeChat(JEditorPane textPane) {
 				try {
 					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
 					textPane.setContentType("text/html");
