@@ -14,13 +14,22 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 	@Override
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
-			Matcher asd = Pattern.compile("sobre (.*)").matcher(mensaje);
-			if (asd.find()) {
-				String tema = asd.group(1);
-				String info = obtenerTituloYVistaPrevia(
-						"http://www.google.com/search?&btnI=745&pws=0&q=wikipedia%20sobre%20"
-								+ tema.replace(" ", "%20"));
-				return "Segun Wikipedia " + info.substring(3, info.length() - 4);
+			String regex = "";
+			if (mensaje.contains("sobre"))
+				regex = "sobre";
+			else if (mensaje.contains("informacion de"))
+				regex = "informacion de";
+			else if (mensaje.contains("que es"))
+				regex = "que es";
+
+			Matcher tema = Pattern.compile(regex + " (.*)").matcher(mensaje);
+			if (tema.find()) {
+				String link = "http://www.google.com/search?&btnI=745&pws=0&q=wikipedia%20sobre%20";
+				link += tema.group(1).replace(" ", "%20");
+				String info = obtenerTituloYVistaPrevia(link);
+				info = info.substring(3, info.length() - 4);
+				if (info != null)
+					return "Segun Wikipedia " + info;
 			}
 		}
 		return null;
@@ -61,7 +70,7 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 			System.out.println(e.getLocalizedMessage());
 		}
 
-		return "";
+		return null;
 	}
 
 }
