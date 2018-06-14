@@ -47,7 +47,7 @@ public class Clima extends RespuestaGenerico {
 								lector.close();
 								resp = resp.replace("Humidity", "Humedad");
 								resp = resp.replace("Wind", "Viento");
-								resp = resp.replace("Pressure", "Precion");
+								resp = resp.replace("Pressure", "Preson");
 								resp = resp.replace("Clouds", "Nubosidad");
 								return resp;
 							}
