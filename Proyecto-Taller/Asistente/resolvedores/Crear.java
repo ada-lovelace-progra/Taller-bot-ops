@@ -3,7 +3,7 @@ package resolvedores;
 public class Crear {
 
 	static public RespuestaGenerico Cadena() {
-		
+
 		Agradecer agradecer = new Agradecer();
 		CalculoString calcular = new CalculoString();
 		ChuckNorris chuck = new ChuckNorris();
@@ -16,9 +16,11 @@ public class Crear {
 		BuscarInformacionWikiGoogle wikipediaGoogle = new BuscarInformacionWikiGoogle();
 		Giphy gif = new Giphy();
 		Jueguito juego = new Jueguito();
-		
+		Clima clima = new Clima();
+
 		eventos.siguiente(agradecer);
-		agradecer.siguiente(gif);
+		agradecer.siguiente(clima);
+		clima.siguiente(gif);
 		gif.siguiente(juego);
 		juego.siguiente(wikipediaGoogle);
 		wikipediaGoogle.siguiente(fecha);
