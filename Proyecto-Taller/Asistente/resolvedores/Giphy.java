@@ -7,11 +7,12 @@ import java.util.regex.*;
 
 public class Giphy extends RespuestaGenerico {
 
+	private Pattern regex = Pattern.compile("de (.*)");
+
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
-			Matcher tema = Pattern.compile("de (.*)").matcher(mensaje);
+			Matcher tema = regex.matcher(mensaje);
 			if (tema.find()) {
-				
 				return obtenerTodo(tema.group(1).replace(" ", "+"));
 			}
 		}
@@ -31,28 +32,17 @@ public class Giphy extends RespuestaGenerico {
 			InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
 			BufferedReader lector = new BufferedReader(inputReader);
 			String linea = "";
+			Pattern regex = Pattern.compile("media/(.+)/gip");
+			Matcher match;
 			while ((linea = lector.readLine()) != null)
-				if (linea.contains("img")) {
-					String link = linea.substring(26, linea.lastIndexOf("><") - 2);
-					String htmlImagen = linea.substring(linea.indexOf("<im"), linea.indexOf("/>") + 2);
-					try {
-						saveImage(htmlImagen.substring(10,htmlImagen.length()-3), "C:\\Users\\fedem\\Escritorio\\giphy.gif");
-					} catch (IOException e) {
-					}
-					return link + "\n" + htmlImagen;
+				if ((match = regex.matcher(linea)).find()) {
+					String link = "https://i.giphy.com/media/" + match.group(1) + "/giphy.gif";
+					return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
 				}
+			lector.close();
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
 		return null;
 	}
-
-	public void saveImage(String imageUrl, String destinationFile) throws IOException {
-		URL website = new URL(imageUrl);
-		ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-		FileOutputStream fos = new FileOutputStream(destinationFile);
-		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		fos.close();
-	}
-
 }
