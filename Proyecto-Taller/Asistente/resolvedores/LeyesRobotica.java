@@ -2,15 +2,14 @@ package resolvedores;
 
 public class LeyesRobotica extends RespuestaGenerico {
 
-	String[] resp = {
-			"1- Un robot no debe da馻r a un ser humano o, por su inacci髇, dejar que un ser humano sufra da駉.\r\n"
-					+ "2- Un robot debe obedecer las 髍denes que le son dadas por un ser humano, excepto si estas 髍denes entran en conflicto con la Primera Ley.\r\n"
-					+ "3- Un robot debe proteger su propia existencia, hasta donde esta protecci髇 no entre en conflicto con la Primera o la Segunda Ley." };
+	String resp =
+			"1- Un robot no debe da帽ar a un ser humano o, por su inacci贸n, dejar que un ser humano sufra da帽o.\r\n"
+					+ "2- Un robot debe obedecer las 贸rdenes que le son dadas por un ser humano, excepto si estas 贸rdenes entran en conflicto con la Primera Ley.\r\n"
+					+ "3- Un robot debe proteger su propia existencia, hasta donde esta protecci贸n no entre en conflicto con la Primera o la Segunda Ley.";
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje))
-			// if((int)Math.random()*2%2==0)
-			return resp[0];
+			return resp;
 		return null;
 	}
 
