@@ -1,26 +1,25 @@
 package resolvedores;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.*;
 
-public class Giphy extends RespuestaGenerico {
+public class Gag9 extends RespuestaGenerico {
 
-	private Pattern regex = Pattern.compile("de (.*)");
-	private Pattern regexGif = Pattern.compile("media/(.+)/gip");
-	
+	private Pattern regex = Pattern.compile("media/(.+)/gip");
+
+	@Override
 	public String intentarResponder(String mensaje) {
-		if (consulta(mensaje)) {
-			Matcher tema = regex.matcher(mensaje);
-			if (tema.find()) {
-				return obtenerTodo(tema.group(1).replace(" ", "+"));
-			}
-		}
+		if (consulta(mensaje))
+			return obtenerTodo();
 		return null;
 	}
 
-	private String obtenerTodo(String tema) {
-		String url = "http://api.giphy.com/v1/gifs/random?api_key=yvyt1ie3dMcJOJzDj1Lp7okLFHIUXYfs&fmt=html&tag=";
+	private String obtenerTodo() {
+		String url = "https://img-9gag-fun.9cache.com/photo/aQ3OXmq_460sv.mp4";
 		try {
 			URL urlPagina = new URL(url);
 			URLConnection urlConexion = urlPagina.openConnection();
@@ -30,10 +29,10 @@ public class Giphy extends RespuestaGenerico {
 			InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
 			BufferedReader lector = new BufferedReader(inputReader);
 			String linea = "";
-			
+
 			Matcher match;
 			while ((linea = lector.readLine()) != null)
-				if ((match = regexGif.matcher(linea)).find()) {
+				if ((match = regex.matcher(linea)).find()) {
 					String link = "https://i.giphy.com/media/" + match.group(1) + "/giphy.gif";
 					return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
 				}
@@ -43,4 +42,5 @@ public class Giphy extends RespuestaGenerico {
 		}
 		return null;
 	}
+
 }
