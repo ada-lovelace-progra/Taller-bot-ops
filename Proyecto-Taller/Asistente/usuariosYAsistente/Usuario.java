@@ -18,7 +18,7 @@ public class Usuario extends UsuarioGenerico {
 		try {
 			System.out.println("Solicitando nuevo Chat");
 			codTemp = "0000";
-			cliente.get(0).enviar("0000nuevoChat" + userAConectar);
+			cliente.get(0).enviar("0000nuevoChat" + "|" + userAConectar + "|" + nombre);
 			while (codTemp == "0000") {
 				System.out.print(".");
 				Thread.sleep(300);
@@ -57,15 +57,14 @@ public class Usuario extends UsuarioGenerico {
 			return "";
 		}
 		if (codChat == 0) {
-			// System.out.println(recibir);
 			if (recibir.matches("[0-9]+")) {
 				codTemp = recibir;
 				System.out.println(codTemp);
 				return "";
 			} else if (recibir.contains("levantarConexion")) {
 				System.out.println("levantando");
-				String subCadena = recibir.substring(16);
-				nuevoChat(Integer.parseInt(subCadena));
+				String codChatNuevo = recibir.substring(16, 20);
+				nuevoChat(Integer.parseInt(codChatNuevo));
 				return recibir;
 			} else if (recibir.contains("?")) {
 				return recibir.substring(4);

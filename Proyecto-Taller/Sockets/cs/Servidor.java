@@ -96,7 +96,7 @@ class Hilo extends Thread {
 					System.out.println(leer);
 					new peticionesNuevoChat().start();
 				}
-			} catch (Exception e) { 
+			} catch (Exception e) {
 				System.out.println("falla en procesamiento por CodChat 0000 " + e.getMessage() + e.getCause());
 			}
 	}
@@ -106,16 +106,17 @@ class Hilo extends Thread {
 			String temp = leer;
 			try {
 				if (temp.contains("nuevoChat")) { // si es peticion entro
+					String[] mensaje = temp.split("\\|");
 					String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
-					String usuarioBuscado = temp.substring(13); // a este flaco estoy llamando
+					String usuarioBuscado = mensaje[1]; // a este flaco estoy llamando
 					Socket socketTemp = usuarios.get(usuarioBuscado); // aca traigo el socket de dicho usuario
 					// agarro el bufferDeSalida del usuario llamado
 					DataOutputStream bufferSalidaTemp = new DataOutputStream(socketTemp.getOutputStream());
 					// y por ese buffer le mando el comando para que levante y el codigo de chat
 					// nuevo
-					bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
+					bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo + mensaje[2]);
 					bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
-					//nuevo
+					// nuevo
 					System.out.println(codChatNuevo);
 				}
 			} catch (Exception e) {
@@ -125,7 +126,7 @@ class Hilo extends Thread {
 	}
 
 	private String obtenerCodChat() {
-		return String.format("%04d",(int) (Math.random() * 999) + codChatLibres++);
+		return String.format("%04d", (int) (Math.random() * 999) + codChatLibres++);
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {

@@ -61,11 +61,10 @@ public class Jueguito extends RespuestaGenerico {
 		}
 		if (max != 0 && min != 0)
 			yoDije = (int) ((Math.random() * (max - min)) + min);
-		else if (max == 0)
-			yoDije = (int) (Math.random() * (min + 500));
-		else if (min == 0)
+		else if (max != 0)
 			yoDije = (int) (Math.random() * max);
-		
+		else
+			yoDije = (int) (Math.random() * (min + 500));
 		return "es " + yoDije + "?";
 	}
 
