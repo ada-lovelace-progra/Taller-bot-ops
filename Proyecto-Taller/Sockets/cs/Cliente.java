@@ -14,8 +14,7 @@ public class Cliente {
 
 	public Cliente(int puerto) {
 		if (host == null) {
-			levantarConeccion(puerto);
-			if (socket == null)
+			if(levantarConeccion(puerto))
 				levantarServerYConectarse(puerto);
 		} else
 			try {
@@ -54,7 +53,7 @@ public class Cliente {
 		}
 	}
 
-	private String levantarConeccion(int puerto) {
+	private boolean levantarConeccion(int puerto) {
 		boolean UltimoIntento = true;
 		Scanner hosts = null;
 		try {
@@ -63,7 +62,7 @@ public class Cliente {
 			e1.printStackTrace();
 		}
 		String hostIntentados = "";
-		while ((hosts.hasNextLine() || UltimoIntento) && socket == null)
+		while (UltimoIntento && socket == null)
 			try {
 				if (hosts.hasNextLine()) {
 					host = hosts.nextLine();
@@ -75,22 +74,21 @@ public class Cliente {
 				}
 				System.out.println("Intentando con Host: " + host);
 				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
-
+				if (!hostIntentados.contains(host)) {
+					try {
+						FileWriter asd = new FileWriter("hosts.dat");
+						asd.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
+						asd.close();				
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}				
+				
+				return false;
 			} catch (Exception e) {
 				socket = null;
 			}
-
-		if (!hostIntentados.contains(host)) {
-			try {
-				FileWriter asd = new FileWriter("hosts.dat");
-				asd.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
-				asd.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return hostIntentados;
+		return true;
 	}
 
 	public void enviar(String mensaje) throws Exception {
