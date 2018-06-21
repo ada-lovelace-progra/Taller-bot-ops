@@ -29,6 +29,6 @@ public class BuscarInformacionWikiGoogleTest {
 		for (String mensaje : mensajes) {
 			Assert.assertEquals(respuesta, escucha(mensaje));
 		}
-	}
+	} 
 
 }
