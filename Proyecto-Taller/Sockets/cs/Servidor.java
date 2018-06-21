@@ -115,7 +115,7 @@ class Hilo extends Thread {
 					// nuevo
 					bufferSalidaTemp.writeUTF("levantarConexion" + codChatNuevo);
 					bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
-															// nuevo
+					//nuevo
 					System.out.println(codChatNuevo);
 				}
 			} catch (Exception e) {
