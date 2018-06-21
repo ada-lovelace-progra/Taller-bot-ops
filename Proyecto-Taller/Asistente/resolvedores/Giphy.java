@@ -4,6 +4,10 @@ import java.io.*;
 import java.net.*;
 import java.util.regex.*;
 
+
+/** 
+ * Resolvedor, muestra gifs proporcionados por giphy.
+ */
 public class Giphy extends RespuestaGenerico {
 
 	private Pattern regex = Pattern.compile("de (.*)");

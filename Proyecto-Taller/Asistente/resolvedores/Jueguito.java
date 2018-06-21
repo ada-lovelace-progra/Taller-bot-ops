@@ -3,6 +3,11 @@ package resolvedores;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/** 
+ * Resolvedor, juega mayor-menor con el usuario.
+ * (o al menos eso intenta)
+ * 
+ */
 public class Jueguito extends RespuestaGenerico {
 	private boolean EstoyJugando = false, EstoyAdivinando = false;
 	private int yoDije = 0, max = 0, min = 0, pensado = 0;

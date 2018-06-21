@@ -7,6 +7,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.*;
 
+
+/** 
+ * Resolvedor, muestra fotos aleatoreas de 9gag.
+ */
 public class Gag9 extends RespuestaGenerico {
 
 	private Pattern regex = Pattern.compile("media/(.+)/gip");

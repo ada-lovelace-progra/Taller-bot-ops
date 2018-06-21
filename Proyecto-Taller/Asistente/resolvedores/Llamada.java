@@ -1,5 +1,6 @@
 package resolvedores;
 
+
 public class Llamada extends RespuestaGenerico {
 
 	public Llamada() {

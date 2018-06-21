@@ -1,5 +1,8 @@
 package resolvedores;
 
+/** 
+ * Resolvedor, agradece.
+ */
 public class Agradecer extends RespuestaGenerico {
 
 	public Agradecer() {

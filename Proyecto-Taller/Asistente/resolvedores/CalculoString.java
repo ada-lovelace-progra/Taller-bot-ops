@@ -84,6 +84,9 @@
 //nuevo
 package resolvedores;
 
+/** 
+ * Resolvedor, realiza calculos.
+ */
 public class CalculoString extends RespuestaGenerico {
 
 	@Override

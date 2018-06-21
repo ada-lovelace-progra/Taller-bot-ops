@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+/** 
+ * Resolvedor, tira "datos" de chuck norris.
+ */
 public class ChuckNorris extends RespuestaGenerico {
 
 	public ChuckNorris() {

@@ -6,6 +6,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+/** 
+ * Resolvedor, devuelve el clima.
+ */
 public class Clima extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {

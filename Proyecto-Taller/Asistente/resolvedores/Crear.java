@@ -1,5 +1,9 @@
 package resolvedores;
 
+
+/** 
+ *  Crea la cadena de responsabilidad de las respuestas.
+ */
 public class Crear {
 
 	static public RespuestaGenerico Cadena() {

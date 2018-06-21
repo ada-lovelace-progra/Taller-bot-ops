@@ -1,5 +1,9 @@
 package resolvedores;
 
+
+/** 
+ * Resolvedor, son las leyes de la robotica.
+ */
 public class LeyesRobotica extends RespuestaGenerico {
 
 	String resp =

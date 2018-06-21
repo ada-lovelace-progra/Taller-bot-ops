@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/** 
+ * Resolvedor, Agenda nuevos eventos en el futuro y permite ver los proximos eventos pendientes.
+ */
 public class RecordarEventos extends RespuestaGenerico {
 
 	public RecordarEventos() {

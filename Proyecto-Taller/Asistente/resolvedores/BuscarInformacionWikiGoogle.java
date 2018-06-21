@@ -9,6 +9,9 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Resolvedor, busca informacion de Wikipedia.
+ */
 public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 
 	@Override

@@ -7,6 +7,16 @@ import java.util.regex.Pattern;
 import org.joda.time.*;
 import org.joda.time.format.*;
 
+
+/** 
+ * Resolvedor, devuelve operaciones relacionadas a la fecha.
+ * 
+ * dias hasta
+ * dias desde
+ * hora
+ * semana
+ * fecha actual
+ */
 public class Fecha extends RespuestaGenerico {
 
 	@Override

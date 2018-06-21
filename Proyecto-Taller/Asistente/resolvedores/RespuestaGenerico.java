@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/** 
+ * Todas las respuestas de ada deberan extender de esta clase, es el "Handler" del asistente.
+ */
 public abstract class RespuestaGenerico {
 
 	protected RespuestaGenerico Siguiente = null;
