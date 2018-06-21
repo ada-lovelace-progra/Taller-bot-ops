@@ -3,9 +3,8 @@ package resolvedores;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** 
- * Resolvedor, juega mayor-menor con el usuario.
- * (o al menos eso intenta)
+/**
+ * Resolvedor, juega mayor-menor con el usuario. (o al menos eso intenta)
  * 
  */
 public class Jueguito extends RespuestaGenerico {
@@ -30,7 +29,7 @@ public class Jueguito extends RespuestaGenerico {
 
 	private String pensando(String mensaje) {
 		if (pensado == 0)
-			pensado = (int) (Math.random() * 99999);
+			pensado = (int) (Math.random() * 999);
 		Matcher numeroP = Pattern.compile("([0-9]+)").matcher(mensaje);
 		if (numeroP.find()) {
 			int numero = Integer.parseInt(numeroP.group(1));
@@ -60,7 +59,13 @@ public class Jueguito extends RespuestaGenerico {
 			yoDije = max = min = 0;
 			return "GANEE!!!!\r\nIgual lo sabia... siempre gano... ahora yo pienso";
 		}
-		yoDije = (int) ((Math.random() * (max - min)) + min);
+		if (max != 0 && min != 0)
+			yoDije = (int) ((Math.random() * (max - min)) + min);
+		else if (max == 0)
+			yoDije = (int) (Math.random() * (min + 500));
+		else if (min == 0)
+			yoDije = (int) (Math.random() * max);
+		
 		return "es " + yoDije + "?";
 	}
 

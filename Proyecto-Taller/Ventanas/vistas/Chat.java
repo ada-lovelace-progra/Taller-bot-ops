@@ -135,7 +135,7 @@ public class Chat extends JFrame {
 		new CargaDeConectados().start();
 
 		listaConectados.addMouseListener(new MouseAdapter() {
-			private String usuariosSeleccionados = "";
+			public String usuariosSeleccionados = "";
 
 			public void mouseClicked(MouseEvent e) {
 				int cant = listaConectados.getSelectedItems().length;
