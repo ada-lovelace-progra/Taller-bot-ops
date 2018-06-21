@@ -10,59 +10,87 @@ public class Cliente {
 	private Socket socket = null;
 	private DataOutputStream dataOutputStream;
 	private DataInputStream dataInputStream;
+	private static String host = null;
 
 	public Cliente(int puerto) {
-		Scanner hosts;
-		String host = null;
-		String hostIntentados = "";
-		boolean UltimoIntento = true;
-
-		try {
-			hosts = new Scanner(new File("hosts.dat"));
-			while ((hosts.hasNextLine() || UltimoIntento) && socket == null)
-				try {
-					if (hosts.hasNextLine()) {
-						host = hosts.nextLine();
-						hostIntentados += host + "\r\n";
-					} else {
-						hosts.close();
-						host = InetAddress.getLocalHost().getHostName();
-						UltimoIntento = false;
-					}
-					System.out.println("Intentando con Host: " + host);
-					socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
-				} catch (Exception e) {
-					socket = null;
-				}
-		} catch (Exception e1) {
-		}
-		try {
-			if (socket == null) {
-				System.out.println("No hay ningun chochino sever... asique soy mi propio server");
-				new Thread() {
-					public void run() {
-						try {
-							new Servidor(5050);
-						} catch (Exception e) {
-						}
-					}
-				}.start();
-
-				Thread.sleep(500);
-				socket = new Socket(InetAddress.getByName(InetAddress.getLocalHost().getHostName()).getHostAddress(),
-						puerto);
-
+		if (host == null) {
+			levantarConeccion(puerto);
+			if (socket == null)
+				levantarServerYConectarse(puerto);
+		} else
+			try {
+				System.out.println("Intentando con Host: " + host);
+				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (!hostIntentados.contains(host)) {
-				FileWriter asd = new FileWriter("hosts.dat");
-				asd.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
-				asd.close();
-			}
+		definirBuffer();
+	}
+
+	private void definirBuffer() {
+		try {
 			dataInputStream = new DataInputStream(socket.getInputStream());
 			dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			dataOutputStream.flush();
 		} catch (Exception e) {
 		}
+	}
+
+	private void levantarServerYConectarse(int puerto) {
+		System.out.println("No hay ningun chochino sever... asique soy mi propio server");
+		new Thread() {
+			public void run() {
+				try {
+					new Servidor(puerto);
+				} catch (Exception e) {
+				}
+			}
+		}.start();
+		try {
+			Thread.sleep(500);
+			socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String levantarConeccion(int puerto) {
+		boolean UltimoIntento = true;
+		Scanner hosts = null;
+		try {
+			hosts = new Scanner(new File("hosts.dat"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		String hostIntentados = "";
+		while ((hosts.hasNextLine() || UltimoIntento) && socket == null)
+			try {
+				if (hosts.hasNextLine()) {
+					host = hosts.nextLine();
+					hostIntentados += host + "\r\n";
+				} else {
+					hosts.close();
+					host = InetAddress.getLocalHost().getHostName();
+					UltimoIntento = false;
+				}
+				System.out.println("Intentando con Host: " + host);
+				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
+
+			} catch (Exception e) {
+				socket = null;
+			}
+
+		if (!hostIntentados.contains(host)) {
+			try {
+				FileWriter asd = new FileWriter("hosts.dat");
+				asd.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
+				asd.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return hostIntentados;
 	}
 
 	public void enviar(String mensaje) throws Exception {
