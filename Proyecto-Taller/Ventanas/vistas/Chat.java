@@ -2,10 +2,9 @@ package vistas;
 
 import java.awt.EventQueue;
 import java.awt.List;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.net.URI;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -22,7 +21,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-
 
 import usuariosYAsistente.*;
 
@@ -42,13 +40,17 @@ import java.awt.Font;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.event.MouseEvent;
 
 public class Chat extends JFrame {
 
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Usuario usuario;
 	private static Chat ventana;
-	private int codChatAbrir=-1;
+	private int codChatAbrir = -1;
 	private HTMLEditorKit editorKit;
 	private String text;
 	private List listaConectados;
@@ -78,7 +80,8 @@ public class Chat extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public Chat(String user) throws Exception {
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
@@ -88,26 +91,25 @@ public class Chat extends JFrame {
 		ventana.setTitle(user);
 		usuario.nuevoChat(0);
 		usuario.enviar(0, "refresh");
-		
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{29, 229, 25, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 2.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 29, 229, 25, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 2.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gridBagLayout);
-		
+
 		JLabel lblConectados = new JLabel("Conectados");
 		GridBagConstraints gbc_lblConectados = new GridBagConstraints();
 		gbc_lblConectados.insets = new Insets(0, 0, 5, 5);
 		gbc_lblConectados.gridx = 0;
 		gbc_lblConectados.gridy = 0;
 		getContentPane().add(lblConectados, gbc_lblConectados);
-		
+
 		listaConectados = new List();
 		lblConectados.setLabelFor(listaConectados);
 		GridBagConstraints gbc_listaConectados = new GridBagConstraints();
@@ -117,7 +119,7 @@ public class Chat extends JFrame {
 		gbc_listaConectados.gridx = 0;
 		gbc_listaConectados.gridy = 1;
 		getContentPane().add(listaConectados, gbc_listaConectados);
-		
+
 		tabChats = new JTabbedPane(JTabbedPane.TOP);
 		tabChats.setBorder(new MatteBorder(1, 1, 1, 1, (Color) SystemColor.control));
 		tabChats.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -129,45 +131,41 @@ public class Chat extends JFrame {
 		gbc_tabChats.gridy = 1;
 
 		getContentPane().add(tabChats, gbc_tabChats);
-		
-		
+
 		new CargaDeConectados().start();
-		
-		listaConectados.addItemListener(new ItemListener() 
-		{
-			public void itemStateChanged(ItemEvent e) 
-			{
+
+		listaConectados.addMouseListener(new MouseAdapter() {
+			private String usuariosSeleccionados = "";
+
+			public void mouseClicked(MouseEvent e) {
 				int cant = listaConectados.getSelectedItems().length;
-				if (cant == 1 && !listaConectados.getSelectedItem().equals(user)) 
-				{
-					try 
-					{
-						int codChat= codChatAbrir= usuario.pedirNuevoChat(listaConectados.getSelectedItem());
-						if (codChat != -1) //ver que ya no tenga la pestaña abierta
+				String selectedItem = listaConectados.getSelectedItem();
+				if (cant == 1 && !selectedItem.equals(user) && !usuariosSeleccionados.contains(selectedItem)) {
+					try {
+						usuariosSeleccionados += selectedItem + " ";
+						int codChat = codChatAbrir = usuario.pedirNuevoChat(selectedItem);
+						if (codChat != -1) // ver que ya no tenga la pestaña abierta
 							nuevaTab(codChat + "", codChat);
-					} 
-					catch (Exception e1) {
+					} catch (Exception e1) {
 					}
-					listaConectados.deselect(listaConectados.getSelectedIndex());
 				}
+				listaConectados.deselect(listaConectados.getSelectedIndex());
 			}
 		});
 
 	}
-	
-	
-	private void nuevaTab(String nombre, int codChat)
-	{
-		if(tabChats.indexOfTab(nombre) != -1) //ya esta la tab abierta: de ultima que le haga focus
+
+	private void nuevaTab(String nombre, int codChat) {
+		if (tabChats.indexOfTab(nombre) != -1) // ya esta la tab abierta: de ultima que le haga focus
 		{
 			tabChats.setSelectedIndex(tabChats.indexOfTab(nombre));
-		}		
-		
+		}
+
 		textEnviar = new JTextArea();
-		//textEnviar.setMinimumSize(new Dimension(20, 22));
+		// textEnviar.setMinimumSize(new Dimension(20, 22));
 		textEnviar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		textEnviar.setLineWrap(true);
-		
+
 		scrollChiquito = new JScrollPane(textEnviar);
 		scrollChiquito.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollChiquito.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -176,21 +174,18 @@ public class Chat extends JFrame {
 		gbc_scrollChiquito.gridx = 1;
 		gbc_scrollChiquito.gridy = 2;
 		getContentPane().add(scrollChiquito, gbc_scrollChiquito);
-		
+
 		mensajes = new JEditorPane();
 		mensajes.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		mensajes.setEditable(false);
 		mensajes.setContentType("text/html");
-		//mensajes.setPreferredSize(this.getSize());
+		// mensajes.setPreferredSize(this.getSize());
 		fuente = new Font("Tahoma", Font.PLAIN, 11);
-		mensajes.putClientProperty(mensajes.HONOR_DISPLAY_PROPERTIES, true);
+		mensajes.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
 		mensajes.setFont(fuente);
-		
-		
-		mensajes.addHyperlinkListener(new HyperlinkListener() 
-		{
-			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) 
-			{
+
+		mensajes.addHyperlinkListener(new HyperlinkListener() {
+			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
 				String url = null;
 				URL uURL = hLinkEv.getURL();
 				if (uURL != null)
@@ -198,17 +193,13 @@ public class Chat extends JFrame {
 				else
 					url = hLinkEv.getDescription();
 
-				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) 
-				{
+				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					System.out.println("url: " + url);
 					if (Desktop.isDesktopSupported())
-						try 
-					{
+						try {
 							Desktop.getDesktop().browse(new URI(url));
 							;
-						} 
-					catch (Exception e1) 
-					{
+						} catch (Exception e1) {
 							System.out.println("fallo Desktop");
 						}
 					else
@@ -224,62 +215,51 @@ public class Chat extends JFrame {
 								System.out.println("se acabo todo... todillo");
 							}
 						}
-				}//fin if activated
+				} // fin if activated
 			}
 		});
-		
+
 		scrollPane = new JScrollPane(mensajes);
-		scrollPane.setHorizontalScrollBarPolicy(scrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		mensajes.getDocument().addDocumentListener(new DocumentListener()
-				{
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-					@Override
-					public void insertUpdate(DocumentEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
+		mensajes.getDocument().addDocumentListener(new DocumentListener() {
 
-					@Override
-					public void removeUpdate(DocumentEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
 
-					@Override
-					public void changedUpdate(DocumentEvent e) {
-						mensajes.setCaretPosition(mensajes.getDocument().getLength());
-					}
-			
-				});
-		
-		
-		textEnviar.addKeyListener(new KeyAdapter() 
-		{
-			public void keyPressed(KeyEvent arg0) 
-			{
-				if (arg0.getKeyChar() == '\n')
-				{
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				mensajes.setCaretPosition(mensajes.getDocument().getLength());
+			}
+
+		});
+
+		textEnviar.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyChar() == '\n') {
 					enviarMensaje(textEnviar, mensajes, codChat);
 					textEnviar.setText("");
-				}
-				else if (textEnviar.getText().startsWith("\r\n"))
+				} else if (textEnviar.getText().startsWith("\r\n"))
 					textEnviar.setText(textEnviar.getText().substring(2));
 			}
 		});
 
-		
-		//falta el boton de enviar
-		
-		
+		// falta el boton de enviar
+
 		new Thread() {
-			public void run() 
-			{
+			public void run() {
 				cargaContenidoDeChat(mensajes);
-				try 
-				{
-					while (true) 
-					{
+				try {
+					while (true) {
 						String recibido = usuario.recibir(codChat);
 						if (recibido.contains(":zumbido:"))
 							new Zumbido().start();
@@ -287,34 +267,28 @@ public class Chat extends JFrame {
 						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
 						mensajes.setCaretPosition(doc.getLength());
 					}
-				} 
-				catch (Exception e) 
-				{
+				} catch (Exception e) {
 					System.out.println("error recibiendo el mensaje");
 				}
 			}
 
-			private void cargaContenidoDeChat(JEditorPane textPane) 
-			{
-				try 
-				{
+			private void cargaContenidoDeChat(JEditorPane textPane) {
+				try {
 					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
 					textPane.setContentType("text/html");
 					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
 					editorKit = (HTMLEditorKit) textPane.getEditorKit();
 					editorKit.insertHTML(doc, doc.getLength(), text, 0, 0, null);
-					//JScrollBar vertical = scrollPane.getVerticalScrollBar();
+					// JScrollBar vertical = scrollPane.getVerticalScrollBar();
 					textPane.setCaretPosition(textPane.getDocument().getLength());
 				} catch (Exception e) {
 				}
 			}
 		}.start();
-		
-		tabChats.addTab(nombre, null, scrollPane, null);		
+
+		tabChats.addTab(nombre, null, scrollPane, null);
 	}
-	
-	
-	
+
 	private void enviarMensaje(JTextArea aEnviar, JEditorPane mensajes, int codChat) {
 		String mensaje = aEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
@@ -330,9 +304,9 @@ public class Chat extends JFrame {
 			try {
 				editorKit.insertHTML(doc, doc.getLength(), usuario.nombre + ": " + mensaje, 0, 0, null);
 				usuario.enviar(codChat, mensaje);
-				//JScrollBar vertical = scrollPane.getVerticalScrollBar();
+				// JScrollBar vertical = scrollPane.getVerticalScrollBar();
 				mensajes.setCaretPosition(mensajes.getDocument().getLength());
-				//vertical.setValue(vertical.getMaximum()+1);
+				// vertical.setValue(vertical.getMaximum()+1);
 			} catch (Exception e) {
 			}
 		}
@@ -421,56 +395,39 @@ public class Chat extends JFrame {
 		return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
 				|| recibido.contains(".com");
 	}
-	
-	
-	
-	
-	class CargaDeConectados extends Thread 
-	{
-		public void run() 
-		{
-			try 
-			{
+
+	class CargaDeConectados extends Thread {
+		public void run() {
+			try {
 				String anterior = null;
-				while (true) 
-				{
+				while (true) {
 					String nuevo = usuario.recibir(0);
-					if (nuevo.contains("?")) 
-					{
-						if (!nuevo.equals(anterior)) 
-						{
+					if (nuevo.contains("?")) {
+						if (!nuevo.equals(anterior)) {
 							listaConectados.removeAll();
 							for (String user : nuevo.split("\\?"))
-								if (!user.equals(usuario))
+								if (!user.equals(usuario.nombre))
 									listaConectados.add(user);
 							anterior = nuevo;
 						}
-					}
-					else
-					{
-						//nuevaTab("Pestana Pedida", Integer.parseInt(nuevo.substring(16)));
-						if(tabChats.indexOfTab(codChatAbrir+"") != -1) //ya esta la tab abierta: de ultima que le haga focus
+					} else {
+						// nuevaTab("Pestana Pedida", Integer.parseInt(nuevo.substring(16)));
+						if (tabChats.indexOfTab(codChatAbrir + "") != -1) // ya esta la tab abierta: de ultima que le
+																			// haga focus
 						{
-							tabChats.setSelectedIndex(tabChats.indexOfTab(codChatAbrir+""));
-						}
-						else
-						{
+							tabChats.setSelectedIndex(tabChats.indexOfTab(codChatAbrir + ""));
+						} else {
 							nuevaTab("cargacontNO", Integer.parseInt(nuevo.substring(16)));
 						}
 					}
 				}
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 			}
 		}
 	}
-	
-	
-	class Zumbido extends Thread 
-	{
-		public void run() 
-		{
+
+	class Zumbido extends Thread {
+		public void run() {
 			System.out.println("iniciado vibrado");
 			int veces = 50;
 			int x = (int) ventana.getLocation().getY();
