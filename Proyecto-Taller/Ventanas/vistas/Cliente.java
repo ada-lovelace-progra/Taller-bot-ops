@@ -1,76 +1,55 @@
 package vistas;
 
 import java.awt.EventQueue;
-import java.awt.List;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.JTabbedPane;
 import java.awt.TextArea;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.net.URI;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
-import usuariosYAsistente.Usuario;
 import javax.swing.JLayeredPane;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import java.awt.Desktop;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
-	private Usuario user;
-	private String Usuario;
 	private static Cliente ventana;
-	private List Conectados;
 	private JPasswordField iniPass;
 	private JTextField regEmail;
 	private JPasswordField regPass;
 	private JTextField regUser;
-	private HTMLEditorKit editorKit;
 
-	private String text;
-	private JLayeredPane InisioSesion;
+	private JLayeredPane inicioSesion;
 	private JLayeredPane Chat;
 	private JLabel lblNewLabel;
-	private JPanel panel;
 	private JButton btnNewButton;
 	private JEditorPane mensajes;
 	private TextArea aEnviar;
+	private Font fuente;
 
 	private JScrollPane mensajesScroll;
 
-	private int posicionScrollbar=0;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					ventana = new Cliente();
+					ventana.setLocationRelativeTo(null);
 					ventana.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,6 +61,7 @@ public class Cliente extends JFrame {
 	public Cliente() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 568, 300);
+		fuente = new Font("Tahoma", Font.PLAIN, 11);
 		setAllBounds();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -91,67 +71,78 @@ public class Cliente extends JFrame {
 	}
 
 	private void iniciarSesion() {
-		InisioSesion = new JLayeredPane();
-		contentPane.add(InisioSesion);
-		InisioSesion.setLayout(null);
+		inicioSesion = new JLayeredPane();
+		contentPane.add(inicioSesion);
+		inicioSesion.setLayout(null);
 
 		iniPass = new JPasswordField();
-		InisioSesion.setLayer(iniPass, 0);
+		iniPass.setFont(fuente);
+		inicioSesion.setLayer(iniPass, 0);
 
-		InisioSesion.add(iniPass);
+		inicioSesion.add(iniPass);
 
 		JTextField iniEmail = new JTextField();
 		iniEmail.setBounds(11, 24, 143, 20);
-		InisioSesion.add(iniEmail);
+		iniEmail.setFont(fuente);
+		inicioSesion.add(iniEmail);
 		iniEmail.setColumns(10);
 
-		JLabel lblUsuario = new JLabel("Email");
+		JLabel lblUsuario = new JLabel("Email:");
 		lblUsuario.setBounds(10, 11, 46, 14);
-		InisioSesion.add(lblUsuario);
+		lblUsuario.setFont(fuente);
+		inicioSesion.add(lblUsuario);
 
-		JLabel lblContrasea = new JLabel("Contrase\u00F1a");
+		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
 		lblContrasea.setBounds(11, 56, 80, 14);
-		InisioSesion.add(lblContrasea);
+		lblContrasea.setFont(fuente);
+		inicioSesion.add(lblContrasea);
 
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
 		separator.setBounds(251, 0, 9, 261);
-		InisioSesion.add(separator);
+		inicioSesion.add(separator);
 
 		regEmail = new JTextField();
 		regEmail.setColumns(10);
 		regEmail.setBounds(260, 24, 143, 20);
-		InisioSesion.add(regEmail);
+		regEmail.setFont(fuente);
+		inicioSesion.add(regEmail);
 
-		JLabel lblEmail = new JLabel("Email");
+		JLabel lblEmail = new JLabel("Email:");
 		lblEmail.setBounds(259, 11, 46, 14);
-		InisioSesion.add(lblEmail);
+		lblEmail.setFont(fuente);
+		inicioSesion.add(lblEmail);
 
-		JLabel lblUsuario_1 = new JLabel("Usuario");
+		JLabel lblUsuario_1 = new JLabel("Usuario:");
 		lblUsuario_1.setBounds(260, 56, 80, 14);
-		InisioSesion.add(lblUsuario_1);
+		lblUsuario_1.setFont(fuente);
+		inicioSesion.add(lblUsuario_1);
 
-		JLabel label = new JLabel("Contrase\u00F1a");
+		JLabel label = new JLabel("Contrase\u00F1a:");
 		label.setBounds(260, 101, 80, 14);
-		InisioSesion.add(label);
+		label.setFont(fuente);
+		inicioSesion.add(label);
 
 		regPass = new JPasswordField();
 		regPass.setBounds(260, 115, 144, 20);
-		InisioSesion.add(regPass);
+		regPass.setFont(fuente);
+		inicioSesion.add(regPass);
 
 		regUser = new JTextField();
 		regUser.setColumns(10);
 		regUser.setBounds(260, 70, 143, 20);
-		InisioSesion.add(regUser);
+		regUser.setFont(fuente);
+		inicioSesion.add(regUser);
 
-		JButton iniciar = new JButton("Iniciar Sesion");
+		JButton iniciar = new JButton("Iniciar sesión");
 		iniciar.setBounds(11, 97, 117, 23);
-		InisioSesion.add(iniciar);
+		iniciar.setFont(fuente);
+		inicioSesion.add(iniciar);
 
-		JButton registrar = new JButton("Registrarse e Iniciar Sesion");
-
+		JButton registrar = new JButton("Registrarse e iniciar sesión");
 		registrar.setBounds(260, 146, 173, 23);
-		InisioSesion.add(registrar);
+		registrar.setFont(fuente);
+		inicioSesion.add(registrar);
 
 		registrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -176,8 +167,8 @@ public class Cliente extends JFrame {
 						YTot = y;
 					double YRelacion = (double) y / (double) YTot, XRelacion = (double) x / (double) XTot;
 
-					if (InisioSesion != null)
-						InisioSesion.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (552 * XRelacion),
+					if (inicioSesion != null)
+						inicioSesion.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (552 * XRelacion),
 								(int) (261 * YRelacion));
 					if (Chat != null)
 						Chat.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (552 * XRelacion),
@@ -200,9 +191,7 @@ public class Cliente extends JFrame {
 					if (aEnviar != null)
 						aEnviar.setBounds((int) (0 * XRelacion), (int) (165 * YRelacion), (int) (398 * XRelacion),
 								(int) (68 * YRelacion));
-					if (Conectados != null)
-						Conectados.setBounds((int) (10 * XRelacion), (int) (26 * YRelacion), (int) (81 * XRelacion),
-								(int) (224 * YRelacion));
+
 
 					try {
 						Thread.sleep(500);
@@ -214,289 +203,11 @@ public class Cliente extends JFrame {
 	}
 
 	private void sesionIniciada() throws Exception {
-		Usuario = regUser.getText();
-		ventana.setTitle(Usuario);
-		user = new Usuario(Usuario);
-		user.nuevoChat(0);
-		user.enviar(0, "refresh");
-
-		contentPane.removeAll();
-
-		Chat = new JLayeredPane();
-
-		contentPane.add(Chat);
-
-		Conectados = new List();
-		Conectados.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				int cant = Conectados.getSelectedItems().length;
-				if (cant == 1) {
-					try {
-						int codChat = user.pedirNuevoChat(Conectados.getSelectedItem());
-						if (codChat != -1)
-							nuevaPesatana(codChat + "", codChat);
-					} catch (Exception e1) {
-					}
-					Conectados.deselect(Conectados.getSelectedIndex());
-				}
-			}
-		});
-		Chat.add(Conectados);
-
-		new cargaDeConectados().start();
-
-		lblNewLabel = new JLabel("Conectados");
-		Chat.add(lblNewLabel);
-
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		Chat.add(tabbedPane);
-	}
-
-	private void enviarMensaje(TextArea aEnviar, JEditorPane mensajes, int codChat) {
-		String mensaje = aEnviar.getText();
-		if (mensaje.length() > 0 && !mensaje.equals("\r\n")) {
-			aEnviar.setText("");
-			if (esImagen(mensaje))
-				mensaje = codificarImagen(mensaje);
-			else if (mensaje.matches(".*;.*;.*"))
-				mensaje = codificarYoutube(mensaje);
-			else if (esLink(mensaje)) {
-				mensaje = codificarLink(mensaje);
-			}
-			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-			try {
-				editorKit.insertHTML(doc, doc.getLength(), Usuario + ": " + mensaje, 0, 0, null);
-				user.enviar(codChat, mensaje);
-				posicionScrollbar++;
-				mensajesScroll.getVerticalScrollBar().setValue(posicionScrollbar);
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	private String codificarYoutube(String recibido) {
-		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
-		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
-			return recibido.replace(";" + link + ";",
-					"<a href=\"www.youtube.com/watch?v=dQw4w9WgXcQ\">" + link + "</a>");
-		}
-		return recibido;
-	}
-
-	private String codificarLink(String recibido) {
-		String ini = "<a href=\"";
-		String fin = "\">";
-		Matcher asd = Pattern.compile("(http\\S+)").matcher(recibido);
-		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
-			// return recibido.replace(link, ini + link + fin + link);
-			return recibido.replace(link, ini + link + fin);
-			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
-		}
-		asd = Pattern.compile("(www\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
-			// return recibido.replace(link, ini + link + fin + link);
-			return recibido.replace(link, ini + link + fin);
-		}
-		asd = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
-			// return recibido.replace(link, ini + "www." + link + fin + link);
-			return recibido.replace(link, ini + link + fin);
-		}
-		return recibido;
-	}
-
-	@SuppressWarnings("unused")
-	private boolean esYoutube2(String recibido) {
-		return recibido.contains("youtu");
-	}
-
-	private String codificarImagen(String recibido) {
-		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
-		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
-			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
-		}
-		asd = Pattern.compile("(http\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
-			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
-		}
-		return recibido;
-	}
-
-	private boolean esImagen(String recibido) {
-		if (esLink(recibido))
-			return recibido.contains("jpg") || recibido.contains("gif") || recibido.contains("png")
-					|| recibido.contains("img") || comprobarQueEsImagenDeFormaFea(recibido);
-		else
-			return false;
-	}
-
-	private boolean comprobarQueEsImagenDeFormaFea(String recibido) {
-		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
-		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
-			try {
-				ImageIO.read(new URL(link));
-			} catch (Exception e) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean esLink(String recibido) {
-		return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
-				|| recibido.contains(".com");
-	}
-
-	class zumbido extends Thread {
-		public void run() {
-			System.out.println("iniciado vibrado");
-			int veces = 50;
-			int x = (int) ventana.getLocation().getY();
-			int y = (int) ventana.getLocation().getX();
-			while (veces-- != 0) {
-				int x1 = (int) (Math.random() * 20 - 10);
-				int y1 = (int) (Math.random() * 20 - 10);
-				ventana.setLocation(x + x1, y + y1);
-				try {
-					Thread.sleep(50);
-				} catch (Exception e) {
-					System.out.println("error 'vibrando'");
-				}
-			}
-			ventana.setLocation(x, y);
-		}
-	}
-
-	private void nuevaPesatana(String nombreTab, int codChat) throws UnknownHostException, Exception {
-		panel = new JPanel();
-		panel.setLayout(null);
-		btnNewButton = new JButton("Enviar");
-		panel.add(btnNewButton);
-
-		mensajes = new JEditorPane();
-		mensajes.setEditable(false);
-		mensajes.addHyperlinkListener(new HyperlinkListener() {
-			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
-				String url = null;
-				URL uURL = hLinkEv.getURL();
-				if (uURL != null)
-					url = uURL.toString();
-				else
-					url = hLinkEv.getDescription();
-
-				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-
-					System.out.println("url: " + url);
-					if (Desktop.isDesktopSupported())
-						try {
-							Desktop.getDesktop().browse(new URI(url));
-							;
-						} catch (Exception e1) {
-							System.out.println("fallo Desktop");
-						}
-					else
-						try {
-							new ProcessBuilder(url).start();
-						} catch (Exception e2) {
-							System.out.println("fallto tmabien forma fea...");
-							try {
-								String comando = url;
-								Runtime.getRuntime().exec("start ");
-								Runtime.getRuntime().exec(comando);
-							} catch (Exception e3) {
-								System.out.println("se acabo todo... todillo");
-							}
-						}
-				}
-			}
-		});
-		mensajesScroll=new JScrollPane(mensajes);
-		panel.add(mensajesScroll);
-
-		aEnviar = new TextArea();
-		aEnviar.addKeyListener(new KeyAdapter() {
-
-			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyChar() == '\n')
-					enviarMensaje(aEnviar, mensajes, codChat);
-				else if (aEnviar.getText().startsWith("\r\n"))
-					aEnviar.setText(aEnviar.getText().substring(2));
-			}
-		});
-
-		panel.add(aEnviar);
-
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				enviarMensaje(aEnviar, mensajes, codChat);
-			}
-		});
-
-		new Thread() {
-
-			public void run() {
-				cargaContenidoDeChat(mensajes);
-				try {
-					while (true) {
-						String recibido = user.recibir(codChat);
-						if (recibido.contains(":zumbido:"))
-							new zumbido().start();
-						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
-					}
-				} catch (Exception e) {
-					System.out.println("error recibiendo el mensaje");
-				}
-			}
-
-			private void cargaContenidoDeChat(JEditorPane textPane) {
-				try {
-					text = "<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>";
-					textPane.setContentType("text/html");
-					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
-					editorKit = (HTMLEditorKit) textPane.getEditorKit();
-					editorKit.insertHTML(doc, doc.getLength(), text, 0, 0, null);
-				} catch (Exception e) {
-				}
-			}
-
-		}.start();
-
-		tabbedPane.addTab(nombreTab, null, panel, null);
-	}
-
-	class cargaDeConectados extends Thread {
-		public void run() {
-			try {
-				String anterior = null;
-				while (true) {
-					String nuevo = user.recibir(0);
-					if (nuevo.contains("?")) {
-						if (!nuevo.equals(anterior)) {
-							Conectados.removeAll();
-							for (String user : nuevo.split("\\?"))
-								if (!user.equals(Usuario))
-									Conectados.add(user);
-							anterior = nuevo;
-						}
-					} else
-						nuevaPesatana("Pestana Pedida", Integer.parseInt(nuevo.substring(16)));
-
-				}
-			} catch (Exception e) {
-			}
-		}
+		
+		Chat ventanaChat = new Chat(regUser.getText());
+		ventanaChat.setLocationRelativeTo(null);
+		ventanaChat.setVisible(true);
+		this.dispose();
 	}
 
 }
