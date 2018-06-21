@@ -7,8 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
-import java.awt.TextArea;
-
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 
@@ -38,7 +36,6 @@ public class Cliente extends JFrame {
 	private JLabel lblNewLabel;
 	private JButton btnNewButton;
 	private JEditorPane mensajes;
-	private TextArea aEnviar;
 	private Font fuente;
 
 	private JScrollPane mensajesScroll;
@@ -188,10 +185,6 @@ public class Cliente extends JFrame {
 					if (mensajesScroll!= null)
 						mensajesScroll.setBounds((int) (0 * XRelacion), (int) (0 * YRelacion), (int) (445 * XRelacion),
 								(int) (160 * YRelacion));
-					if (aEnviar != null)
-						aEnviar.setBounds((int) (0 * XRelacion), (int) (165 * YRelacion), (int) (398 * XRelacion),
-								(int) (68 * YRelacion));
-
 
 					try {
 						Thread.sleep(500);
