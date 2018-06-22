@@ -1,111 +1,75 @@
 id;clase;peticion;respuesta
-1;Agradecer;muchas gracias;De nada!
-2;Llamada;hola;Buen d¡a!
-3;Despedida;chau;Chau
-4;Despedida;adios;Hasta luego! Espero haber sido de ayuda
-5;Llamada;buen dia;Hola!
-6;Llamada;buenos dias;Qu‚ onda?
-7;Llamada;buenas tardes;Buenas tardes, ¨en qu‚ puedo ayudar?
-8;Llamada;buenas noches;Buenas noches, mi buen
-9;Despedida;chau;Nos vemos
-10;CalculoString;resolve;resolve
-11;CalculoString;calcula;calcula
-12;CalculoString;cuanto da;cuanto da
-13;CalculoString;cuanto es;cuanto es
-14;CalculoString;cuanto da la expresion;cuanto da la expresion
-15;CalculoString;resuelve;
-16;ChuckNorris;chuck;
-17;Fecha;que dia estamos;
-18;Fecha;fecha;
-19;Fecha;decime el dia;
-20;Fecha;la hora;
-21;Fecha;dia;
-22;Fecha;que hora es;
-23;Fecha;cuanto falta;
-24;Fecha;dia de la semana;
-25;Fecha;cuanto paso;
-26;LeyesRobotica;leyes robotica;
-27;LeyesRobotica;isaac asimov;
-28;RecordarEventos;proximo evento;
-29;RecordarEventos;agrega este evento;
-30;Unidades_S_Metrico;converti;converti
-31;Unidades_S_Metrico;pasa;
-32;BuscarInformacionWikiGoogle;buscar;buscar
-33;Clima;tiempo;
-34;Clima;clima;
-35;Clima;como esta el tiempo;
-36;Clima;que frio wacho;
-37;Clima;que tiempo hace;
-38;Clima;el tiempo;
-39;Clima;como esta el tiempo hoy;
-40;Clima;necesito el tiempo;
-41;Clima;.*tiempo.*;
-42;Clima;@asistente, me dirias como esta el tiempo hoy?;
-43;Clima;@asistente, me dirias como esta el tiempo hoy;
-44;Clima;@asistente me dirias como esta el tiempo hoy;
-45;Conversacion;@asistente *que onda.*;tu vieja
-46;Conversacion;@asistente *todo peola.*;que ti?
-47;Conversacion;@asistente *todo piola.*;que te importa?
-48;Conversacion;@asistente *todo bien.*;para el orto
-49;Conversacion;@asistente *como andas.*;genial
-50;SimpsonsLista;mi hijo no es comunista;Podr  ser mentiroso, puerco, idiota, comunista, pero nunca una estrella de porno
-51;SimpsonsLista;me gusta la cerveza fria;la tele fuerte y los homosexuales locas, locas
-52;SimpsonsLista;la hiciste llorar;y luego yo llor‚, y Maggie ri¢?Todo fue una confusi¢n
-53;SimpsonsLista;todo fue una confusion;La hiciste llorar, y luego yo llor‚, y Maggie ri¢?
-54;SimpsonsLista;te advierto que si;vas a enfadarte conmigo cada vez que haga una estupidez, no tendr‚ m s remedio que dejar de hacer estupideces
-55;SimpsonsLista;homero, eres tonto como una piedra;y feo como una blasfemia. Si un extra¤o ofrece llevarte, te subes
-56;SimpsonsLista;plan dental;lisa necesita frenos
-57;SimpsonsLista;diferencia entre jugo y sidra;Si es claro y amarillo seguro que es juguillo, si es turbio y picoson es sidra muchachon
-58;SimpsonsLista;una mujer;es como una cerveza, huelen bien, se ven bien y puedes matar a tu madre por conseguir una
-59;SimpsonsLista;linguo muerto;linguo esta muerto
-60;Default;.*;que se yo wacho ni idea loro
-61;Default;.*;que se yo
-62;Default;.*;no ni ahi se hacer eso
-63;Default;.*;ni idea
-64;Default;.*;no se
-65;Default;.*;y eso como se hace?
-66;Default;.*;no se como hacer eso
-67;Default;.*;como se realiza dicha peticion?
-68;Jueguito;mas chico;
-69;Jueguito;mas grande;
-70;Jueguito;jueguito;
-71;Jueguito;es [0-9]+\??;
-72;;;
-73;;;
-74;;;
-75;;;
-76;;;
-77;;;
-78;;;
-79;;;
-80;;;
-81;;;
-82;;;
-83;;;
-84;;;
-85;;;
-86;;;
-87;;;
-88;;;
-89;;;
-90;;;
-91;;;
-92;;;
-93;;;
-94;;;
-95;;;
-96;;;
-97;;;
-98;;;
-99;;;
-100;;;
-101;;;
-102;;;
-103;;;
-104;;;
-105;;;
-106;;;
-107;;;
-108;;;
-109;;;
-110;;;
+1;Agradecer;gracias @asistente;De nada!
+2;Agradecer; @asistente gracias;De nada!
+3;Agradecer;muchas gracias @asistente;De nada!
+4;Llamada;hola;Buen d¡a!
+5;Despedida;chau;Chau
+6;Despedida;adios;Hasta luego! Espero haber sido de ayuda
+7;Llamada;buen dia;Hola!
+8;Llamada;buenos dias;Qu‚ onda?
+9;Llamada;buenas tardes;Buenas tardes, ¨en qu‚ puedo ayudar?
+10;Llamada;buenas noches;Buenas noches, mi buen
+11;Despedida;chau;Nos vemos
+12;CalculoString;resolve;
+13;CalculoString;calcula;
+14;CalculoString;cuanto da;
+15;CalculoString;cuanto es;
+16;CalculoString;cuanto da la expresion;
+17;CalculoString;resuelve;
+18;ChuckNorris;chuck;
+19;Fecha;que dia estamos;
+20;Fecha;fecha;
+21;Fecha;decime el dia;
+22;Fecha;la hora;
+23;Fecha;dia;
+24;Fecha;que hora es;
+25;Fecha;cuanto falta;
+26;Fecha;dia de la semana;
+27;Fecha;cuanto paso;
+28;LeyesRobotica;leyes robotica;
+29;LeyesRobotica;isaac asimov;
+30;RecordarEventos;proximo evento;
+31;RecordarEventos;agrega este evento;
+32;Unidades_S_Metrico;converti;
+33;Unidades_S_Metrico;pasa;
+34;BuscarInformacionWikiGoogle;buscar;
+35;Clima;tiempo;
+36;Clima;clima;
+37;Clima;como esta el tiempo;
+38;Clima;que frio wacho;
+39;Clima;que tiempo hace;
+40;Clima;el tiempo;
+41;Clima;como esta el tiempo hoy;
+42;Clima;necesito el tiempo;
+43;Clima;.*tiempo.*;
+44;Clima;@asistente, me dirias como esta el tiempo hoy?;
+45;Clima;@asistente, me dirias como esta el tiempo hoy;
+46;Clima;@asistente me dirias como esta el tiempo hoy;
+47;Conversacion;@asistente *que onda.*;tu vieja
+48;Conversacion;@asistente *todo peola.*;que ti?
+49;Conversacion;@asistente *todo piola.*;que te importa?
+50;Conversacion;@asistente *todo bien.*;para el orto
+51;Conversacion;@asistente *como andas.*;genial
+52;SimpsonsLista;mi hijo no es comunista;Podr  ser mentiroso, puerco, idiota, comunista, pero nunca una estrella de porno
+53;SimpsonsLista;me gusta la cerveza fria;la tele fuerte y los homosexuales locas, locas
+54;SimpsonsLista;la hiciste llorar;y luego yo llor‚, y Maggie ri¢?Todo fue una confusi¢n
+55;SimpsonsLista;todo fue una confusion;La hiciste llorar, y luego yo llor‚, y Maggie ri¢?
+56;SimpsonsLista;te advierto que si;vas a enfadarte conmigo cada vez que haga una estupidez, no tendr‚ m s remedio que dejar de hacer estupideces
+57;SimpsonsLista;homero, eres tonto como una piedra;y feo como una blasfemia. Si un extra¤o ofrece llevarte, te subes
+58;SimpsonsLista;plan dental;lisa necesita frenos
+59;SimpsonsLista;diferencia entre jugo y sidra;Si es claro y amarillo seguro que es juguillo, si es turbio y picoson es sidra muchachon
+60;SimpsonsLista;una mujer;es como una cerveza, huelen bien, se ven bien y puedes matar a tu madre por conseguir una
+61;SimpsonsLista;linguo muerto;linguo esta muerto
+62;Default;.*;que se yo wacho ni idea loro
+63;Default;.*;que se yo
+64;Default;.*;no ni ahi se hacer eso
+65;Default;.*;ni idea
+66;Default;.*;no se
+67;Default;.*;y eso como se hace?
+68;Default;.*;no se como hacer eso
+69;Default;.*;como se realiza dicha peticion?
+70;Jueguito;mas chico;
+71;Jueguito;mas grande;
+72;Jueguito;jueguito;
+73;Jueguito;es [0-9]+\??;
+74;LeyesRobotica;que leyes debes obedecer?;

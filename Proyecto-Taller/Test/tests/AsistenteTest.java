@@ -72,7 +72,7 @@ public class AsistenteTest {
 
 	@Test
 	public void calculosCompuestos() {
-		Assert.assertEquals("Ada: La expresióon da: -112 @" + USUARIO,
+		Assert.assertEquals("Ada: La expresión da: -112 @" + USUARIO,
 				escuchar("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3"));
 	}
 

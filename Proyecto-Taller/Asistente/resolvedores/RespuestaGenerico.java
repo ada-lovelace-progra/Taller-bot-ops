@@ -84,10 +84,11 @@ public abstract class RespuestaGenerico {
 			cargarLista(this.getClass().getSimpleName());
 		int index = -1;
 		for (RespuestaGenerico temp : peticiones) {
-			String corregido = mensaje.replaceAll("[^a-z_0-9_ ]", "");
+			String corregido = temp.peticion.replace("@asistente", ".*@" + nombre).toLowerCase();
+			corregido = corregido.replaceAll(" ", ".*");
 			index++;
 			// ver de guardar regex en la db
-			if (corregido.matches(".*" + temp.peticion + ".*") || temp.peticion.contains(corregido)) { 
+			if (mensaje.matches(".*" + corregido + ".*")) {
 				this.respuesta = this.peticiones.get(index).respuesta;
 				return true;
 			}
