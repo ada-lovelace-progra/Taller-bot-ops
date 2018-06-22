@@ -12,7 +12,7 @@ public class Despedida extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje))
-			return "-1-2" + respuesta();
+			return "-1-2" + respuesta;
 		return null;
 	}
 

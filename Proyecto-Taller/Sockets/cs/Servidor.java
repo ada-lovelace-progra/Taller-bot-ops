@@ -83,7 +83,8 @@ class Hilo extends Thread {
 					}
 				}
 			} catch (Exception e) {
-				System.out.println("error con cod Chat: " + codChat + e.getMessage() + e.getCause());
+				e.getStackTrace();
+				System.out.println("error con cod Chat: " + codChat + "  " + e.getCause());
 			}
 		else
 			try {

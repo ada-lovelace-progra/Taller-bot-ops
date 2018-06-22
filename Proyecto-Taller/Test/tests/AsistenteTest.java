@@ -57,33 +57,33 @@ public class AsistenteTest {
 
 	@Test
 	public void calculos() {
-		Assert.assertEquals("Ada: la cuenta da: 3 @" + USUARIO, escuchar("@ada calcula 1+2"));
+		Assert.assertEquals("Ada: La cuenta da: 3 @" + USUARIO, escuchar("@ada calcula 1+2"));
 
-		Assert.assertEquals("Ada: la cuenta da: 1 @" + USUARIO, escuchar("@ada cuanto es 5-2*2"));
+		Assert.assertEquals("Ada: La cuenta da: 1 @" + USUARIO, escuchar("@ada cuanto es 5-2*2"));
 
-		Assert.assertEquals("Ada: la cuenta da: 42 @" + USUARIO, escuchar("@ada cuanto da 17+5^2"));
+		Assert.assertEquals("Ada: La cuenta da: 42 @" + USUARIO, escuchar("@ada cuanto da 17+5^2"));
 
 	}
 
 	@Test
-	public void calcularConNegativos() {
-		Assert.assertEquals("Ada: la exprecion da: 10 @" + USUARIO, escuchar("@ada resolve -1*(((1+1)^3*10)/80-6)*2"));
+	public void calcularConNegativos() { 
+		Assert.assertEquals("Ada: La expresión da: 10 @" + USUARIO, escuchar("@ada resolve -1*(((1+1)^3*10)/80-6)*2"));
 	}
 
 	@Test
 	public void calculosCompuestos() {
-		Assert.assertEquals("Ada: la exprecion da: -112 @" + USUARIO,
+		Assert.assertEquals("Ada: La expresióon da: -112 @" + USUARIO,
 				escuchar("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3"));
 	}
 
 	@Test
 	public void porcentaje() {
-		Assert.assertEquals("Ada: la cuenta da: 100 @" + USUARIO, escuchar("@ada cuanto da 25%400"));
+		Assert.assertEquals("Ada: La cuenta da: 100 @" + USUARIO, escuchar("@ada cuanto da 25%400"));
 	}
 
 	@Test
 	public void mixSupremo() {
-		Assert.assertEquals("Ada: la exprecion da: 15 @" + USUARIO,
+		Assert.assertEquals("Ada: La expresión da: 15 @" + USUARIO,
 				escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
 	}
 

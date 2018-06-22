@@ -89,8 +89,6 @@ public class Chat extends JFrame {
 		gbc_tabChats.fill = GridBagConstraints.BOTH;
 		gbc_tabChats.gridx = 1;
 		gbc_tabChats.gridy = 1;
-
-		getContentPane().add(new YouTube());
 		
 		getContentPane().add(tabChats, gbc_tabChats);
 		

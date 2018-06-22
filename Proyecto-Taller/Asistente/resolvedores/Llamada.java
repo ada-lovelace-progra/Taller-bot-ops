@@ -9,7 +9,7 @@ public class Llamada extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje))
-			return respuesta();
+			return respuesta;
 		return null;
 	}
 }

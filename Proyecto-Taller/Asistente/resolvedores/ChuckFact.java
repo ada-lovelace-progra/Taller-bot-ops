@@ -3,7 +3,6 @@ package resolvedores;
 import java.util.Date;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,86 +15,70 @@ public class ChuckFact {
 	private String fact;
 	private Date fechaLectura;
 
-	public ChuckFact()
-	{
+	public ChuckFact() {
 	}
-	
-	public ChuckFact(int id, String fact, Date fechaLectura)
-	{
-		this.id=id;
-		this.fact=fact;
-		this.fechaLectura=fechaLectura;
+
+	public ChuckFact(int id, String fact, Date fechaLectura) {
+		this.id = id;
+		this.fact = fact;
+		this.fechaLectura = fechaLectura;
 	}
-	
-	public void setId(int id)
-	{
-		this.id=id;
+
+	public void setId(int id) {
+		this.id = id;
 	}
-	
-	public void setFact(String fact)
-	{
-		this.fact=fact;
+
+	public void setFact(String fact) {
+		this.fact = fact;
 	}
-	
-	public void setFechaLectura(Date fecha)
-	{
-		this.fechaLectura=fecha;
+
+	public void setFechaLectura(Date fecha) {
+		this.fechaLectura = fecha;
 	}
-	
-	public int getId()
-	{
+
+	public int getId() {
 		return this.id;
 	}
-	
-	public String getFact()
-	{
+
+	public String getFact() {
 		return this.fact;
 	}
-	
-	public Date getFechaLectura()
-	{
+
+	public Date getFechaLectura() {
 		return this.fechaLectura;
 	}
-	
-	
-	@SuppressWarnings("finally")
-	public String obtenerChuckFact()
-	{
+
+	public String obtenerChuckFact() {
 		Configuration conf = new Configuration();
 		conf.configure("hibernate/hibernate.cfg.xml");
 		SessionFactory factory = conf.buildSessionFactory();
 		Session session = factory.openSession();
 		Transaction tx = session.beginTransaction();
 		ChuckFact fact = null;
-		
-		try
-		{
+
+		try {
 			@SuppressWarnings("deprecation")
 			Criteria cb = session.createCriteria(ChuckFact.class);
 			cb.add(Restrictions.isNull("fechaLectura"));
 			cb.add(Restrictions.sqlRestriction("1=1 order by random()"));
 			cb.setMaxResults(1);
-			if(!cb.list().isEmpty())
-			{
+			if (!cb.list().isEmpty()) {
 				fact = (ChuckFact) cb.uniqueResult();
 				fact.setFechaLectura(DateTime.now().toDate());
 				session.saveOrUpdate(fact);
 				tx.commit();
 			}
-		}
-		catch (HibernateException e)
-		{
-			if(tx != null)
+		} catch (Exception e) {
+			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
 			session.close();
 			factory.close();
-			return fact!=null?fact.fact:null;
+			return null;
 		}
+		session.close();
+		factory.close();
+		return fact.fact;
 	}
 
 }

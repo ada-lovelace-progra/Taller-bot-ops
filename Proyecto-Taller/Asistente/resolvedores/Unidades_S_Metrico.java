@@ -33,9 +33,9 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 	//@Override
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
-			return cambio((mensaje.replace(this.getRespuesta().toLowerCase(), "")).trim());
+			return cambio((mensaje.replace(this.respuesta.toLowerCase(), "")).trim());
 		}
-		return "No se pudo realizar la conversión";
+		return null;
 	}
 
 	public String cambio(String entrada) {
@@ -49,7 +49,7 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 			valor = Double.parseDouble(asd.group(1));
 			return new UnidadesSM().convertir(unidadLLegada, unidadDestino, valor);
 		}		
-		return null;
+		return  "No se pudo realizar la conversión";
 	}
 }
 
