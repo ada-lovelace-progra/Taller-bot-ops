@@ -171,7 +171,7 @@ public class Pestana {
 	}
 
 	private void enviarMensaje(JEditorPane textEnviar, JEditorPane mensajes, int codChat) {
-		String mensaje = textEnviar.getText();
+		String mensaje = textEnviar.getText().trim();
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
 			textEnviar.setText("");
 			mensaje = Codificaciones.codificar(mensaje);
