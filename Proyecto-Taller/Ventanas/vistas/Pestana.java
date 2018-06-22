@@ -31,13 +31,16 @@ public class Pestana {
 		this.usuario = usuario;
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public JPanel nuevo(int codChat) {
 		JPanel panel = new JPanel();
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 394, 0 };
 		gbl_panel.rowHeights = new int[] { 200, 28, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
 		JScrollPane scrollPane = new JScrollPane();
