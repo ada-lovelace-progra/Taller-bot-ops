@@ -1,54 +1,37 @@
 package resolvedores;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 
 /** 
  * Resolvedor, tira "datos" de chuck norris.
  */
 public class ChuckNorris extends RespuestaGenerico {
 
+	private int id;
+	
+	public void setId(int id)
+	{
+		this.id=id;
+	}
+	
+	public int getId()
+	{
+		return this.id;
+	}
+	
 	public ChuckNorris() {
 		super();
 	}
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
-			return obtenerYReordenar();
+			return obtenerChuckFact();
 		}
 		return Siguiente.intentarResponder(mensaje);
 	}
 
-	private String obtenerYReordenar() {
-		Scanner file;
-		ArrayList<String> lista = new ArrayList<String>();
-		PrintWriter file2 = null;
-		String ultimo = "";
-		try {
-			file = new Scanner(new File("Respuestas\\respuestas_ChuckNorris.dat"));
-
-			while (file.hasNextLine())
-				lista.add(file.nextLine());
-
-			int random = (int) (Math.random() * 15);
-			while (random > lista.size() / 3)
-				random = (int) (Math.random() * random);
-			ultimo = lista.get(random);
-			lista.remove(random);
-			file.close();
-
-			file2 = new PrintWriter(new File("Respuestas\\respuestas_ChuckNorris.dat"));
-			for (String temp : lista)
-				file2.write(temp + "\r\n");
-			file2.write(ultimo);
-			file2.close();
-		} catch (Exception e) {
-		}
-
-		return ultimo;
-	}
+	public String obtenerChuckFact()
+	{
+		return (new ChuckFact()).obtenerChuckFact();		
+	}	
 
 }
