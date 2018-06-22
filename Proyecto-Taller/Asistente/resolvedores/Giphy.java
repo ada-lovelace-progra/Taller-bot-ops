@@ -39,7 +39,9 @@ public class Giphy extends RespuestaGenerico {
 			while ((linea = lector.readLine()) != null)
 				if ((match = regexGif.matcher(linea)).find()) {
 					String link = "https://i.giphy.com/media/" + match.group(1) + "/giphy.gif";
-					return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
+					//	return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
+					//	return "<img src=\"" + link + "\" height=\"50%\" width=\"50%\" >";
+					return "<img src=\"" + link + "\">";
 				}
 			lector.close();
 		} catch (Exception e) {

@@ -13,9 +13,6 @@ import java.net.URL;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
@@ -26,6 +23,8 @@ import javax.swing.text.html.HTMLEditorKit;
 import usuariosYAsistente.Usuario;
 
 public class Pestana {
+
+	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
 	private Usuario usuario;
 
 	public Pestana(Usuario usuario) {
@@ -33,50 +32,44 @@ public class Pestana {
 	}
 
 	public JPanel nuevo(int codChat) {
-		JTextArea textEnviar = new JTextArea();
-		// textEnviar.setMinimumSize(new Dimension(20, 22));
-		textEnviar.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		textEnviar.setLineWrap(true);
+		JPanel panel = new JPanel();
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 394, 0 };
+		gbl_panel.rowHeights = new int[] { 200, 28, 0 };
+		gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
 
-		JScrollPane scrollChiquito = new JScrollPane(textEnviar);
-		scrollChiquito.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollChiquito.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		GridBagConstraints gbc_scrollChiquito = new GridBagConstraints();
-		gbc_scrollChiquito.fill = GridBagConstraints.BOTH;
-		gbc_scrollChiquito.gridx = 1;
-		gbc_scrollChiquito.gridy = 2;
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		panel.add(scrollPane, gbc_scrollPane);
 
-		Font fuente = new Font("Tahoma", Font.PLAIN, 11);
 		JEditorPane mensajes = new JEditorPane();
-		mensajes.setEditable(false);
 		mensajes.setContentType("text/html");
-		mensajes.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
+		mensajes.setEditable(false);
 		mensajes.setFont(fuente);
+		scrollPane.setViewportView(mensajes);
+
+		JEditorPane textEnviar = new JEditorPane();
+		textEnviar.setContentType("text/plain");
+		textEnviar.setFont(fuente);
+		GridBagConstraints gbc_textEnviar = new GridBagConstraints();
+		gbc_textEnviar.fill = GridBagConstraints.BOTH;
+		gbc_textEnviar.gridx = 0;
+		gbc_textEnviar.gridy = 1;
+		panel.add(textEnviar, gbc_textEnviar);
 
 		setearEventos(codChat, textEnviar, mensajes);
-
-		JScrollPane scrollPane = new JScrollPane(mensajes);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		cargaMensajesNuevosHilo(codChat, mensajes);
 
-		JPanel pane = new JPanel();
-
-		pane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 29, 229, 25, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 2.0, 0.0, Double.MIN_VALUE };
-		pane.setLayout(gridBagLayout);
-		
-		pane.setLayout(new GridBagLayout());
-		pane.add(scrollPane, gridBagLayout);
-		pane.add(scrollChiquito, gbc_scrollChiquito);
-
-		return pane;
+		return panel;
 	}
 
-	private void setearEventos(int codChat, JTextArea textEnviar, JEditorPane mensajes) {
+	private void setearEventos(int codChat, JEditorPane textEnviar, JEditorPane mensajes) {
 		mensajes.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
 				String url = null;
@@ -133,8 +126,11 @@ public class Pestana {
 				if (arg0.getKeyChar() == '\n') {
 					enviarMensaje(textEnviar, mensajes, codChat);
 					textEnviar.setText("");
-				} else if (textEnviar.getText().startsWith("\n"))
-					textEnviar.setText(textEnviar.getText().substring(1));
+				} else if (textEnviar.getText().length() > 2) {
+					char ch = textEnviar.getText().charAt(0);
+					if (ch == '\n' || ch == '\r')
+						textEnviar.setText(textEnviar.getText().substring(1));
+				}
 			}
 		});
 	}
@@ -174,10 +170,10 @@ public class Pestana {
 		}.start();
 	}
 
-	private void enviarMensaje(JTextArea aEnviar, JEditorPane mensajes, int codChat) {
-		String mensaje = aEnviar.getText();
+	private void enviarMensaje(JEditorPane textEnviar, JEditorPane mensajes, int codChat) {
+		String mensaje = textEnviar.getText();
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
-			aEnviar.setText("");
+			textEnviar.setText("");
 			mensaje = Codificaciones.codificar(mensaje);
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 			try {

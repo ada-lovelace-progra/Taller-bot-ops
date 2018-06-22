@@ -11,9 +11,12 @@ import java.awt.List;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -56,9 +59,9 @@ public class Chat extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 29, 229, 25, 0 };
+		gridBagLayout.rowHeights = new int[] { 29, 229, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 2.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 2.0, Double.MIN_VALUE };
 		contentPane.setLayout(gridBagLayout);
 
 		JLabel lblConectados = new JLabel("Conectados");
@@ -71,7 +74,6 @@ public class Chat extends JFrame {
 		listaConectados = new List();
 		lblConectados.setLabelFor(listaConectados);
 		GridBagConstraints gbc_listaConectados = new GridBagConstraints();
-		gbc_listaConectados.gridheight = 2;
 		gbc_listaConectados.insets = new Insets(0, 0, 0, 5);
 		gbc_listaConectados.fill = GridBagConstraints.BOTH;
 		gbc_listaConectados.gridx = 0;
@@ -83,13 +85,13 @@ public class Chat extends JFrame {
 		tabChats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		tabChats.setSize(this.getSize());
 		GridBagConstraints gbc_tabChats = new GridBagConstraints();
-		gbc_tabChats.insets = new Insets(0, 0, 0, 0);
+		gbc_tabChats.insets = new Insets(0, 0, 5, 0);
 		gbc_tabChats.fill = GridBagConstraints.BOTH;
 		gbc_tabChats.gridx = 1;
 		gbc_tabChats.gridy = 1;
 
 		getContentPane().add(tabChats, gbc_tabChats);
-
+		
 		new escucharCodChat_0().start();
 
 		listaConectados.addMouseListener(new MouseAdapter() {
@@ -100,7 +102,6 @@ public class Chat extends JFrame {
 					try {
 						usuariosSeleccionados += selectedItem + " ";
 						int codChat = usuario.pedirNuevoChat(selectedItem);
-						if (codChat != -1) // ver que ya no tenga la pestaña abierta
 							nuevaTab(selectedItem, codChat);
 					} catch (Exception e1) {
 					}
@@ -108,13 +109,41 @@ public class Chat extends JFrame {
 				listaConectados.deselect(listaConectados.getSelectedIndex());
 			}
 		});
-
 	}
 
 	private void nuevaTab(String nombre, int codChat) {
-		tabChats.addTab(nombre, null, new Pestana(usuario).nuevo(codChat), null);
+		JPanel panel = new JPanel();
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{394, 0};
+		gbl_panel.rowHeights = new int[]{200, 28, 0};
+		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		panel.add(scrollPane, gbc_scrollPane);
+		
+		JEditorPane mensajes = new JEditorPane();
+		mensajes.setContentType("text/html");
+		scrollPane.setViewportView(mensajes);
+		
+		JEditorPane textEnviar = new JEditorPane();
+		textEnviar.setContentType("text/html");
+		GridBagConstraints gbc_textEnviar = new GridBagConstraints();
+		gbc_textEnviar.fill = GridBagConstraints.BOTH;
+		gbc_textEnviar.gridx = 0;
+		gbc_textEnviar.gridy = 1;
+		panel.add(textEnviar, gbc_textEnviar);
+		
+		tabChats.addTab(nombre, new Pestana(usuario).nuevo(codChat));	
 	}
 
+	
 	class escucharCodChat_0 extends Thread {
 		public void run() {
 			try {
