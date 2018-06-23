@@ -20,6 +20,7 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import javassist.tools.framedump;
 import usuariosYAsistente.Usuario;
 
 public class Pestana {

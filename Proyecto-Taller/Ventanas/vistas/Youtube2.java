@@ -1,4 +1,7 @@
 package vistas;
+import java.awt.GraphicsConfiguration;
+import java.awt.HeadlessException;
+
 import javax.swing.*;
 
 import javafx.application.Application;
@@ -16,9 +19,28 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-public class Youtube2 {
+public class Youtube2 extends JFrame{
 
-    private static void initAndShowGUI() {
+	
+	
+    public Youtube2() throws HeadlessException {
+    	JFrame frame = new JFrame("Swing and JavaFX");
+        final JFXPanel fxPanel = new JFXPanel();
+        frame.add(fxPanel);
+        frame.setSize(300, 200);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                initFX(fxPanel);
+            }
+       });
+	}
+
+
+	private static void initAndShowGUI() {
         // This method is invoked on the EDT thread
         JFrame frame = new JFrame("Swing and JavaFX");
         final JFXPanel fxPanel = new JFXPanel();
@@ -43,7 +65,7 @@ public class Youtube2 {
 
     private static Scene createScene() {    
 		WebView webview = new WebView();
-		webview.getEngine().load("https://www.youtube.com/embed/yOL-EJZjmp0?autoplay=1");
+		webview.getEngine().load("https://www.youtube.com/embed/c2_VdzHQWNs?autoplay=1");
 		webview.setPrefSize(640, 390);
 		Scene  scene  =  new  Scene(webview);
         return (scene);

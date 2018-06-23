@@ -5,11 +5,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
 public class Codificaciones {
 
 	
 	static private String codificarYoutube(String recibido) {
+		new Youtube2();
 		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
 		String link = "";
 		if (asd.find()) {
