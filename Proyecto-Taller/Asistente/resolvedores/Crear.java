@@ -20,6 +20,7 @@ public class Crear {
 		Giphy gif = new Giphy();
 		Jueguito juego = new Jueguito();
 		Clima clima = new Clima();
+		Gag9 gag = new Gag9();
 
 		eventos.siguiente(agradecer);
 		agradecer.siguiente(clima);
@@ -31,7 +32,8 @@ public class Crear {
 		simpsons.siguiente(chuck);
 		chuck.siguiente(asimov);
 		asimov.siguiente(calcular);
-		calcular.siguiente(unidades);
+		calcular.siguiente(gag);
+		gag.siguiente(unidades);
 		unidades.siguiente(despedida);
 		
 		new Thread() {
