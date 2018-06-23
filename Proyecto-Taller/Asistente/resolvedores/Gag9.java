@@ -2,8 +2,6 @@ package resolvedores;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.regex.Pattern;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,8 +11,6 @@ import org.jsoup.nodes.Element;
  * Resolvedor, muestra fotos aleatoreas de 9gag.
  */
 public class Gag9 extends RespuestaGenerico {
-
-	private Pattern regex = Pattern.compile("media/(.+)/gip");
 
 	@Override
 	public String intentarResponder(String mensaje) {

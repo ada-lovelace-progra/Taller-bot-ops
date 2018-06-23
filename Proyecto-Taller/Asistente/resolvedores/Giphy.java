@@ -25,7 +25,7 @@ public class Giphy extends RespuestaGenerico {
 	}
 
 	private String obtenerTodo(String tema) {
-		String url = "http://api.giphy.com/v1/gifs/random?api_key=yvyt1ie3dMcJOJzDj1Lp7okLFHIUXYfs&fmt=html&tag=";
+		String url = "http://api.giphy.com/v1/gifs/random?api_key=yvyt1ie3dMcJOJzDj1Lp7okLFHIUXYfs&fmt=html&tag="+tema;
 		try {
 			URL urlPagina = new URL(url);
 			URLConnection urlConexion = urlPagina.openConnection();

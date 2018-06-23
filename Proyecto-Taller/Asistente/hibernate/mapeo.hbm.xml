@@ -126,5 +126,19 @@
 		<property column="peticion" name="peticion" type="string" />
 		<property column="respuesta" name="respuesta" type="string" />
 	</class>
+	
+	<class name="resolvedores.Gag9" table="Consultas">
+		<id column="id" name="id" type="int" />
+		<property column="clase" name="clase" type="string" />
+		<property column="peticion" name="peticion" type="string" />
+		<property column="respuesta" name="respuesta" type="string" />
+	</class>
+	
+	<class name="resolvedores.Jueguito" table="Consultas">
+		<id column="id" name="id" type="int" />
+		<property column="clase" name="clase" type="string" />
+		<property column="peticion" name="peticion" type="string" />
+		<property column="respuesta" name="respuesta" type="string" />
+	</class>
 
 </hibernate-mapping>
