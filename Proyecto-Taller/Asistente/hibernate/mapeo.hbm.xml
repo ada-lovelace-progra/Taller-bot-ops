@@ -87,6 +87,12 @@
 		<property column="respuesta" name="respuesta" type="string" />
 	</class>
 	
+	<class name="resolvedores.Memes" table="Memes">
+		<id column="id" name="id" type="int" />
+		<property column="key" name="key" type="string" />
+		<property column="path" name="path" type="string" />
+	</class>
+	
 	<class name="resolvedores.RecordarEventos" table="Consultas">
 		<id column="id" name="id" type="int" />
 		<property column="clase" name="clase" type="string" />
