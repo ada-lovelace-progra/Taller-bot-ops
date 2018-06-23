@@ -11,7 +11,7 @@ public class Codificaciones {
 
 	
 	static private String codificarYoutube(String recibido) {
-		new Youtube2();
+		new YouTube();
 		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
 		String link = "";
 		if (asd.find()) {

@@ -47,7 +47,7 @@ public class Youtube2 extends JFrame{
         frame.add(fxPanel);
         frame.setSize(300, 200);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         Platform.runLater(new Runnable() {
             @Override

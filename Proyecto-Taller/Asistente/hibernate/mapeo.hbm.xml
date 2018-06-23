@@ -120,4 +120,11 @@
 		<property column="sistema" name="sistema" type="string" />
 	</class>
 	
+	<class name="resolvedores.Giphy" table="Consultas">
+		<id column="id" name="id" type="int" />
+		<property column="clase" name="clase" type="string" />
+		<property column="peticion" name="peticion" type="string" />
+		<property column="respuesta" name="respuesta" type="string" />
+	</class>
+
 </hibernate-mapping>
