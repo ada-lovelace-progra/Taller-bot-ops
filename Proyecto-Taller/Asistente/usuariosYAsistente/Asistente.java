@@ -9,9 +9,13 @@ public class Asistente extends UsuarioGenerico {
 	// el nombre lo hereda de usuario generico
 	private String RespondoA;
 	private RespuestaGenerico respuesta;
+	private RespuestaGenerico cadenaCompleta;
+	private Llamada llamada;
 
 	public Asistente() {
-		respuesta = new Llamada();
+		llamada = new Llamada();
+		respuesta = llamada;
+		cadenaCompleta = Crear.Cadena();
 		// el nombre se va a setear cuando lo llamen por primera vez
 	}
 
@@ -30,7 +34,7 @@ public class Asistente extends UsuarioGenerico {
 			if (respuestaTemp != null) {// con esto verifico si pudo responder
 				if (respuesta.getClass() == Llamada.class) {
 					// si respueta es de de la clase llamada entonces estaba inactivo
-					respuesta = Crear.Cadena();
+					respuesta = cadenaCompleta;
 					retorno = nombre + ": " + respuestaTemp + RespondoA;
 				} else if (respuestaTemp.startsWith("-1-2")) {
 					// si comienza con el codigo de salida seteo a

@@ -38,7 +38,7 @@ public class Crear {
 		
 		new Thread() {
 			public void run() {
-				eventos.consulta("cargarTodo!!");
+				eventos.intentar("cargarTodo!!");
 			}
 		}.start();
 		
