@@ -73,3 +73,5 @@ id;clase;peticion;respuesta
 72;Jueguito;jueguito;
 73;Jueguito;es [0-9]+\??;
 74;LeyesRobotica;que leyes debes obedecer?;
+75;Giphy;gif de;
+76;Giphy;giphy de;

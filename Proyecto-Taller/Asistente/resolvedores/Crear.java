@@ -1,8 +1,7 @@
 package resolvedores;
 
-
-/** 
- *  Crea la cadena de responsabilidad de las respuestas.
+/**
+ * Crea la cadena de responsabilidad de las respuestas.
  */
 public class Crear {
 
@@ -34,7 +33,13 @@ public class Crear {
 		asimov.siguiente(calcular);
 		calcular.siguiente(unidades);
 		unidades.siguiente(despedida);
-
+		
+		new Thread() {
+			public void run() {
+				eventos.consulta("cargarTodo!!");
+			}
+		}.start();
+		
 		return eventos;
 	}
 

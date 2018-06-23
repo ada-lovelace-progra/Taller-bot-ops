@@ -17,6 +17,7 @@ public class Giphy extends RespuestaGenerico {
 		if (consulta(mensaje)) {
 			Matcher tema = regex.matcher(mensaje);
 			if (tema.find()) {
+				System.out.println("buscando gif");
 				return obtenerTodo(tema.group(1).replace(" ", "+"));
 			}
 		}
