@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import resolvedores.Memes;
 
 public class Codificaciones {
 
@@ -52,6 +52,29 @@ public class Codificaciones {
 	static private boolean esYoutube2(String recibido) {
 		return recibido.contains("youtu");
 	}
+	
+	static private String codificarMeme(String recibido) {
+		//Matcher mat = Pattern.compile(":(.+):").matcher(recibido);
+		String meme = "";
+		//if(mat.find()) {
+			meme = recibido.replace(":", "").trim(); //mat.group(1);
+			String path = new Memes().obtenerMeme(meme);
+			if(path!=null)
+			{
+				recibido = recibido.replace(":" + meme + ":",
+						"<a href= \"" + path + "\" title=\"Ampliar :" + meme + ":\"> <img width=\"200\" height=\"100\" src=\"" + path + "\"> </a>");
+			}
+	//	}
+		return recibido;
+	}
+	
+	static private boolean esMeme(String recibido) {
+		//match = Pattern.compile(":(.+):").matcher(recibido);
+		if(recibido.matches(":(.*):"))//match.find())
+			return true;//!match.group(1).isEmpty();
+		return false;
+	}	
+	
 
 	static private String codificarImagen(String recibido) {
 		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
@@ -70,7 +93,7 @@ public class Codificaciones {
 
 	static private boolean esImagen(String recibido) {
 		if (esLink(recibido))
-			return recibido.contains("jpg") || recibido.contains("gif") || recibido.contains("png")
+			return recibido.contains("jpg") || recibido.contains("gif") /*|| recibido.contains("png")*/
 					|| recibido.contains("img") || comprobarQueEsImagenDeFormaFea(recibido);
 		else
 			return false;
@@ -103,6 +126,8 @@ public class Codificaciones {
 		else if (esLink(mensaje)) {
 			mensaje = codificarLink(mensaje);
 		}
+		else if(esMeme(mensaje))
+			mensaje = codificarMeme(mensaje);
 		return mensaje;
 	}
 

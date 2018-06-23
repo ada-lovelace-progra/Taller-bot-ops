@@ -13,6 +13,7 @@ import java.net.URL;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
@@ -20,7 +21,6 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-import javassist.tools.framedump;
 import usuariosYAsistente.Usuario;
 
 public class Pestana {
@@ -58,14 +58,19 @@ public class Pestana {
 		mensajes.setFont(fuente);
 		scrollPane.setViewportView(mensajes);
 
+		JScrollPane scrollEnviar = new JScrollPane();
+		GridBagConstraints gbc_scrollEnviar = new GridBagConstraints();
+		gbc_scrollEnviar.fill = GridBagConstraints.BOTH;
+		gbc_scrollEnviar.gridx = 0;
+		gbc_scrollEnviar.gridy = 1;
+		scrollEnviar.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollEnviar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		panel.add(scrollEnviar, gbc_scrollEnviar);
+
 		JEditorPane textEnviar = new JEditorPane();
 		textEnviar.setContentType("text/plain");
 		textEnviar.setFont(fuente);
-		GridBagConstraints gbc_textEnviar = new GridBagConstraints();
-		gbc_textEnviar.fill = GridBagConstraints.BOTH;
-		gbc_textEnviar.gridx = 0;
-		gbc_textEnviar.gridy = 1;
-		panel.add(textEnviar, gbc_textEnviar);
+		scrollEnviar.setViewportView(textEnviar);
 
 		setearEventos(codChat, textEnviar, mensajes);
 		cargaMensajesNuevosHilo(codChat, mensajes);
@@ -85,7 +90,15 @@ public class Pestana {
 
 				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					System.out.println("url: " + url);
-					if (Desktop.isDesktopSupported())
+					/*SimpleAttributeSet at = (SimpleAttributeSet)hLinkEv.getSourceElement().getAttributes().getAttribute(HTML.Tag.A);
+					String title = at!=null?(String)at.getAttribute(HTML.Attribute.TITLE):null;
+					if(title.contains("Ampliar")) //es un meme
+					{
+						Ampliar a = new Ampliar(url);
+						a.setLocationRelativeTo(null);
+						a.setVisible(true);
+					}
+					else */if (Desktop.isDesktopSupported())
 						try {
 							Desktop.getDesktop().browse(new URI(url));
 							;
@@ -136,6 +149,23 @@ public class Pestana {
 						textEnviar.setText(textEnviar.getText().substring(1));
 				}
 			}
+		});
+		
+		textEnviar.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				textEnviar.setCaretPosition(textEnviar.getDocument().getLength());
+			}
+
 		});
 	}
 
