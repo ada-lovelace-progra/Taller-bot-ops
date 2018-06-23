@@ -188,7 +188,7 @@ public class Pestana {
 						}
 					}
 				} catch (Exception e) {
-					System.out.println("error recibiendo el mensaje");
+			//		System.out.println("error recibiendo el mensaje");
 				}
 			}
 

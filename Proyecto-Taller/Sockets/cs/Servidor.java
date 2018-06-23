@@ -40,7 +40,8 @@ class Hilo extends Thread {
 		codChat = readUTF.substring(0, 4);
 		if (!lista.containsKey(codChat)) {
 			lista.put(codChat, new ArrayList<Socket>());
-			asistentePorCodChat.put(codChat, new Asistente());
+			if (!codChat.equals("0000"))
+				asistentePorCodChat.put(codChat, new Asistente());
 		}
 		lista.get(codChat).add(socket);
 		String usuario = readUTF.substring(4);
