@@ -1,11 +1,12 @@
 package resolvedores;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.regex.*;
+import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 
 /** 
@@ -22,29 +23,48 @@ public class Gag9 extends RespuestaGenerico {
 		return null;
 	}
 
-	private String obtenerTodo() {
-		String url = "https://img-9gag-fun.9cache.com/photo/aQ3OXmq_460sv.mp4";
-		try {
-			URL urlPagina = new URL(url);
-			URLConnection urlConexion = urlPagina.openConnection();
-			urlConexion.connect();
-
-			InputStream inputStream = urlConexion.getInputStream();
-			InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
-			BufferedReader lector = new BufferedReader(inputReader);
-			String linea = "";
-
-			Matcher match;
-			while ((linea = lector.readLine()) != null)
-				if ((match = regex.matcher(linea)).find()) {
-					String link = "https://i.giphy.com/media/" + match.group(1) + "/giphy.gif";
-					return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
-				}
-			lector.close();
-		} catch (Exception e) {
-			System.out.println(e.getLocalizedMessage());
-		}
-		return null;
+	private String obtenerTodo() {		
+			String link = null;
+			try {
+				link = this.extractImageUrl("https://9gag.com/random");
+				//return "<img src=\"" + link + "\" height=\"50\" width=\"50\" >";
+				return "<img src=\"" + link + "\">";
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return link;
 	}
+	
+	
+	public String extractImageUrl(String url) throws IOException {
+        String contentType = new URL(url).openConnection().getContentType();
+        if (contentType != null) {
+            if (contentType.startsWith("image/")) {
+                return url;
+            }
+        }
+        
+        Document document = Jsoup.connect(url).get();
+
+        String imageUrl = null;
+
+        imageUrl = getImageFromOpenGraph(document);
+        if (imageUrl != null) {
+            return imageUrl;
+        }
+        return imageUrl;
+    }
+
+    private static String getImageFromOpenGraph(Document document) {
+        Element image = document.select("meta[property=og:image]").first();
+        if (image != null) {
+            return image.attr("abs:content");
+        }
+        Element secureImage = document.select("meta[property=og:image:secure]").first();
+        if (secureImage != null) {
+            return secureImage.attr("abs:content");
+        }
+        return null;
+    }    
 
 }
