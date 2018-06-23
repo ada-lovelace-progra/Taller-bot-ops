@@ -11,10 +11,10 @@ public class Codificaciones {
 
 	
 	static private String codificarYoutube(String recibido) {
-		new YouTube();
 		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
 		String link = "";
 		if (asd.find()) {
+			//new Youtube2();
 			link = asd.group(1);
 			return recibido.replace(";" + link + ";",
 					"<a href=\"www.youtube.com/watch?v=dQw4w9WgXcQ\">" + link + "</a>");

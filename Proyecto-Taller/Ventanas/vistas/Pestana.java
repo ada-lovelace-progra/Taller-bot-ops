@@ -152,6 +152,10 @@ public class Pestana {
 						HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
 						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
 						mensajes.setCaretPosition(doc.getLength());
+						if (recibido.contains("youtube")) {
+							System.out.println("youtubeee");
+							mensajes.add(  Youtube2.metodoLoco(true) );
+						}
 					}
 				} catch (Exception e) {
 					System.out.println("error recibiendo el mensaje");
