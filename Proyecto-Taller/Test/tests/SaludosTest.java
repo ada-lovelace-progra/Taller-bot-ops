@@ -26,8 +26,10 @@ public class SaludosTest {
 		respuestas.add("Ada: hola.... @" + USUARIO);
 		respuestas.add("Ada: Buenos dias. En que puedo servirte @" + USUARIO);
 		respuestas.add("Ada: Buenos dias!! @" + USUARIO);
-		respuestas.add("Ada: en que puedo ayudarte @" + USUARIO);
+		respuestas.add("Ada: en que puedo ayudarte? @" + USUARIO);
 		respuestas.add("Ada: buenos dias @" + USUARIO);
+		respuestas.add("Ada: que onda? @" + USUARIO);
+		respuestas.add("Ada: qe quere? @" + USUARIO);
 		respuestas.add("Ada: estoy para servirle @" + USUARIO);
 		respuestas.add("Ada: mas vale que valga la pena... estaba durmiendo... @" + USUARIO);
 		respuestas.add("Ada: mas vale que valga la pena... @" + USUARIO);

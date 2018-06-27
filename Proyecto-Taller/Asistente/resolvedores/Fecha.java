@@ -9,15 +9,10 @@ import org.joda.time.format.*;
 
 import armadores.RespuestaGenerico;
 
-
-/** 
+/**
  * Resolvedor, devuelve operaciones relacionadas a la fecha.
  * 
- * dias hasta
- * dias desde
- * hora
- * semana
- * fecha actual
+ * dias hasta dias desde hora semana fecha actual
  */
 public class Fecha extends RespuestaGenerico {
 
@@ -34,8 +29,7 @@ public class Fecha extends RespuestaGenerico {
 				return getFechaCompleta();
 
 			else if (mensaje.contains("hora"))
-				return "algo";
-				//return getHora();
+				return getHora();
 
 			else if (mensaje.contains("falta")) {
 				Matcher asd = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*").matcher(mensaje);

@@ -1,13 +1,6 @@
 package armadores;
 
 import java.util.ArrayList;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
-
 import bdResponderGenerico.BaseDato;
 import bdResponderGenerico.RespuestaBD;
 import resolvedores.Default;

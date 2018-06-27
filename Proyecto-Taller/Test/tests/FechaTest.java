@@ -70,12 +70,12 @@ public class FechaTest {
 	
 	@Test
 	public void dentrodeDias() {
-		Assert.assertEquals("Ada: va a ser 04/06/2018 @delucas", escuchar("@ada dia dentro de 2 dias"));
+		Assert.assertTrue(escuchar("@ada dia dentro de 2 dias").matches("Ada: va a ser [0-9]{2}/[0-9]{2}/2018 @delucas"));
 	}
 	
 	@Test
 	public void haceDias() {
-		Assert.assertEquals("Ada: 28/05/2018 @delucas", escuchar("@ada dia hace 5 dias"));
+		Assert.assertTrue(escuchar("@ada dia hace 5 dias").matches("Ada: [0-9]{2}/[0-9]{2}/2018 @delucas"));
 	}
 
 }

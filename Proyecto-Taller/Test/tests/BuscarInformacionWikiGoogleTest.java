@@ -24,11 +24,11 @@ public class BuscarInformacionWikiGoogleTest {
 
 	@Test
 	public void wikipedia() {
-		String respuesta = "Ada: Segun Wikipedia La programaci髇 es un proceso que se utiliza para idear y ordenar las <b>acciones</b> que se realizar醤 en el marco de un proyecto;al anuncio de las partes que componen un acto o espect醕ulo; a la preparaci髇 de m醧uinas para que cumplan con una cierta tarea en un momento determinado; a la elaboraci髇 de programas para la resoluci髇 de problemas mediante ordenadores; y a la preparaci髇 de los datos necesarios para obtener una soluci髇 de un problema. @delucas";
+		String respuesta = "Ada: Segun Wikipedia La programaci贸n es un proceso que se utiliza para idear y ordenar las <b>acciones</b> que se realizar谩n en el marco de un proyecto;al anuncio de las partes que componen un acto o espect谩culo; a la preparaci贸n de m谩quinas para que cumplan con una cierta tarea en un momento determinado; a la elaboraci贸n de programas para la resoluci贸n de problemas mediante ordenadores; y a la preparaci贸n de los datos necesarios para obtener una soluci贸n de un problema. @delucas";
 		String[] mensajes = { "@ada me buscas informacion sobre programacion" };
 		for (String mensaje : mensajes) {
 			Assert.assertEquals(respuesta, escucha(mensaje));
 		}
-	} 
+	}
 
 }
