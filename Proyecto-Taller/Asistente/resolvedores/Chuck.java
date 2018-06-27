@@ -1,26 +1,12 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
+import bdResponderGenerico.ChuckBD;
 
 /** 
  * Resolvedor, tira "datos" de chuck norris.
  */
-public class ChuckNorris extends RespuestaGenerico {
-
-	private int id;
-	
-	public void setId(int id)
-	{
-		this.id=id;
-	}
-	
-	public int getId()
-	{
-		return this.id;
-	}
-	
-	public ChuckNorris() {
-		super();
-	}
+public class Chuck extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
@@ -31,7 +17,7 @@ public class ChuckNorris extends RespuestaGenerico {
 
 	public String obtenerChuckFact()
 	{
-		return (new ChuckFact()).obtenerChuckFact();		
+		return (new ChuckBD()).obtenerChuckFact();		
 	}	
 
 }

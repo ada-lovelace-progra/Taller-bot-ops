@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.joda.time.*;
 import org.joda.time.format.*;
 
+import armadores.RespuestaGenerico;
+
 
 /** 
  * Resolvedor, devuelve operaciones relacionadas a la fecha.
@@ -32,7 +34,8 @@ public class Fecha extends RespuestaGenerico {
 				return getFechaCompleta();
 
 			else if (mensaje.contains("hora"))
-				return getHora();
+				return "algo";
+				//return getHora();
 
 			else if (mensaje.contains("falta")) {
 				Matcher asd = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*").matcher(mensaje);

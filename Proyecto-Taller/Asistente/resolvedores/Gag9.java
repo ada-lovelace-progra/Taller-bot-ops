@@ -6,6 +6,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import armadores.RespuestaGenerico;
+
 
 /** 
  * Resolvedor, muestra fotos aleatoreas de 9gag.

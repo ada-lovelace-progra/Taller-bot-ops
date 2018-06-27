@@ -1,4 +1,4 @@
-package resolvedores;
+package bdResponderGenerico;
 
 import java.util.Hashtable;
 
@@ -11,7 +11,9 @@ import org.hibernate.criterion.Restrictions;
 
 import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 
-public class Conversion {
+import resolvedores.UnidadesSM;
+
+public class ConversionBD extends BaseDato {
 
 	private Hashtable<String, String> bases;
 
@@ -20,11 +22,11 @@ public class Conversion {
 	private double valor;
 	private int id;
 
-	public Conversion() {
+	public ConversionBD() {
 		setearBases();
 	}
 
-	public Conversion(int id, String de, String a, double valor) {
+	public ConversionBD(int id, String de, String a, double valor) {
 		this.id = id;
 		this.de = de;
 		this.a = a;
@@ -71,14 +73,10 @@ public class Conversion {
 		this.id = id;
 	}
 
-	@SuppressWarnings({ "finally", "deprecation" })
-	public Conversion getConversion(UnidadesSM de, UnidadesSM a) {
-		Configuration conf = new Configuration();
-		conf.configure("hibernate/hibernate.cfg.xml");
-		SessionFactory factory = conf.buildSessionFactory();
-		Session session = factory.openSession();
-		Conversion c = null;
-		Conversion temp = null; // temp lo uso en el caso de que tenga que pasar a alguna base
+	@SuppressWarnings("all")
+	public ConversionBD getConversion(UnidadesSM de, UnidadesSM a) {
+		ConversionBD c = null;
+		ConversionBD temp = null; // temp lo uso en el caso de que tenga que pasar a alguna base
 
 		try {
 			Criteria crit = session.createCriteria(this.getClass())
@@ -88,10 +86,10 @@ public class Conversion {
 							Restrictions.and(Restrictions.eq("de", a.getAbreviacion()),
 									Restrictions.eqOrIsNull("a", de.getAbreviacion()))));
 			try {
-				c = (Conversion) crit.uniqueResult(); // ver si de aca salta al catch en lugar de preguntar si es nulo
+				c = (ConversionBD) crit.uniqueResult(); // ver si de aca salta al catch en lugar de preguntar si es nulo
 			} catch (Exception e) {
 			}
-			
+
 			if (c != null) {
 				if (c.getDe().equals(a.getAbreviacion()))
 					c.setValor(1 / c.valor);
@@ -109,7 +107,7 @@ public class Conversion {
 									Restrictions.and(Restrictions.eq("de", base),
 											Restrictions.eqOrIsNull("a", de.getAbreviacion()))));
 
-					temp = (Conversion) crit.uniqueResult();
+					temp = (ConversionBD) crit.uniqueResult();
 					if (temp.getDe().equals(base))
 						temp.setValor(1 / temp.valor);
 
@@ -122,7 +120,7 @@ public class Conversion {
 									Restrictions.and(Restrictions.eq("de", base),
 											Restrictions.eqOrIsNull("a", a.getAbreviacion()))));
 
-					c = (Conversion) crit.uniqueResult();
+					c = (ConversionBD) crit.uniqueResult();
 					if (c.getDe().equals(base))
 						c.setValor(1 / c.valor);
 				} catch (Exception e) {
@@ -135,7 +133,7 @@ public class Conversion {
 									Restrictions.and(Restrictions.eq("de", base),
 											Restrictions.eqOrIsNull("a", a.getAbreviacion()))));
 
-					temp = (Conversion) crit.uniqueResult();
+					temp = (ConversionBD) crit.uniqueResult();
 					if (temp.getDe().equals(base))
 						temp.setValor(1 / temp.valor);
 
@@ -146,7 +144,7 @@ public class Conversion {
 									Restrictions.and(Restrictions.eq("de", base),
 											Restrictions.eqOrIsNull("a", de.getAbreviacion()))));
 
-					c = (Conversion) crit.uniqueResult();
+					c = (ConversionBD) crit.uniqueResult();
 					if (c.getDe().equals(base))
 						c.setValor(1 / c.valor);
 				} finally {
@@ -160,10 +158,7 @@ public class Conversion {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			session.close();
-			factory.close();
-			return c;
 		}
+		return c;
 	}
 }

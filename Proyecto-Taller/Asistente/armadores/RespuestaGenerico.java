@@ -1,4 +1,4 @@
-package resolvedores;
+package armadores;
 
 import java.util.ArrayList;
 import org.hibernate.Criteria;
@@ -8,53 +8,21 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
+import bdResponderGenerico.BaseDato;
+import bdResponderGenerico.RespuestaBD;
+import resolvedores.Default;
+
 /**
  * Todas las respuestas de ada deberan extender de esta clase, es el "Handler"
  * del asistente.
  */
 public abstract class RespuestaGenerico {
 
-	private String peticion;
-	protected String respuesta;
-
 	protected RespuestaGenerico Siguiente = null;
-	private ArrayList<RespuestaGenerico> peticiones = null;
-	private String clase;
-	private int id;
+	private ArrayList<RespuestaBD> peticiones = null;
+	public String respuesta;
 	protected static double cordialidad;
 	public static String nombre;
-
-	public int getId() {
-		return this.id;
-	}
-
-	public String getClase() {
-		return this.clase;
-	}
-
-	public String getPeticion() {
-		return this.peticion;
-	}
-
-	public String getRespuesta() {
-		return this.respuesta;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setClase(String clase) {
-		this.clase = clase;
-	}
-
-	public void setPeticion(String peticion) {
-		this.peticion = peticion;
-	}
-
-	public void setRespuesta(String res) {
-		this.respuesta = res;
-	}
 
 	public RespuestaGenerico() {
 		Siguiente = new Default();
@@ -82,46 +50,23 @@ public abstract class RespuestaGenerico {
 	protected boolean consulta(String mensaje) {
 		if (peticiones == null)
 			cargarLista(this.getClass().getSimpleName());
-		int index = -1;
-		for (RespuestaGenerico temp : peticiones) {
-			String corregido = temp.peticion.replace("@asistente", ".*@" + nombre).toLowerCase();
-			corregido = corregido.replaceAll(" ", ".*");
-			index++;
-			// ver de guardar regex en la db
-			if (mensaje.matches(".*" + corregido + ".*")) {
-				this.respuesta = this.peticiones.get(index).respuesta;
-				return true;
+		if (peticiones != null) {
+			int index = -1;
+			for (RespuestaBD temp : peticiones) {
+				String corregido = temp.peticion.replace("@asistente", ".*@" + nombre).toLowerCase();
+				corregido = corregido.replaceAll(" ", ".*");
+				index++;
+				if (mensaje.matches(".*" + corregido + ".*")) {
+					this.respuesta = this.peticiones.get(index).respuesta;
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void cargarLista(String clase) {
-		SessionFactory factory = null;
-		Session session = null;
-		try {
-
-			Configuration conf = new Configuration();
-			conf.configure("hibernate/hibernate.cfg.xml");
-			factory = conf.buildSessionFactory();
-			session = factory.openSession();
-			this.peticiones = new ArrayList<>();
-
-			@SuppressWarnings("deprecation")
-			Criteria cb = session.createCriteria(this.getClass()).add(Restrictions.eq("clase", clase));
-			// mensaje = mensaje.replaceAll("[^a-z_0-9_ ]", "");
-			if (!cb.list().isEmpty()) {
-				this.peticiones.addAll((ArrayList<RespuestaGenerico>) cb.list());
-			}
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			// return false;
-		} finally {
-			session.close();
-			factory.close();
-			// return !this.peticiones.isEmpty();
-		}
+		this.peticiones = new BaseDato().traerDatos(clase);
 	}
 
 	//

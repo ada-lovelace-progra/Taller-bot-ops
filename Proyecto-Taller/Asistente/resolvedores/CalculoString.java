@@ -84,6 +84,8 @@
 //nuevo
 package resolvedores;
 
+import armadores.RespuestaGenerico;
+
 /** 
  * Resolvedor, realiza calculos.
  */
@@ -93,7 +95,7 @@ public class CalculoString extends RespuestaGenerico {
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
 			String aux = mensaje.substring(mensaje.lastIndexOf(" ")).trim();
-			return ("La " + (aux.length() < 12 ? "cuenta" : "expresión") + " da: " + calcularFormat(aux, "%.3f"));
+			return ("La " + (aux.length() < 12 ? "cuenta" : "puta que te pario") + " da: " + calcularFormat(aux, "%.3f"));
 		}
 		return null;
 	}

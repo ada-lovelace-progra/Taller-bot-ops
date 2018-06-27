@@ -1,4 +1,19 @@
-package resolvedores;
+package armadores;
+
+import resolvedores.Agradecer;
+import resolvedores.BuscarInformacionWikiGoogle;
+import resolvedores.CalculoString;
+import resolvedores.Chuck;
+import resolvedores.Clima;
+import resolvedores.Despedida;
+import resolvedores.Fecha;
+import resolvedores.Gag9;
+import resolvedores.Giphy;
+import resolvedores.Jueguito;
+import resolvedores.LeyesRobotica;
+import resolvedores.RecordarEventos;
+import resolvedores.Simpsons;
+import resolvedores.Unidades_S_Metrico;
 
 /**
  * Crea la cadena de responsabilidad de las respuestas.
@@ -9,7 +24,7 @@ public class Crear {
 
 		Agradecer agradecer = new Agradecer();
 		CalculoString calcular = new CalculoString();
-		ChuckNorris chuck = new ChuckNorris();
+		Chuck chuck = new Chuck();
 		Despedida despedida = new Despedida();
 		Fecha fecha = new Fecha();
 		LeyesRobotica asimov = new LeyesRobotica();
@@ -35,13 +50,7 @@ public class Crear {
 		calcular.siguiente(gag);
 		gag.siguiente(unidades);
 		unidades.siguiente(despedida);
-		
-		new Thread() {
-			public void run() {
-				eventos.intentar("cargarTodo!!");
-			}
-		}.start();
-		
+				
 		return eventos;
 	}
 

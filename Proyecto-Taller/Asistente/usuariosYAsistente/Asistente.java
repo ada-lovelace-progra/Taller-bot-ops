@@ -5,16 +5,19 @@ import resolvedores.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import armadores.Crear;
+import armadores.RespuestaGenerico;
+
 public class Asistente extends UsuarioGenerico {
 	// el nombre lo hereda de usuario generico
 	private String RespondoA;
-	private RespuestaGenerico respuesta;
+	private RespuestaGenerico cadena;
 	private RespuestaGenerico cadenaCompleta;
 	private Llamada llamada;
 
 	public Asistente() {
 		llamada = new Llamada();
-		respuesta = llamada;
+		cadena = llamada;
 		cadenaCompleta = Crear.Cadena();
 		// el nombre se va a setear cuando lo llamen por primera vez
 	}
@@ -29,23 +32,23 @@ public class Asistente extends UsuarioGenerico {
 		String retorno = null;
 		if (nombre != null && entrada.contains("@" + nombre.toLowerCase())) {
 			entrada = entrada.toLowerCase();
-			String respuestaTemp = respuesta.intentar(entrada);
+			String respuestaTemp = cadena.intentar(entrada);
 
 			if (respuestaTemp != null) {// con esto verifico si pudo responder
-				if (respuesta.getClass() == Llamada.class) {
+				if (cadena.getClass() == Llamada.class) {
 					// si respueta es de de la clase llamada entonces estaba inactivo
-					respuesta = cadenaCompleta;
+					cadena = cadenaCompleta;
 					retorno = nombre + ": " + respuestaTemp + RespondoA;
 				} else if (respuestaTemp.startsWith("-1-2")) {
 					// si comienza con el codigo de salida seteo a
 					// respuesta para que solo tenga un eslabon y sea el de llamada
 					respuestaTemp = respuestaTemp.substring(4);
-					respuesta = new Llamada();
+					cadena = new Llamada();
 					retorno = nombre + ": " + respuestaTemp + RespondoA;
 					nombre = null;
 				} else
 					retorno = nombre + ": " + respuestaTemp + RespondoA;
-			} else if (respuesta.getClass() == Llamada.class)
+			} else if (cadena.getClass() == Llamada.class)
 				nombre = null;
 		}
 		return "----" + retorno;

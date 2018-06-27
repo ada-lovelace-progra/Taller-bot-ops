@@ -1,5 +1,7 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
+
 /** 
  * linguo muerto.
  */

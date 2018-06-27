@@ -1,5 +1,6 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
 
 public class Llamada extends RespuestaGenerico {
 

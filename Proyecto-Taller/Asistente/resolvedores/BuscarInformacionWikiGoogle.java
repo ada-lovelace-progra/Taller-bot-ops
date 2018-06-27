@@ -9,6 +9,8 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import armadores.RespuestaGenerico;
+
 /**
  * Resolvedor, busca informacion de Wikipedia.
  */

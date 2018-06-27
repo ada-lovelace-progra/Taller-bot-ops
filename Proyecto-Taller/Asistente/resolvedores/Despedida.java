@@ -1,5 +1,6 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
 
 /**
  * Resolvedor, el asistente se despide.

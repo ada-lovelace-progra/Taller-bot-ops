@@ -3,6 +3,8 @@ package resolvedores;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import armadores.RespuestaGenerico;
+
 /**
  * Resolvedor, juega mayor-menor con el usuario. (o al menos eso intenta)
  * 

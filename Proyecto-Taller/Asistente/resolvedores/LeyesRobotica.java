@@ -1,5 +1,6 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
 
 /** 
  * Resolvedor, son las leyes de la robotica.

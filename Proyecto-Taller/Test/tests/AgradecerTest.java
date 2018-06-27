@@ -3,6 +3,7 @@ package tests;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import usuariosYAsistente.Asistente;
 
@@ -22,7 +23,7 @@ public class AgradecerTest {
 		return ada.escuchar(USUARIO + ": " + mensaje).substring(4);
 	}
 
-	@Test
+	@Test 
 	public void agradecimiento() {
 		String[] mensajes = { "¡Muchas gracias, @ada!", "@ada gracias", "gracias @ada" };
 		for (String mensaje : mensajes) {

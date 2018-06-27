@@ -2,6 +2,8 @@ package resolvedores;
 
 import java.util.Date;
 
+import armadores.RespuestaGenerico;
+
 /** 
  * Resolvedor, Agenda nuevos eventos en el futuro y permite ver los proximos eventos pendientes.
  */

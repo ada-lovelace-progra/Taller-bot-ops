@@ -1,4 +1,5 @@
-package resolvedores;
+package bdResponderGenerico;
+
 
 import java.util.Date;
 
@@ -10,15 +11,15 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
-public class ChuckFact {
+public class ChuckBD {
 	private int id;
 	private String fact;
 	private Date fechaLectura;
 
-	public ChuckFact() {
+	public ChuckBD() {
 	}
 
-	public ChuckFact(int id, String fact, Date fechaLectura) {
+	public ChuckBD(int id, String fact, Date fechaLectura) {
 		this.id = id;
 		this.fact = fact;
 		this.fechaLectura = fechaLectura;
@@ -54,16 +55,16 @@ public class ChuckFact {
 		SessionFactory factory = conf.buildSessionFactory();
 		Session session = factory.openSession();
 		Transaction tx = session.beginTransaction();
-		ChuckFact fact = null;
+		ChuckBD fact = null;
 
 		try {
 			@SuppressWarnings("deprecation")
-			Criteria cb = session.createCriteria(ChuckFact.class);
+			Criteria cb = session.createCriteria(ChuckBD.class);
 			cb.add(Restrictions.isNull("fechaLectura"));
 			cb.add(Restrictions.sqlRestriction("1=1 order by random()"));
 			cb.setMaxResults(1);
 			if (!cb.list().isEmpty()) {
-				fact = (ChuckFact) cb.uniqueResult();
+				fact = (ChuckBD) cb.uniqueResult();
 				fact.setFechaLectura(DateTime.now().toDate());
 				session.saveOrUpdate(fact);
 				tx.commit();

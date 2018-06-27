@@ -90,7 +90,7 @@ public class AsistenteTest {
 	@Test
 	public void hora() {
 		String hora = new SimpleDateFormat("HH:mm").format(new Date());
-		Assert.assertEquals(formato(hora), escuchar("@ada hora"));
+		Assert.assertEquals(formato(hora), escuchar("@ada la hora"));
 	}
 
 	@Test

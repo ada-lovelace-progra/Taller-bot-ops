@@ -36,13 +36,13 @@ public class CalculoStringTest {
 
 	@Test
 	public void calcularConNegativos() {
-		Assert.assertEquals("Ada: La exprecion da: 10 @" + USUARIO,
+		Assert.assertEquals("Ada: La expresion da: 10 @" + USUARIO,
 				escuchar("@ada resolve -1*(((1+1)^3*10)/80-6)*2"));
 	}
 
 	@Test
 	public void calculosCompuestos() {
-		Assert.assertEquals("Ada: La exprecion da: -112 @" + USUARIO,
+		Assert.assertEquals("Ada: La expresion da: -112 @" + USUARIO,
 				escuchar("@ada resuelve (((1+1)^3*10)/80-6)*2-100-5+3"));
 	}
 
@@ -53,7 +53,7 @@ public class CalculoStringTest {
 
 	@Test
 	public void mixSupremo() {
-		Assert.assertEquals("Ada: La exprecion da: 15 @" + USUARIO, escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
+		Assert.assertEquals("Ada: La expresion da: 15 @" + USUARIO, escuchar("@ada cuanto es 10%((30+20)+((135-30)-5)^1)"));
 	}
 }
 

@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.regex.*;
 
+import armadores.RespuestaGenerico;
+
 
 /** 
  * Resolvedor, muestra gifs proporcionados por giphy.

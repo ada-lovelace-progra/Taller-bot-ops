@@ -10,6 +10,7 @@
 	<classpathentry kind="src" path="Test"/>
 	<classpathentry kind="src" path="Sockets"/>
 	<classpathentry kind="src" path="Ventanas"/>
+	<classpathentry kind="src" path="BaseDeDatos"/>
 	<classpathentry kind="lib" path="libs/joda-time-2.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/antlr-2.7.7.jar"/>
@@ -28,5 +29,7 @@
 	<classpathentry kind="lib" path="libs/slf4j-simple-1.7.7.jar"/>
 	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="libs/jsoup-1.11.3.jar"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

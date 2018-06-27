@@ -1,5 +1,7 @@
 package resolvedores;
 
+import armadores.RespuestaGenerico;
+
 public class Default extends RespuestaGenerico {
 
 	public Default() {
