@@ -12,14 +12,13 @@ import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+
 import usuariosYAsistente.Usuario;
 
 public class Chat extends JFrame {
@@ -112,35 +111,7 @@ public class Chat extends JFrame {
 	}
 
 	private void nuevaTab(String nombre, int codChat) {
-		JPanel panel = new JPanel();
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{394, 0};
-		gbl_panel.rowHeights = new int[]{200, 28, 0};
-		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 0;
-		panel.add(scrollPane, gbc_scrollPane);
-		
-		JEditorPane mensajes = new JEditorPane();
-		mensajes.setContentType("text/html");
-		scrollPane.setViewportView(mensajes);
-		
-		JEditorPane textEnviar = new JEditorPane();
-		textEnviar.setContentType("text/html");
-		GridBagConstraints gbc_textEnviar = new GridBagConstraints();
-		gbc_textEnviar.fill = GridBagConstraints.BOTH;
-		gbc_textEnviar.gridx = 0;
-		gbc_textEnviar.gridy = 1;
-		panel.add(textEnviar, gbc_textEnviar);
-		
-		tabChats.addTab(nombre, new Pestana(usuario).nuevo(codChat));	
+		tabChats.addTab(nombre, new Pestana(usuario, tabChats).nuevo(codChat));
 	}
 
 	

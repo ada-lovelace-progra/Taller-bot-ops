@@ -1,23 +1,21 @@
 package vistas;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
 import java.awt.SystemColor;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
 
 public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -122,12 +120,6 @@ public class Cliente extends JFrame {
 				iniciarSesion();
 			}
 		});
-		btnRegistrar.addKeyListener(new KeyAdapter() {
-			public void Pressed(KeyEvent e) {
-				if(e.getKeyChar() == '\n')
-					iniciarSesion();
-			}
-		});
 		btnRegistrar.setBounds(253, 183, 178, 23);
 		btnRegistrar.setFont(fuente);
 		contentPane.add(btnRegistrar);
@@ -142,7 +134,6 @@ public class Cliente extends JFrame {
 		try {
 			sesionIniciada();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

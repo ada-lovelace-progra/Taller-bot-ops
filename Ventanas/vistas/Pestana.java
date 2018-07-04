@@ -9,10 +9,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -30,9 +33,14 @@ public class Pestana {
 
 	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
 	private Usuario usuario;
+	private boolean setearonNombre = false;
+	private JTabbedPane tabChats;
+	private int indicePestana;
 
-	public Pestana(Usuario usuario) {
+	public Pestana(Usuario usuario, JTabbedPane tabChats) {
 		this.usuario = usuario;
+		this.tabChats = tabChats;
+		indicePestana = tabChats.getTabCount();
 	}
 
 	/**
@@ -93,15 +101,14 @@ public class Pestana {
 
 				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					System.out.println("url: " + url);
-					/*SimpleAttributeSet at = (SimpleAttributeSet)hLinkEv.getSourceElement().getAttributes().getAttribute(HTML.Tag.A);
-					String title = at!=null?(String)at.getAttribute(HTML.Attribute.TITLE):null;
-					if(title.contains("Ampliar")) //es un meme
-					{
-						Ampliar a = new Ampliar(url);
-						a.setLocationRelativeTo(null);
-						a.setVisible(true);
-					}
-					else */if (Desktop.isDesktopSupported())
+					/*
+					 * SimpleAttributeSet at =
+					 * (SimpleAttributeSet)hLinkEv.getSourceElement().getAttributes().getAttribute(
+					 * HTML.Tag.A); String title =
+					 * at!=null?(String)at.getAttribute(HTML.Attribute.TITLE):null;
+					 * if(title.contains("Ampliar")) //es un meme { Ampliar a = new Ampliar(url);
+					 * a.setLocationRelativeTo(null); a.setVisible(true); } else
+					 */if (Desktop.isDesktopSupported())
 						try {
 							Desktop.getDesktop().browse(new URI(url));
 							;
@@ -121,7 +128,7 @@ public class Pestana {
 								System.out.println("se acabo todo... todillo");
 							}
 						}
-				} // fin if activated
+				}
 			}
 		});
 		mensajes.getDocument().addDocumentListener(new DocumentListener() {
@@ -153,7 +160,7 @@ public class Pestana {
 				}
 			}
 		});
-		
+
 		textEnviar.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -183,15 +190,25 @@ public class Pestana {
 							new Zumbido().start();
 						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 						HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
+
+						if (estanSeteandoElTitulo(recibido)) {
+							Matcher regex = Pattern.compile("#T=(\\S+)").matcher(recibido);
+							if (regex.find()) {
+								setearonNombre = true;
+								tabChats.setTitleAt(indicePestana, regex.group(1));
+							}
+						}
+
 						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
+
 						mensajes.setCaretPosition(doc.getLength());
 						if (recibido.contains("youtube")) {
 							System.out.println("youtubeee");
-							mensajes.add(  Youtube2.metodoLoco(true) );
+							mensajes.add(Youtube2.metodoLoco(true));
 						}
 					}
 				} catch (Exception e) {
-			//		System.out.println("error recibiendo el mensaje");
+					// System.out.println("error recibiendo el mensaje");
 				}
 			}
 
@@ -216,6 +233,18 @@ public class Pestana {
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
 			textEnviar.setText("");
 			mensaje = Codificaciones.codificar(mensaje);
+
+			if (setearonNombre && esInvitacion(mensaje))
+				mensaje = codificarInvitacion(mensaje, tabChats.getTitleAt(indicePestana));
+
+			if (estanSeteandoElTitulo(mensaje)) {
+				Matcher regex = Pattern.compile("#T=(\\S+)").matcher(mensaje);
+				if (regex.find()) {
+					setearonNombre = true;
+					tabChats.setTitleAt(indicePestana, regex.group(1));
+				}
+			}
+
 			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
 			try {
 				HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
@@ -225,6 +254,18 @@ public class Pestana {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	private boolean estanSeteandoElTitulo(String mensaje) {
+		return mensaje.contains("#T=");
+	}
+
+	private static String codificarInvitacion(String mensaje, String nombreSala) {
+		return mensaje + " #" + nombreSala;
+	}
+
+	private static boolean esInvitacion(String mensaje) {
+		return mensaje.contains("!@");
 	}
 
 }

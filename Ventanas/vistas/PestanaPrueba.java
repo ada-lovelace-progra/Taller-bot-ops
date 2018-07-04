@@ -117,6 +117,7 @@ public class PestanaPrueba {
 		});
 	}
 
+	@SuppressWarnings("unused")
 	private void eventoLink(JTextPane mensajes) {
 		mensajes.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {

@@ -123,9 +123,9 @@ public class Codificaciones {
 			mensaje = codificarImagen(mensaje);
 		else if (mensaje.matches(".*;.*;.*"))
 			mensaje = codificarYoutube(mensaje);
-		else if (esLink(mensaje)) {
+		else if (esLink(mensaje))
 			mensaje = codificarLink(mensaje);
-		} else if (esMeme(mensaje))
+		else if (esMeme(mensaje))
 			mensaje = codificarMeme(mensaje);
 		return mensaje;
 	}
