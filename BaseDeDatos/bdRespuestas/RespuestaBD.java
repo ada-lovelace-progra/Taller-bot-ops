@@ -1,4 +1,4 @@
-package bdResponderGenerico;
+package bdRespuestas;
 
 public class RespuestaBD {
 	private int id;

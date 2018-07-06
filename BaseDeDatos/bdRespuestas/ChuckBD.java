@@ -1,4 +1,4 @@
-package bdResponderGenerico;
+package bdRespuestas;
 
 
 import java.util.Date;

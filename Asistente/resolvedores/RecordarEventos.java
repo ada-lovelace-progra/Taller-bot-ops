@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import armadores.RespuestaGenerico;
-import bdResponderGenerico.EventoBD;
+import bdRespuestas.EventoBD;
 
 /**
  * Resolvedor, Agenda nuevos eventos en el futuro y permite ver los proximos

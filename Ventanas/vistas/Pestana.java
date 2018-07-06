@@ -36,6 +36,8 @@ public class Pestana {
 	private boolean setearonNombre = false;
 	private JTabbedPane tabChats;
 	private int indicePestana;
+	private char privacidad;
+	private boolean setearonPrivacidad;
 
 	public Pestana(Usuario usuario, JTabbedPane tabChats) {
 		this.usuario = usuario;
@@ -186,29 +188,37 @@ public class Pestana {
 				try {
 					while (true) {
 						String recibido = usuario.recibir(codChat);
-						if (recibido.contains(":zumbido:"))
-							new Zumbido().start();
-						HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-						HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
 
-						if (estanSeteandoElTitulo(recibido)) {
-							Matcher regex = Pattern.compile("#T=(\\S+)").matcher(recibido);
-							if (regex.find()) {
-								setearonNombre = true;
-								tabChats.setTitleAt(indicePestana, regex.group(1));
-							}
-						}
+						zumbido(recibido);
 
-						editorKit.insertHTML(doc, doc.getLength(), recibido, 0, 0, null);
+						if (setearonNombre && setearonPrivacidad && esInvitacion(recibido))
+							recibido = codificarInvitacion(recibido);
 
-						mensajes.setCaretPosition(doc.getLength());
-						if (recibido.contains("youtube")) {
-							System.out.println("youtubeee");
-							mensajes.add(Youtube2.metodoLoco(true));
-						}
+						if (estanSeteandoElTitulo(recibido))
+							setearTitulo(recibido);
+
+						if (estanSeteandoPrivacidad(recibido))
+							setearPrivacidad(recibido, codChat);
+
+						// youtube(mensajes, recibido);
+
+						cargarMensaje(mensajes, codChat, recibido);
 					}
 				} catch (Exception e) {
-					// System.out.println("error recibiendo el mensaje");
+					System.out.println("error recibiendo el mensaje");
+				}
+			}
+
+			private void zumbido(String recibido) {
+				if (recibido.contains(":zumbido:"))
+					new Zumbido().start();
+			}
+
+			@SuppressWarnings("unused")
+			private void youtube(JEditorPane mensajes, String recibido) {
+				if (recibido.contains("youtube")) {
+					System.out.println("youtubeee");
+					mensajes.add(Youtube2.metodoLoco(true));
 				}
 			}
 
@@ -234,25 +244,67 @@ public class Pestana {
 			textEnviar.setText("");
 			mensaje = Codificaciones.codificar(mensaje);
 
-			if (setearonNombre && esInvitacion(mensaje))
-				mensaje = codificarInvitacion(mensaje, tabChats.getTitleAt(indicePestana));
+			if (setearonPrivacidad && esInvitacion(mensaje))
+				mensaje = codificarInvitacion(mensaje);
 
-			if (estanSeteandoElTitulo(mensaje)) {
-				Matcher regex = Pattern.compile("#T=(\\S+)").matcher(mensaje);
-				if (regex.find()) {
-					setearonNombre = true;
-					tabChats.setTitleAt(indicePestana, regex.group(1));
-				}
-			}
+			if (estanSeteandoElTitulo(mensaje))
+				setearTitulo(mensaje);
 
-			HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
+			if (setearonNombre && estanSeteandoPrivacidad(mensaje))
+				setearPrivacidad(mensaje, codChat);
+
+			cargarMensaje(mensajes, codChat, usuario.nombre + ": " + mensaje);
+
 			try {
-				HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
-				editorKit.insertHTML(doc, doc.getLength(), usuario.nombre + ": " + mensaje, 0, 0, null);
 				usuario.enviar(codChat, mensaje);
-				mensajes.setCaretPosition(mensajes.getDocument().getLength());
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
+		}
+	}
+
+	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
+		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
+			if (mensaje.contains("@") && mensaje.contains("#"))
+				mensaje=mensaje.substring(0, mensaje.indexOf("#"));
+				try {
+					HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
+					HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
+					editorKit.insertHTML(doc, doc.getLength(), mensaje, 0, 0, null);
+					mensajes.setCaretPosition(mensajes.getDocument().getLength());
+				} catch (Exception e) {
+				}
+		}
+	}
+
+	private void setearTitulo(String mensaje) {
+		Matcher regex = Pattern.compile("#T=(.*)\\.?").matcher(mensaje);
+		if (regex.find()) {
+			setearonNombre = true;
+			String nombreSala = regex.group(1);
+			tabChats.setTitleAt(indicePestana, "#" + nombreSala);
+		}
+	}
+
+	private boolean estanSeteandoPrivacidad(String mensaje) {
+		return mensaje.contains("#P=");
+	}
+
+	private void setearPrivacidad(String mensaje, int codChat) {
+		Matcher regex = Pattern.compile("#P=(.)").matcher(mensaje);
+		if (regex.find()) {
+			setearonPrivacidad = true;
+			privacidad = regex.group(1).charAt(0);
+
+			// decirle al server que agregue la sala en caso de ser publica
+
+			try {
+				usuario.enviar(0, "agregarSala" + tabChats.getTitleAt(indicePestana) + privacidad
+						+ String.format("%04d", codChat));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -260,12 +312,12 @@ public class Pestana {
 		return mensaje.contains("#T=");
 	}
 
-	private static String codificarInvitacion(String mensaje, String nombreSala) {
-		return mensaje + " #" + nombreSala;
+	private String codificarInvitacion(String mensaje) {
+		return mensaje + tabChats.getTitleAt(indicePestana) + privacidad;
 	}
 
-	private static boolean esInvitacion(String mensaje) {
-		return mensaje.contains("!@");
+	private boolean esInvitacion(String mensaje) {
+		return mensaje.contains("@");
 	}
 
 }

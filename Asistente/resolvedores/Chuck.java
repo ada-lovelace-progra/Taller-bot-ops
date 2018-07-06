@@ -1,7 +1,7 @@
 package resolvedores;
 
 import armadores.RespuestaGenerico;
-import bdResponderGenerico.ChuckBD;
+import bdRespuestas.ChuckBD;
 
 /** 
  * Resolvedor, tira "datos" de chuck norris.

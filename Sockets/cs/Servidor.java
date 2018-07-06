@@ -9,6 +9,7 @@ public class Servidor {
 
 	public Servidor(int puerto) throws Exception {
 		serversock = new ServerSocket(puerto);
+		//new dbUsuarios.BaseDato();
 		while (true) {
 			servidor = serversock.accept();
 			new HiloServer(servidor).start();

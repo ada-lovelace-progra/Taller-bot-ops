@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
-import bdResponderGenerico.MemesBD;
+import bdRespuestas.MemesBD;
 
 public class Codificaciones {
 

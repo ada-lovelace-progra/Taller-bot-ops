@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="dbUsuarios.RespuestaBD" table="Usuarios">
+		<id column="id" name="id" type="int" />
+		<property column="Usuarios" name="usuarios" type="string" />
+		<property column="Pass" name="passHasheada" type="string" />
+	</class>
+	
+</hibernate-mapping>

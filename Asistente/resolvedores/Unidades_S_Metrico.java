@@ -3,7 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import armadores.RespuestaGenerico;
-import bdResponderGenerico.UnidadesSMBD;
+import bdRespuestas.UnidadesSMBD;
 
 /** 
  * Resolvedor, Convierte entre distintas unidades.

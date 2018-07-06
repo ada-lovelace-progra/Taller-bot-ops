@@ -1,12 +1,12 @@
-package bdResponderGenerico;
+package bdRespuestas;
 
 import java.util.ArrayList;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
-
 public class BaseDato {
 
 	private static SessionFactory factory;
@@ -15,7 +15,7 @@ public class BaseDato {
 	public BaseDato() {
 		if (session == null) {
 			Configuration conf = new Configuration();
-			conf.configure("bdResponderGenerico/hibernate.cfg.xml");
+			conf.configure("bdRespuestas/hibernate.cfg.xml");
 			factory = conf.buildSessionFactory();
 			session = factory.openSession();
 		}

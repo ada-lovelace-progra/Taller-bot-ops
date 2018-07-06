@@ -88,9 +88,9 @@ public class Chat extends JFrame {
 		gbc_tabChats.fill = GridBagConstraints.BOTH;
 		gbc_tabChats.gridx = 1;
 		gbc_tabChats.gridy = 1;
-		
+
 		getContentPane().add(tabChats, gbc_tabChats);
-		
+
 		new escucharCodChat_0().start();
 
 		listaConectados.addMouseListener(new MouseAdapter() {
@@ -99,9 +99,10 @@ public class Chat extends JFrame {
 				String selectedItem = listaConectados.getSelectedItem();
 				if (cant == 1 && !usuariosSeleccionados.contains(selectedItem + " ")) {
 					try {
-						usuariosSeleccionados += selectedItem + " ";
+						if (!selectedItem.equals("Nueva_Sala"))
+							usuariosSeleccionados += selectedItem + " ";
 						int codChat = usuario.pedirNuevoChat(selectedItem);
-							nuevaTab(selectedItem, codChat);
+						nuevaTab(selectedItem, codChat);
 					} catch (Exception e1) {
 					}
 				}
@@ -114,7 +115,6 @@ public class Chat extends JFrame {
 		tabChats.addTab(nombre, new Pestana(usuario, tabChats).nuevo(codChat));
 	}
 
-	
 	class escucharCodChat_0 extends Thread {
 		public void run() {
 			try {

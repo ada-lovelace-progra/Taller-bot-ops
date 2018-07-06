@@ -1,8 +1,9 @@
 package armadores;
 
 import java.util.ArrayList;
-import bdResponderGenerico.BaseDato;
-import bdResponderGenerico.RespuestaBD;
+
+import bdRespuestas.BaseDato;
+import bdRespuestas.RespuestaBD;
 
 /**
  * Todas las respuestas de ada deberan extender de esta clase, es el "Handler"

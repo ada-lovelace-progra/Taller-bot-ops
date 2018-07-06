@@ -1,4 +1,4 @@
-package bdResponderGenerico;
+package bdRespuestas;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;

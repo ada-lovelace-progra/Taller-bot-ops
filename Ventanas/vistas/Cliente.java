@@ -47,72 +47,71 @@ public class Cliente extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 466, 280);
 		fuente = new Font("Tahoma", Font.PLAIN, 11);
-		//setAllBounds();
 		contentPane = new JPanel();
 		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) SystemColor.control));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.setFont(fuente);
-		
+
 		JLabel lblEmail = new JLabel("Email:");
 		lblEmail.setBounds(10, 45, 66, 14);
 		lblEmail.setFont(fuente);
 		contentPane.add(lblEmail);
-		
+
 		txtMailLogin = new JTextField();
 		txtMailLogin.setBounds(10, 67, 205, 20);
 		txtMailLogin.setFont(fuente);
 		contentPane.add(txtMailLogin);
 		txtMailLogin.setColumns(10);
-		
+
 		JLabel lblContra = new JLabel("Contase\u00F1a:");
 		lblContra.setBounds(10, 98, 66, 14);
 		lblContra.setFont(fuente);
 		contentPane.add(lblContra);
-		
+
 		passLogin = new JPasswordField();
 		passLogin.setBounds(10, 116, 205, 20);
 		passLogin.setFont(fuente);
 		contentPane.add(passLogin);
-		
+
 		JButton btnIniciarsesion = new JButton("Iniciar sesi\u00F3n");
 		btnIniciarsesion.setBounds(56, 167, 101, 23);
 		btnIniciarsesion.setFont(fuente);
 		contentPane.add(btnIniciarsesion);
-		
+
 		JLabel lblMailReg = new JLabel("Email:");
 		lblMailReg.setBounds(238, 21, 66, 14);
 		lblMailReg.setFont(fuente);
 		contentPane.add(lblMailReg);
-		
+
 		txtMailReg = new JTextField();
 		txtMailReg.setBounds(238, 39, 200, 20);
 		txtMailReg.setFont(fuente);
 		contentPane.add(txtMailReg);
 		txtMailReg.setColumns(10);
-		
+
 		JLabel lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setBounds(238, 67, 66, 14);
 		lblUsuario.setFont(fuente);
 		contentPane.add(lblUsuario);
-		
+
 		txtUsuario = new JTextField();
 		txtUsuario.setBounds(238, 87, 200, 20);
 		txtUsuario.setFont(fuente);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
-		
+
 		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
 		lblContrasea.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasea.setBounds(238, 118, 66, 14);
 		lblContrasea.setFont(fuente);
 		contentPane.add(lblContrasea);
-		
+
 		passReg = new JPasswordField();
 		passReg.setBounds(238, 137, 200, 20);
 		passReg.setFont(fuente);
 		contentPane.add(passReg);
-		
+
 		JButton btnRegistrar = new JButton("Registrarse e Iniciar sesi\u00F3n");
 		btnRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
@@ -123,7 +122,7 @@ public class Cliente extends JFrame {
 		btnRegistrar.setBounds(253, 183, 178, 23);
 		btnRegistrar.setFont(fuente);
 		contentPane.add(btnRegistrar);
-		
+
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
 		separator.setBounds(227, 0, 2, 251);
@@ -138,9 +137,9 @@ public class Cliente extends JFrame {
 		}
 	}
 
-
 	private void sesionIniciada() throws Exception {
-		
+
+//		Chat ventanaChat = new Chat(txtUsuario.getText() + "|" + passReg.getPassword().toString());
 		Chat ventanaChat = new Chat(txtUsuario.getText());
 		ventanaChat.setLocationRelativeTo(null);
 		ventanaChat.setVisible(true);
