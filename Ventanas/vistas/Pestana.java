@@ -28,16 +28,20 @@ import plugins.Codificaciones;
 import plugins.Youtube2;
 import plugins.Zumbido;
 import usuariosYAsistente.Usuario;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class Pestana {
 
 	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
 	private Usuario usuario;
 	private boolean setearonNombre = false;
+	private String nombrePestana;
 	private JTabbedPane tabChats;
 	private int indicePestana;
 	private char privacidad;
 	private boolean setearonPrivacidad;
+	private int mensajesSinLeer = 0;
 
 	public Pestana(Usuario usuario, JTabbedPane tabChats) {
 		this.usuario = usuario;
@@ -50,6 +54,12 @@ public class Pestana {
 	 */
 	public JPanel nuevo(int codChat) {
 		JPanel panel = new JPanel();
+		panel.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				mensajesSinLeer = 0;
+			}
+		});
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 394, 0 };
 		gbl_panel.rowHeights = new int[] { 200, 28, 0 };
@@ -133,6 +143,7 @@ public class Pestana {
 				}
 			}
 		});
+
 		mensajes.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -155,10 +166,24 @@ public class Pestana {
 				if (arg0.getKeyChar() == '\n') {
 					enviarMensaje(textEnviar, mensajes, codChat);
 					textEnviar.setText("");
-				} else if (textEnviar.getText().length() > 2) {
-					char ch = textEnviar.getText().charAt(0);
-					if (ch == '\n' || ch == '\r')
-						textEnviar.setText(textEnviar.getText().substring(1));
+				} else if (textEnviar.getText().length() > 1) {
+					char charAt = textEnviar.getText().charAt(0);
+					try {
+						while (charAt == '\n' || charAt == '\r' && textEnviar.getText().length() > 1) {
+							textEnviar.setText(textEnviar.getText().substring(1));
+							charAt = textEnviar.getText().charAt(0);
+						}
+					} catch (Exception e) {
+					}
+					try {
+						int length = textEnviar.getText().length();
+						charAt = textEnviar.getText().charAt(length - 1);
+						while (charAt == '\n' || charAt == '\r' && textEnviar.getText().length() > 1) {
+							textEnviar.setText(textEnviar.getText().substring(0, --length - 1));
+							charAt = textEnviar.getText().charAt(length - 1);
+						}
+					} catch (Exception e) {
+					}
 				}
 			}
 		});
@@ -178,6 +203,19 @@ public class Pestana {
 				textEnviar.setCaretPosition(textEnviar.getDocument().getLength());
 			}
 
+		});
+
+		mensajes.addFocusListener(new FocusAdapter() {
+			public void focusGained(FocusEvent arg0) {
+				mensajesSinLeer = 0;
+			}
+		});
+
+		textEnviar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				mensajesSinLeer = 0;
+			}
 		});
 	}
 
@@ -203,6 +241,7 @@ public class Pestana {
 						// youtube(mensajes, recibido);
 
 						cargarMensaje(mensajes, codChat, recibido);
+						mensajesSinLeer++;
 					}
 				} catch (Exception e) {
 					System.out.println("error recibiendo el mensaje");
@@ -263,17 +302,25 @@ public class Pestana {
 		}
 	}
 
+	private boolean fueSeteado = false;
+
 	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
+		if (!fueSeteado) {
+			fueSeteado = true;
+			nombrePestana = tabChats.getTitleAt(indicePestana);
+			setearNombreSala.start();
+		}
+
 		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
-				mensaje=mensaje.substring(0, mensaje.indexOf("#"));
-				try {
-					HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-					HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
-					editorKit.insertHTML(doc, doc.getLength(), mensaje, 0, 0, null);
-					mensajes.setCaretPosition(mensajes.getDocument().getLength());
-				} catch (Exception e) {
-				}
+				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
+			try {
+				HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
+				HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
+				editorKit.insertHTML(doc, doc.getLength(), mensaje, 0, 0, null);
+				mensajes.setCaretPosition(mensajes.getDocument().getLength());
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -281,8 +328,8 @@ public class Pestana {
 		Matcher regex = Pattern.compile("#T=(.*)\\.?").matcher(mensaje);
 		if (regex.find()) {
 			setearonNombre = true;
-			String nombreSala = regex.group(1);
-			tabChats.setTitleAt(indicePestana, "#" + nombreSala);
+			nombrePestana = regex.group(1);
+			tabChats.setTitleAt(indicePestana, "#" + nombrePestana);
 		}
 	}
 
@@ -319,5 +366,23 @@ public class Pestana {
 	private boolean esInvitacion(String mensaje) {
 		return mensaje.contains("@");
 	}
+
+	private final Thread setearNombreSala = new Thread() {
+		public void run() {
+			while (true) {
+				try {
+					if (mensajesSinLeer != 0) {
+						String nombre = nombrePestana + " (" + mensajesSinLeer + ")";
+						tabChats.setTitleAt(indicePestana, nombre);
+						Thread.sleep(500);
+						tabChats.setTitleAt(indicePestana, nombrePestana + "    ");
+					}
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	};
 
 }

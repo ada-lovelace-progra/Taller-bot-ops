@@ -118,6 +118,7 @@ public class Chat extends JFrame {
 						int codChat = usuario.pedirNuevoChat(selectedItem);
 						nuevaTab(selectedItem, codChat);
 					} catch (Exception e1) {
+						e1.printStackTrace();
 					}
 				}
 				listaConectados.deselect(listaConectados.getSelectedIndex());

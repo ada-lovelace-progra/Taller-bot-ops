@@ -43,6 +43,8 @@ public class HiloServer extends Thread {
 			comprobarUsuario(user_pass);
 
 			readUTF = readUTF.substring(0, readUTF.indexOf("|"));
+			if (!iniciado)
+				return;
 		}
 		/////////////////////////////////////////////////////////////////
 
@@ -54,7 +56,7 @@ public class HiloServer extends Thread {
 
 	private void cargarUsuario(String user_pass) {
 		// AAAAAAAAASSHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!!!!!!!
-		
+
 		// si esta en la base no hagas nada.... si no agregalo y lesto
 	}
 
@@ -106,7 +108,7 @@ public class HiloServer extends Thread {
 
 	public void run() {
 		// mensajes entre usuarios
-		if (!codChat.equals("0000"))
+		if (codChat != null && !codChat.equals("0000"))
 			try {
 				while (true) {
 					String mensaje = bufferDeEntrada.readUTF();
