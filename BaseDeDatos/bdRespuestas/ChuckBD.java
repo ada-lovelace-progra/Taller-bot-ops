@@ -4,14 +4,11 @@ package bdRespuestas;
 import java.util.Date;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
-public class ChuckBD {
+public class ChuckBD extends BaseDato{
 	private int id;
 	private String fact;
 	private Date fechaLectura;
@@ -50,10 +47,6 @@ public class ChuckBD {
 	}
 
 	public String obtenerChuckFact() {
-		Configuration conf = new Configuration();
-		conf.configure("hibernate/hibernate.cfg.xml");
-		SessionFactory factory = conf.buildSessionFactory();
-		Session session = factory.openSession();
 		Transaction tx = session.beginTransaction();
 		ChuckBD fact = null;
 
@@ -73,12 +66,8 @@ public class ChuckBD {
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
-			session.close();
-			factory.close();
 			return null;
 		}
-		session.close();
-		factory.close();
 		return fact.fact;
 	}
 
