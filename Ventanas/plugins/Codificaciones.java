@@ -11,11 +11,11 @@ import bdRespuestas.MemesBD;
 public class Codificaciones {
 
 	static private String codificarYoutube(String recibido) {
-		Matcher asd = Pattern.compile(";(\\S+);").matcher(recibido);
+		Matcher regex = Pattern.compile(";(\\S+);").matcher(recibido);
 		String link = "";
-		if (asd.find()) {
+		if (regex.find()) {
 			// new Youtube2();
-			link = asd.group(1);
+			link = regex.group(1);
 			return recibido.replace(";" + link + ";",
 					"<a href=\"www.youtube.com/watch?v=dQw4w9WgXcQ\">" + link + "</a>");
 		}
@@ -25,23 +25,23 @@ public class Codificaciones {
 	static private String codificarLink(String recibido) {
 		String ini = "<a href=\"";
 		String fin = "\">";
-		Matcher asd = Pattern.compile("(http\\S+)").matcher(recibido);
+		Matcher regex = Pattern.compile("(http\\S+)").matcher(recibido);
 		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
+		if (regex.find()) {
+			link = regex.group(1);
 			// return recibido.replace(link, ini + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
 			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
 		}
-		asd = Pattern.compile("(www\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
+		regex = Pattern.compile("(www\\S+)").matcher(recibido);
+		if (regex.find()) {
+			link = regex.group(1);
 			// return recibido.replace(link, ini + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
 		}
-		asd = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
+		regex = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
+		if (regex.find()) {
+			link = regex.group(1);
 			// return recibido.replace(link, ini + "www." + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
 		}
@@ -75,15 +75,15 @@ public class Codificaciones {
 	}
 
 	static private String codificarImagen(String recibido) {
-		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		Matcher regex = Pattern.compile("(www\\S+)").matcher(recibido);
 		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
+		if (regex.find()) {
+			link = regex.group(1);
 			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
 		}
-		asd = Pattern.compile("(http\\S+)").matcher(recibido);
-		if (asd.find()) {
-			link = asd.group(1);
+		regex = Pattern.compile("(http\\S+)").matcher(recibido);
+		if (regex.find()) {
+			link = regex.group(1);
 			return recibido.replace(link, "<img width=\"100\" height=\"50\" src=\"" + link + "\">");
 		}
 		return recibido;
@@ -98,10 +98,10 @@ public class Codificaciones {
 	}
 
 	static private boolean comprobarQueEsImagenDeFormaFea(String recibido) {
-		Matcher asd = Pattern.compile("(www\\S+)").matcher(recibido);
+		Matcher regex = Pattern.compile("(www\\S+)").matcher(recibido);
 		String link = "";
-		if (asd.find()) {
-			link = asd.group(1);
+		if (regex.find()) {
+			link = regex.group(1);
 			try {
 				ImageIO.read(new URL(link));
 			} catch (Exception e) {

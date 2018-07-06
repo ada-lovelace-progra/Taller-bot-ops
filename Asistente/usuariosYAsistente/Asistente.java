@@ -59,13 +59,13 @@ public class Asistente extends UsuarioGenerico {
 	private void obtenerNombreAsistente(String entrada) {
 		/////////////////////////////////////////////////////////////////////////////
 		// nada.... es una garcha aveces regex....
-		Matcher asd = Pattern.compile(".*@([a-z]+) ?.*").matcher(entrada);
-		if (asd.find())
-			nombre = asd.group(1);
+		Matcher regex = Pattern.compile(".*@([a-z]+) ?.*").matcher(entrada);
+		if (regex.find())
+			nombre = regex.group(1);
 		else {
-			asd = Pattern.compile(".*@(.*) ?.*").matcher(entrada);
-			if (asd.find())
-				nombre = asd.group(1);
+			regex = Pattern.compile(".*@(.*) ?.*").matcher(entrada);
+			if (regex.find())
+				nombre = regex.group(1);
 		}
 		/////////////////////////////////////////////////////////////////////////////
 

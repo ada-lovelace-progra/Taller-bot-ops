@@ -42,14 +42,14 @@ public class Unidades_S_Metrico extends RespuestaGenerico {
 	}
 
 	public String cambio(String entrada) {
-		Matcher asd = Pattern.compile("([0-9]+[0-9]*) (\\S+) [a-z] (\\S+)").matcher(entrada);
+		Matcher regex = Pattern.compile("([0-9]+[0-9]*) (\\S+) [a-z] (\\S+)").matcher(entrada);
 		String unidadLLegada = null;
 		String unidadDestino = null;
 		double valor = 0;
-		if (asd.find()) {
-			unidadLLegada = asd.group(2);
-			unidadDestino = asd.group(3);
-			valor = Double.parseDouble(asd.group(1));
+		if (regex.find()) {
+			unidadLLegada = regex.group(2);
+			unidadDestino = regex.group(3);
+			valor = Double.parseDouble(regex.group(1));
 			return new UnidadesSMBD().convertir(unidadLLegada, unidadDestino, valor);
 		}		
 		return  "No se pudo realizar la conversión";

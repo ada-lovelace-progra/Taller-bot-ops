@@ -14,7 +14,7 @@ public class Cliente {
 
 	public Cliente(int puerto) {
 		if (host == null) {
-			if(levantarConeccion(puerto))
+			if(levantarConexion(puerto))
 				levantarServerYConectarse(puerto);
 		} else
 			try {
@@ -53,7 +53,7 @@ public class Cliente {
 		}
 	}
 
-	private boolean levantarConeccion(int puerto) {
+	private boolean levantarConexion(int puerto) {
 		boolean UltimoIntento = true;
 		Scanner hosts = null;
 		try {
@@ -76,9 +76,9 @@ public class Cliente {
 				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
 				if (!hostIntentados.contains(host)) {
 					try {
-						FileWriter asd = new FileWriter("hosts.dat");
-						asd.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
-						asd.close();				
+						FileWriter escribir = new FileWriter("hosts.dat");
+						escribir.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
+						escribir.close();				
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

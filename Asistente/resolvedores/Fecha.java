@@ -15,6 +15,8 @@ import armadores.RespuestaGenerico;
  * dias hasta dias desde hora semana fecha actual
  */
 public class Fecha extends RespuestaGenerico {
+	private Pattern patternFechaCompleta = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*");
+	private Pattern patternDias = Pattern.compile(".* ([0-9]+) ([a-z]+).*");
 
 	@Override
 	public String intentarResponder(String mensaje) {
@@ -32,24 +34,26 @@ public class Fecha extends RespuestaGenerico {
 				return getHora();
 
 			else if (mensaje.contains("falta")) {
-				Matcher asd = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*").matcher(mensaje);
-				if (asd.find()) {
-					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
-							ano = Integer.parseInt(asd.group(3));
+				Matcher regexFechaCompleta = patternFechaCompleta.matcher(mensaje);
+				if (regexFechaCompleta.find()) {
+					int dia = Integer.parseInt(regexFechaCompleta.group(1)),
+							mes = Integer.parseInt(regexFechaCompleta.group(2)),
+							ano = Integer.parseInt(regexFechaCompleta.group(3));
 					return hasta(dia, mes, ano);
 				}
 			} else if (mensaje.contains("paso")) {
-				Matcher asd = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*").matcher(mensaje);
-				if (asd.find()) {
-					int dia = Integer.parseInt(asd.group(1)), mes = Integer.parseInt(asd.group(2)),
-							ano = Integer.parseInt(asd.group(3));
+				Matcher regexFechaCompleta = patternFechaCompleta.matcher(mensaje);
+				if (regexFechaCompleta.find()) {
+					int dia = Integer.parseInt(regexFechaCompleta.group(1)),
+							mes = Integer.parseInt(regexFechaCompleta.group(2)),
+							ano = Integer.parseInt(regexFechaCompleta.group(3));
 					return desde(dia, mes, ano);
 				}
 			} else if (mensaje.contains("dentro")) {
-				Matcher asd = Pattern.compile(".* ([0-9]+) ([a-z]+).*").matcher(mensaje);
-				if (asd.find()) {
-					int dia = Integer.parseInt(asd.group(1));
-					switch (asd.group(2)) {
+				Matcher regexDias = patternDias.matcher(mensaje);
+				if (regexDias.find()) {
+					int dia = Integer.parseInt(regexDias.group(1));
+					switch (regexDias.group(2)) {
 					case "dias":
 						return dentrodeDias(dia);
 					case "meses":
@@ -57,10 +61,10 @@ public class Fecha extends RespuestaGenerico {
 					}
 				}
 			} else if (mensaje.contains("hace")) {
-				Matcher asd = Pattern.compile(".* ([0-9]+) ([a-z]+).*").matcher(mensaje);
-				if (asd.find()) {
-					int dia = Integer.parseInt(asd.group(1));
-					switch (asd.group(2)) {
+				Matcher regexDias = patternDias.matcher(mensaje);
+				if (regexDias.find()) {
+					int dia = Integer.parseInt(regexDias.group(1));
+					switch (regexDias.group(2)) {
 					case "dias":
 						return haceDias(dia);
 					case "meses":
