@@ -26,6 +26,8 @@ public class Asistente extends UsuarioGenerico {
 		entrada = entrada.toLowerCase().trim(); // nunca esta de mas un buen trim.... y el buen toLower para evitar
 												// preguntar por mayuscula y minuscula
 		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
+
+		RespondoA = RespondoA.substring(0, 1).toUpperCase() + RespondoA.substring(1);
 		if (nombre == null)
 			obtenerNombreAsistente(entrada);
 

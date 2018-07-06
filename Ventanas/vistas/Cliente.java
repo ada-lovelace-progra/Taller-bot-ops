@@ -16,6 +16,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -75,6 +79,18 @@ public class Cliente extends JFrame {
 		contentPane.add(passLogin);
 
 		JButton btnIniciarsesion = new JButton("Iniciar sesi\u00F3n");
+		btnIniciarsesion.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyChar() == KeyEvent.VK_ENTER)
+					iniciarSesion();
+			}
+		});
+		btnIniciarsesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				iniciarSesion();
+			}
+		});
 		btnIniciarsesion.setBounds(56, 167, 101, 23);
 		btnIniciarsesion.setFont(fuente);
 		contentPane.add(btnIniciarsesion);
@@ -112,11 +128,33 @@ public class Cliente extends JFrame {
 		passReg.setFont(fuente);
 		contentPane.add(passReg);
 
+		passReg.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyChar() == KeyEvent.VK_ENTER)
+					iniciarSesion();
+			}
+		});
+		
 		JButton btnRegistrar = new JButton("Registrarse e Iniciar sesi\u00F3n");
+		btnRegistrar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_ENTER)
+					iniciarSesion();
+			}
+		});
+		passLogin.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_ENTER)
+					iniciarSesion();
+			}
+		});
 		btnRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				iniciarSesion();
+				cargarUsuarioEIniciar();
 			}
 		});
 		btnRegistrar.setBounds(253, 183, 178, 23);
@@ -129,20 +167,21 @@ public class Cliente extends JFrame {
 		contentPane.add(separator);
 	}
 
-	private void iniciarSesion() {
-		try {
-			sesionIniciada();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private void cargarUsuarioEIniciar() {
+		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), passReg.getPassword());
+		iniciado(ventanaChat);
 	}
 
-	private void sesionIniciada() throws Exception {
+	private void iniciarSesion() {
+		Chat ventanaChat = new Chat(txtMailLogin.getText(), passLogin.getPassword());
+		iniciado(ventanaChat);
+	}
 
-//		Chat ventanaChat = new Chat(txtUsuario.getText() + "|" + passReg.getPassword().toString());
-		Chat ventanaChat = new Chat(txtUsuario.getText());
-		ventanaChat.setLocationRelativeTo(null);
-		ventanaChat.setVisible(true);
-		this.dispose();
+	private void iniciado(Chat ventanaChat) {
+		if (ventanaChat.iniciado) {
+			ventanaChat.setLocationRelativeTo(null);
+			ventanaChat.setVisible(true);
+			this.dispose();
+		}
 	}
 }

@@ -31,6 +31,7 @@ public class Chat extends JFrame {
 	private List listaConectados;
 	private JTabbedPane tabChats;
 	private String usuariosSeleccionados = "";
+	public boolean iniciado = false;
 
 	/**
 	 * Launch the application.
@@ -44,13 +45,26 @@ public class Chat extends JFrame {
 	 * 
 	 * @throws Exception
 	 */
-	public Chat(String user) throws Exception {
+	public Chat(String user, char[] cs) {
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setMinimumSize(new Dimension(542, 346));
-		usuario = new Usuario(user);
+		String hash = hashear(cs);
+		usuario = new Usuario(user, hash);
+
 		this.setTitle(user);
-		usuario.nuevoChat(0);
-		usuario.enviar(0, "refresh");
+
+		if (!usuario.nuevoChat(0)) {
+			iniciado = false;
+			return;
+		}
+
+		iniciado = true;
+
+		try {
+			usuario.enviar(0, "refresh");
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel contentPane = new JPanel();
@@ -109,6 +123,15 @@ public class Chat extends JFrame {
 				listaConectados.deselect(listaConectados.getSelectedIndex());
 			}
 		});
+	}
+
+	private String hashear(char[] cs) {
+		String retorno = "";
+		for (char c : cs) {
+			double divido = (c * 3) / 7;
+			retorno += (int) (divido * 11);
+		}
+		return retorno;
 	}
 
 	private void nuevaTab(String nombre, int codChat) {

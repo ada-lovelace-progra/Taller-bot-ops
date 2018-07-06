@@ -1,6 +1,5 @@
 package dbUsuarios;
 
-import java.util.ArrayList;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,23 +12,18 @@ public class BaseDato {
 	protected static Session session;
 
 	public BaseDato() {
-		new Thread() {
-			public void run() {
-				if (session == null) {
-					Configuration conf = new Configuration();
-					conf.configure("dbUsuarios/hibernate.cfg.xml");
-					factory = conf.buildSessionFactory();
-					session = factory.openSession();
-				}
-			}
-		}.start();
+		if (session == null) {
+			Configuration conf = new Configuration();
+			conf.configure("dbUsuarios/hibernate.cfg.xml");
+			factory = conf.buildSessionFactory();
+			session = factory.openSession();
+		}
 	}
 
 	@SuppressWarnings("all")
 	public boolean traerDatos(String user) {
 		try {
-			ArrayList<RespuestaBD> peticiones = new ArrayList<>();
-			Criteria cb = session.createCriteria(RespuestaBD.class).add(Restrictions.eq("Usuario", user));
+			Criteria cb = session.createCriteria(RespuestaBD.class).add(Restrictions.eq("Usuario_Pass", user.toLowerCase()));
 			// mensaje = mensaje.replaceAll("[^a-z_0-9_ ]", "");
 			if (cb != null && cb.list() != null && !cb.list().isEmpty()) {
 				return true;

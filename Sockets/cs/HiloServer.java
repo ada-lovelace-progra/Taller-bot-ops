@@ -25,28 +25,24 @@ public class HiloServer extends Thread {
 	private int codChatLibres = 5;
 	public boolean iniciado = false;
 
-	@SuppressWarnings("unused")
 	public HiloServer(Socket server) throws Exception {
 		socket = server;
 		bufferDeSalida = new DataOutputStream(socket.getOutputStream());
 		bufferDeEntrada = new DataInputStream(socket.getInputStream());
 		String readUTF = bufferDeEntrada.readUTF();
 
-		// comprobar si esta registrado
-		// ejemplo de lectura (readUTF):
-		// 0000Usuario|PassHash
-		if (false) {
+		if (readUTF.startsWith("0000")) {
+			// comprobar si esta registrado
+			// ejemplo de lectura (readUTF):
+			// 0000Usuario|PassHash
 			String user_pass = readUTF.substring(4);
-
-			if (!new dbUsuarios.BaseDato().traerDatos(user_pass)) {
-				iniciado = false;
-				System.out.println("no se encontro el usuario: " + user_pass);
-				bufferDeSalida.writeUTF("no se encontro el usuario");
-				return;
+			if (user_pass.charAt(0) == '$') {
+				user_pass = user_pass.substring(1);
+				cargarUsuario(user_pass);
 			}
-			iniciado = true;
-			readUTF = readUTF.substring(0, readUTF.indexOf("|"));
+			comprobarUsuario(user_pass);
 
+			readUTF = readUTF.substring(0, readUTF.indexOf("|"));
 		}
 		/////////////////////////////////////////////////////////////////
 
@@ -54,6 +50,23 @@ public class HiloServer extends Thread {
 		String usuario = cargaUsuario(readUTF);
 		System.out
 				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
+	}
+
+	private void cargarUsuario(String user_pass) {
+		// AAAAAAAAASSHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!!!!!!!
+		
+		// si esta en la base no hagas nada.... si no agregalo y lesto
+	}
+
+	private void comprobarUsuario(String user_pass) throws IOException {
+		if (!new dbUsuarios.BaseDato().traerDatos(user_pass)) {
+			iniciado = false;
+			System.out.println("no se encontro el usuario: " + user_pass);
+			bufferDeSalida.writeUTF("no se encontro el usuario");
+			return;
+		}
+		iniciado = true;
+		bufferDeSalida.writeUTF("iniciado");
 	}
 
 	private String cargaUsuario(String readUTF) {
@@ -92,7 +105,6 @@ public class HiloServer extends Thread {
 	};
 
 	public void run() {
-		// if (iniciado)
 		// mensajes entre usuarios
 		if (!codChat.equals("0000"))
 			try {
@@ -109,11 +121,15 @@ public class HiloServer extends Thread {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("error con cod Chat: " + codChat + "  " + e.getCause());
+				System.out.println("error con cod Chat: " + codChat + "  " + e.getMessage());
+				try {
+					cerrar();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 			}
 		/// mensajes "bajo nivel" entre server y cliente
-		else
+		else if (iniciado)
 			trabajoABajoNivel();
 	}
 
@@ -160,7 +176,8 @@ public class HiloServer extends Thread {
 
 					return mensaje.substring(0, mensaje.lastIndexOf("#"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.err.println("No se encuentra el usuario solicitado");
+					return mensaje;
 				}
 		}
 		return mensaje;
@@ -176,24 +193,26 @@ public class HiloServer extends Thread {
 		public void run() {
 			try {
 				if (leer.contains("nuevoChat")) { // si es peticion entro
-					
+
 					String[] mensaje = leer.split("\\|");
-					
-					if (mensaje[1].charAt(0) != '#') { // osea... si pido a un usuario
-						String codChatNuevo = obtenerCodChat(); // obtengo un codigo no usado
+
+					if (mensaje[1].charAt(0) != '#') { // si pido a un usuario
+
+						// obtengo un codigo no usado
+						String codChatNuevo = obtenerCodChat();
 
 						if (!mensaje[1].equals("Nueva_Sala"))
 							enviarAlUsuarioLlamado(mensaje, codChatNuevo);
 
-						bufferDeSalida.writeUTF(codChatNuevo); // le mando al usuario que pidio el chat el codigo
-						// nuevo
+						// le mando al usuario que pidio el chat el codigo nuevo
+						bufferDeSalida.writeUTF(codChatNuevo);
 
 						System.out.println(codChatNuevo);
-						
+
 					} else {// si pido a una sala
 						bufferDeSalida.writeUTF(codChatPorSala.get(mensaje[1]));
 					}
-					
+
 				}
 			} catch (Exception e) {
 				System.out.println("error procesando peticion nuevo Chat");
@@ -212,7 +231,7 @@ public class HiloServer extends Thread {
 	}
 
 	private String obtenerCodChat() {
-		return String.format("%04d", (int) (Math.random() * 999) + codChatLibres++);
+		return String.format("%04d", codChatLibres++);
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {
@@ -237,8 +256,8 @@ public class HiloServer extends Thread {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void cerrar() throws Exception {
+		System.out.println("cerrando buffers y socket");
 		bufferDeEntrada.close();
 		bufferDeSalida.close();
 		socket.close();

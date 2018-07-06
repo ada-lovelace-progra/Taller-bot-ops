@@ -2,8 +2,15 @@ package dbUsuarios;
 
 public class RespuestaBD {
 	private int id;
-	private String Usuario;
-	private String passHasheada;
+	private String Usuario_Pass;
+
+	public String getUsuario_Pass() {
+		return Usuario_Pass;
+	}
+
+	public void setUsuario_Pass(String usuario_Pass) {
+		Usuario_Pass = usuario_Pass;
+	}
 
 	public int getId() {
 		return id;
@@ -11,22 +18,6 @@ public class RespuestaBD {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getUsuario() {
-		return Usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		Usuario = usuario;
-	}
-
-	public String getPassHasheada() {
-		return passHasheada;
-	}
-
-	public void setPassHasheada(String passHasheada) {
-		this.passHasheada = passHasheada;
 	}
 
 }
