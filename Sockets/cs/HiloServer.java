@@ -24,6 +24,7 @@ public class HiloServer extends Thread {
 	private String codChat;
 	private int codChatLibres = 5;
 	public boolean iniciado = false;
+	private String usuario;
 
 	public HiloServer(Socket server) throws Exception {
 		socket = server;
@@ -49,7 +50,7 @@ public class HiloServer extends Thread {
 		/////////////////////////////////////////////////////////////////
 
 		cargaCodChat(readUTF);
-		String usuario = cargaUsuario(readUTF);
+		usuario = cargaUsuario(readUTF);
 		System.out
 				.println(usuario + " conectado en el puerto: " + socket.getPort() + " pidio Sala de Chat: " + codChat);
 	}
@@ -233,7 +234,8 @@ public class HiloServer extends Thread {
 	}
 
 	private String obtenerCodChat() {
-		return String.format("%04d", codChatLibres++);
+		codChatLibres += (int) (Math.random() * 19);
+		return String.format("%04d", codChatLibres);
 	}
 
 	private void reenviarATodos(String mensaje) throws Exception {
@@ -260,6 +262,8 @@ public class HiloServer extends Thread {
 
 	private void cerrar() throws Exception {
 		System.out.println("cerrando buffers y socket");
+		if (codChat.equals("0000"))
+			usuariosConectados.replace(usuario + "?", "");
 		bufferDeEntrada.close();
 		bufferDeSalida.close();
 		socket.close();

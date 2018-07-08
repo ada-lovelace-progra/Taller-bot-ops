@@ -1,5 +1,6 @@
 package vistas;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -369,13 +370,23 @@ public class Pestana {
 
 	private final Thread setearNombreSala = new Thread() {
 		public void run() {
+			Color color = tabChats.getBackground();
+			boolean sinLeer = false;
 			while (true) {
 				try {
 					if (mensajesSinLeer != 0) {
+						if (sinLeer) {
+							tabChats.setBackgroundAt(indicePestana, Color.GREEN);
+							sinLeer = false;
+						}
 						String nombre = nombrePestana + " (" + mensajesSinLeer + ")";
 						tabChats.setTitleAt(indicePestana, nombre);
 						Thread.sleep(500);
-						tabChats.setTitleAt(indicePestana, nombrePestana + "    ");
+						tabChats.setTitleAt(indicePestana, nombrePestana + "....");
+					} else if(sinLeer){
+						sinLeer = true;
+						tabChats.setBackgroundAt(indicePestana, color);
+						tabChats.setTitleAt(indicePestana, nombrePestana);
 					}
 					Thread.sleep(500);
 				} catch (InterruptedException e) {

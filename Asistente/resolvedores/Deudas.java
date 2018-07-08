@@ -1,8 +1,5 @@
 package resolvedores;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import armadores.RespuestaGenerico;
 
 public class Deudas extends RespuestaGenerico{
