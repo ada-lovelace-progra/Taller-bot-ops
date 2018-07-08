@@ -3,6 +3,7 @@ package cs;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Cliente {
@@ -14,7 +15,7 @@ public class Cliente {
 
 	public Cliente(int puerto) {
 		if (host == null) {
-			if(levantarConexion(puerto))
+			if (levantarConexion(puerto))
 				levantarServerYConectarse(puerto);
 		} else
 			try {
@@ -51,40 +52,47 @@ public class Cliente {
 	}
 
 	private boolean levantarConexion(int puerto) {
-		boolean UltimoIntento = true;
 		Scanner hosts = null;
+
 		try {
-			hosts = new Scanner(new File("hosts.dat"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+			conectar(puerto, InetAddress.getLocalHost());
+		} catch (Exception e2) {
 		}
-		String hostIntentados = "";
-		while (UltimoIntento && socket == null)
+
+		if (socket == null) {
 			try {
-				if (hosts.hasNextLine()) {
+				hosts = new Scanner(new File("hosts.dat"));
+			} catch (Exception e1) {
+			}
+			String hostIntentados = "";
+			while (socket == null && hosts.hasNextLine())
+				try {
 					host = hosts.nextLine();
 					hostIntentados += host + "\r\n";
-				} else {
-					hosts.close();
-					host = InetAddress.getLocalHost().getHostName();
-					UltimoIntento = false;
-				}
-				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
-				if (!hostIntentados.contains(host)) {
-					try {
-						FileWriter escribir = new FileWriter("hosts.dat");
-						escribir.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
-						escribir.close();				
-					} catch (Exception e) {
-						e.printStackTrace();
+					InetAddress posibleHost = InetAddress.getByName(host);
+					if (posibleHost.isReachable(100))
+						conectar(puerto, posibleHost);
+					if (!hostIntentados.contains(host)) {
+						try {
+							FileWriter escribir = new FileWriter("hosts.dat");
+							escribir.write(host + "\r\n" + hostIntentados.substring(0, hostIntentados.length() - 2));
+							escribir.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}				
-				
-				return false;
-			} catch (Exception e) {
-				socket = null;
-			}
+
+					return false;
+				} catch (Exception e) {
+					socket = null;
+				}
+			hosts.close();
+		}
 		return true;
+	}
+
+	private void conectar(int puerto, InetAddress host) throws UnknownHostException, IOException {
+		socket = new Socket(host.getHostAddress(), puerto);
 	}
 
 	public void enviar(String mensaje) throws Exception {
