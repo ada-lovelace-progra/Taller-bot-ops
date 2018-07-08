@@ -305,7 +305,10 @@ public class Pestana {
 			nombrePestana = tabChats.getTitleAt(indicePestana);
 			notificarMensajesNuevos.start();
 		}
-
+		
+		if(mensaje.contains("@"+usuario.nombre))
+			NotificacionSonora.sonar();
+		
 		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));

@@ -7,8 +7,8 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 
 public class NotificacionSonora {
-	
-	public static void sonar(int nota) {
+
+	private static void nota(int nota) {
 		try {
 			Synthesizer midiSynth = MidiSystem.getSynthesizer();
 			midiSynth.open();
@@ -17,18 +17,21 @@ public class NotificacionSonora {
 			midiSynth.loadInstrument(instr[0]);
 			mChannels[0].noteOn(nota, 100);
 			try {
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 			}
 			mChannels[0].noteOff(nota);
 		} catch (MidiUnavailableException e) {
 		}
 	}
-	
+
 	public static void main(String a[]) {
-		sonar(60);
-		sonar(60);
-		sonar(90);
+		sonar();
 	}
-	
+
+	public static void sonar() {
+		for (int i = 50; i < 100; i+=10)
+			nota(i);
+	}
+
 }
