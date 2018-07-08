@@ -182,6 +182,9 @@ public class HiloServer extends Thread {
 
 		public void run() {
 			try {
+				
+				// ejemplo de nuevo chat:
+				// 0000nuevoChat|Nueva_Sala|usuarioquelapidio
 				if (leer.contains("nuevoChat")) { // si es peticion entro
 
 					String[] mensaje = leer.split("\\|");

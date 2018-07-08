@@ -158,6 +158,7 @@ public class Chat extends JFrame {
 						usuariosSeleccionados += nuevo.substring(20) + " ";
 						nuevaTab(nuevo.substring(20), Integer.parseInt(nuevo.substring(16, 20)));
 					}
+					
 				}
 			} catch (Exception e) {
 			}

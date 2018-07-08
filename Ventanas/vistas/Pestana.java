@@ -26,6 +26,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import plugins.Codificaciones;
+import plugins.NotificacionSonora;
 import plugins.Youtube2;
 import plugins.Zumbido;
 import usuariosYAsistente.Usuario;
@@ -233,6 +234,9 @@ public class Pestana {
 
 						// youtube(mensajes, recibido);
 
+						// if(recibido.contains("@"+usuario.nombre))
+						// NotificacionSonora.sonar();
+
 						cargarMensaje(mensajes, codChat, recibido);
 						mensajesSinLeer++;
 					} catch (Exception e) {
@@ -299,7 +303,7 @@ public class Pestana {
 		if (!fueSeteado) {
 			fueSeteado = true;
 			nombrePestana = tabChats.getTitleAt(indicePestana);
-			setearNombreSala.start();
+			notificarMensajesNuevos.start();
 		}
 
 		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
@@ -358,13 +362,14 @@ public class Pestana {
 		return mensaje.contains("@");
 	}
 
-	private final Thread setearNombreSala = new Thread() {
+	private final Thread notificarMensajesNuevos = new Thread() {
 
 		public void run() {
 			Color colorNotificacion = colorArray[(int) (Math.random() * 8)];
 			Color color = tabChats.getBackground();
 			boolean sinLeer = true;
-			while (true)
+			int noVaMas = 0;
+			while (true && noVaMas != 10)
 				try {
 					if (mensajesSinLeer != 0) {
 						if (sinLeer) {
@@ -382,8 +387,8 @@ public class Pestana {
 					}
 					Thread.sleep(500);
 				} catch (Exception e) {
+					noVaMas++;
 				}
 		}
 	};
-
 }

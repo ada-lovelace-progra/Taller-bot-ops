@@ -88,7 +88,7 @@ public class Cliente {
 				}
 			hosts.close();
 		}
-		return true;
+		return host != null;
 	}
 
 	private void conectar(int puerto, InetAddress host) throws UnknownHostException, IOException {
