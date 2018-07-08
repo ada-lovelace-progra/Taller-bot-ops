@@ -32,8 +32,6 @@ public class BaseDato {
 				return peticiones;
 			}
 		} catch (Exception e) {
-			System.out.println("\n\n\nerror en criteria con la clase: " + clase + "\n\n\n");
-			e.printStackTrace();
 		}
 		return null;
 	}

@@ -19,7 +19,6 @@ public class UnidadesTest {
 		String escuchar = ada.escuchar(USUARIO + ": " + mensaje);
 		if (escuchar.length() > 5) {
 			String substring = escuchar.substring(4);
-			System.out.println(substring);
 			return substring;
 		}
 		return null;

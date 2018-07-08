@@ -38,7 +38,6 @@ public class SaludosTest {
 		for (String mensaje : mensajes) {
 			ada = new Asistente();
 			String escuchar = escuchar(mensaje);
-			System.out.println(escuchar);
 			Assert.assertTrue(respuestas.contains(escuchar));
 			ada = null;
 		}

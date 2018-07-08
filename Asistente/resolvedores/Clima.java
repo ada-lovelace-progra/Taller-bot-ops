@@ -22,8 +22,6 @@ public class Clima extends RespuestaGenerico {
 
 	private String obtenerClima() {
 		String url = "http://ipinfo.io/geo";
-		System.out.println("Leyendo Pagina : " + url);
-
 		HttpURLConnection connection;
 		try {
 			connection = (HttpURLConnection) new URL(url).openConnection();

@@ -136,7 +136,7 @@ public class Chat extends JFrame {
 	}
 
 	private void nuevaTab(String nombre, int codChat) {
-		tabChats.addTab(nombre, new Pestana(usuario, tabChats).nuevo(codChat));
+		tabChats.addTab(nombre, new Pestana(usuario, tabChats, this).nuevo(codChat));
 	}
 
 	class escucharCodChat_0 extends Thread {

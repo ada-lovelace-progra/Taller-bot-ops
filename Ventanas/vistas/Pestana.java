@@ -43,11 +43,15 @@ public class Pestana {
 	private char privacidad;
 	private boolean setearonPrivacidad;
 	private int mensajesSinLeer = 0;
+	private Chat ventana;
+	private static final Color[] colorArray = { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA,
+			Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };
 
-	public Pestana(Usuario usuario, JTabbedPane tabChats) {
+	public Pestana(Usuario usuario, JTabbedPane tabChats, Chat ventana) {
 		this.usuario = usuario;
 		this.tabChats = tabChats;
 		indicePestana = tabChats.getTabCount();
+		this.ventana = ventana;
 	}
 
 	/**
@@ -113,32 +117,20 @@ public class Pestana {
 					url = hLinkEv.getDescription();
 
 				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					System.out.println("url: " + url);
-					/*
-					 * SimpleAttributeSet at =
-					 * (SimpleAttributeSet)hLinkEv.getSourceElement().getAttributes().getAttribute(
-					 * HTML.Tag.A); String title =
-					 * at!=null?(String)at.getAttribute(HTML.Attribute.TITLE):null;
-					 * if(title.contains("Ampliar")) //es un meme { Ampliar a = new Ampliar(url);
-					 * a.setLocationRelativeTo(null); a.setVisible(true); } else
-					 */if (Desktop.isDesktopSupported())
+					if (Desktop.isDesktopSupported())
 						try {
 							Desktop.getDesktop().browse(new URI(url));
-							;
 						} catch (Exception e1) {
-							System.out.println("fallo Desktop");
 						}
 					else
 						try {
 							new ProcessBuilder(url).start();
 						} catch (Exception e2) {
-							System.out.println("fallto tmabien forma fea...");
 							try {
 								String comando = url;
 								Runtime.getRuntime().exec("start ");
 								Runtime.getRuntime().exec(comando);
 							} catch (Exception e3) {
-								System.out.println("se acabo todo... todillo");
 							}
 						}
 				}
@@ -224,8 +216,8 @@ public class Pestana {
 		new Thread() {
 			public void run() {
 				cargaContenidoDeChat();
-				try {
-					while (true) {
+				while (true) {
+					try {
 						String recibido = usuario.recibir(codChat);
 
 						zumbido(recibido);
@@ -243,21 +235,19 @@ public class Pestana {
 
 						cargarMensaje(mensajes, codChat, recibido);
 						mensajesSinLeer++;
+					} catch (Exception e) {
 					}
-				} catch (Exception e) {
-					System.out.println("error recibiendo el mensaje");
 				}
 			}
 
 			private void zumbido(String recibido) {
 				if (recibido.contains(":zumbido:"))
-					new Zumbido().start();
+					new Zumbido(ventana).start();
 			}
 
 			@SuppressWarnings("unused")
 			private void youtube(JEditorPane mensajes, String recibido) {
 				if (recibido.contains("youtube")) {
-					System.out.println("youtubeee");
 					mensajes.add(Youtube2.metodoLoco(true));
 				}
 			}
@@ -369,30 +359,30 @@ public class Pestana {
 	}
 
 	private final Thread setearNombreSala = new Thread() {
+
 		public void run() {
+			Color colorNotificacion = colorArray[(int) (Math.random() * 8)];
 			Color color = tabChats.getBackground();
-			boolean sinLeer = false;
-			while (true) {
+			boolean sinLeer = true;
+			while (true)
 				try {
 					if (mensajesSinLeer != 0) {
 						if (sinLeer) {
-							tabChats.setBackgroundAt(indicePestana, Color.GREEN);
+							tabChats.setBackgroundAt(indicePestana, colorNotificacion);
 							sinLeer = false;
 						}
 						String nombre = nombrePestana + " (" + mensajesSinLeer + ")";
 						tabChats.setTitleAt(indicePestana, nombre);
 						Thread.sleep(500);
 						tabChats.setTitleAt(indicePestana, nombrePestana + "....");
-					} else if(sinLeer){
+					} else if (!sinLeer) {
 						sinLeer = true;
 						tabChats.setBackgroundAt(indicePestana, color);
 						tabChats.setTitleAt(indicePestana, nombrePestana);
 					}
 					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
 				}
-			}
 		}
 	};
 

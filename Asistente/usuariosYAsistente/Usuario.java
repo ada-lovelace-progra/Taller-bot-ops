@@ -20,11 +20,9 @@ public class Usuario extends UsuarioGenerico {
 	public int pedirNuevoChat(String userAConectar) {
 		int codChat = 0;
 		try {
-			System.out.println("Solicitando nuevo Chat");
 			codTemp = "0000";
 			clientePorCodChat.get(0).enviar("0000nuevoChat" + "|" + userAConectar + "|" + nombre);
 			while (codTemp == "0000") {
-				System.out.print(".");
 				Thread.sleep(300);
 			}
 			if (codTemp != "----") {
@@ -42,7 +40,6 @@ public class Usuario extends UsuarioGenerico {
 
 	public boolean nuevoChat(int codChat) {
 		try {
-			System.out.println("intentando levantar conexion... CodChat: " + codChat);
 			clientePorCodChat.put(codChat, new Cliente(5050));
 			if (codChat == 0) {
 				clientePorCodChat.get(codChat).enviar(String.format("%04d", codChat) + nombre + "|" + pass);
@@ -69,10 +66,8 @@ public class Usuario extends UsuarioGenerico {
 		if (codChat == 0) {
 			if (recibir.matches("[0-9]+")) {
 				codTemp = recibir;
-				System.out.println(codTemp);
 				return "";
 			} else if (recibir.contains("levantarConexion")) {
-				System.out.println("levantando");
 				String codChatNuevo = recibir.substring(16, 20);
 				nuevoChat(Integer.parseInt(codChatNuevo));
 				return recibir;

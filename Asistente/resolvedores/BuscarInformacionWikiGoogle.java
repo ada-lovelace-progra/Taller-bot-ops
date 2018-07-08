@@ -41,8 +41,6 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 	}
 
 	private String obtenerTituloYVistaPrevia(String url) {
-		System.out.println("Leyendo Pagina : " + url);
-
 		HttpURLConnection connection;
 		try {
 			connection = (HttpURLConnection) new URL(url).openConnection();
@@ -51,7 +49,6 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 			connection.setReadTimeout(15000);
 			connection.setInstanceFollowRedirects(true);
 			connection.connect();
-			System.out.println(connection.getHeaderField("Location"));
 			url = connection.getHeaderField("location");
 
 		} catch (Exception e1) {
@@ -77,7 +74,6 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 					return linea;
 
 		} catch (Exception e) {
-			System.out.println(e.getLocalizedMessage());
 			if (Math.random() > 0.5)
 				return "algunas vez viste una tortuga agitarse? yo tampoco vi que se pueda realizar una busqueda con tu cochino internet";
 			if (Math.random() > 0.5)

@@ -29,8 +29,6 @@ public class BaseDato {
 				return true;
 			}
 		} catch (Exception e) {
-			System.out.println("\n\n\nerror en criteria con la clase: " + user + "\n\n\n");
-			e.printStackTrace();
 			return false;
 		}
 		return false;

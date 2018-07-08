@@ -18,10 +18,8 @@ public class Cliente {
 				levantarServerYConectarse(puerto);
 		} else
 			try {
-				System.out.println("Intentando con Host: " + host);
 				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		definirBuffer();
 	}
@@ -36,7 +34,6 @@ public class Cliente {
 	}
 
 	private void levantarServerYConectarse(int puerto) {
-		System.out.println("No hay ningun chochino sever... asique soy mi propio server");
 		new Thread() {
 			public void run() {
 				try {
@@ -72,7 +69,6 @@ public class Cliente {
 					host = InetAddress.getLocalHost().getHostName();
 					UltimoIntento = false;
 				}
-				System.out.println("Intentando con Host: " + host);
 				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
 				if (!hostIntentados.contains(host)) {
 					try {

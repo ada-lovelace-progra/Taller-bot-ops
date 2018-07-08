@@ -1,31 +1,26 @@
 package vistas;
 
-import java.awt.Desktop;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.net.URI;
-import java.net.URL;
 
 import javax.swing.JEditorPane;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+
 import plugins.Codificaciones;
 import plugins.Youtube2;
 import plugins.Zumbido;
 import usuariosYAsistente.Usuario;
-import javax.swing.JList;
-import java.awt.Color;
-import java.awt.Dimension;
 
 public class PestanaPrueba {
 
@@ -117,51 +112,6 @@ public class PestanaPrueba {
 		});
 	}
 
-	@SuppressWarnings("unused")
-	private void eventoLink(JTextPane mensajes) {
-		mensajes.addHyperlinkListener(new HyperlinkListener() {
-			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
-				String url = null;
-				URL uURL = hLinkEv.getURL();
-				if (uURL != null)
-					url = uURL.toString();
-				else
-					url = hLinkEv.getDescription();
-
-				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					System.out.println("url: " + url);
-					/*
-					 * SimpleAttributeSet at =
-					 * (SimpleAttributeSet)hLinkEv.getSourceElement().getAttributes().getAttribute(
-					 * HTML.Tag.A); String title =
-					 * at!=null?(String)at.getAttribute(HTML.Attribute.TITLE):null;
-					 * if(title.contains("Ampliar")) //es un meme { Ampliar a = new Ampliar(url);
-					 * a.setLocationRelativeTo(null); a.setVisible(true); } else
-					 */if (Desktop.isDesktopSupported())
-						try {
-							Desktop.getDesktop().browse(new URI(url));
-							;
-						} catch (Exception e1) {
-							System.out.println("fallo Desktop");
-						}
-					else
-						try {
-							new ProcessBuilder(url).start();
-						} catch (Exception e2) {
-							System.out.println("fallto tmabien forma fea...");
-							try {
-								String comando = url;
-								Runtime.getRuntime().exec("start ");
-								Runtime.getRuntime().exec(comando);
-							} catch (Exception e3) {
-								System.out.println("se acabo todo... todillo");
-							}
-						}
-				} // fin if activated
-			}
-		});
-	}
-
 	private void cargaMensajesNuevosHilo(int codChat, JList<Object> mensajes) {
 		new Thread() {
 			public void run() {
@@ -169,15 +119,13 @@ public class PestanaPrueba {
 					while (true) {
 						String recibido = usuario.recibir(codChat);
 						if (recibido.contains(":zumbido:"))
-							new Zumbido().start();
+							new Zumbido(null).start();
 						agregarMensajeSimple(mensajes, recibido);
 						if (recibido.contains("youtube")) {
-							System.out.println("youtubeee");
 							mensajes.add(Youtube2.metodoLoco(true));
 						}
 					}
 				} catch (Exception e) {
-					// System.out.println("error recibiendo el mensaje");
 				}
 			}
 		}.start();
@@ -185,8 +133,8 @@ public class PestanaPrueba {
 
 	private void agregarMensajeSimple(JList<Object> mensajes, String recibido) {
 		JEditorPane nuevo = new JEditorPane();
-		nuevo.setSize(new Dimension(100	, 20));
-		
+		nuevo.setSize(new Dimension(100, 20));
+
 		nuevo.setContentType("text/html");
 		String cadena = "<HTML><HEAD></HEAD><BODY><p>";
 		cadena += recibido;
