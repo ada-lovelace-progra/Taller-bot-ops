@@ -45,8 +45,17 @@ public class Pestana {
 	private boolean setearonPrivacidad;
 	private int mensajesSinLeer = 0;
 	private Chat ventana;
-	private static final Color[] colorArray = { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA,
-			Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };
+	private static final Color[] colorArray = 	
+			{ new Color(255, 204, 204),//rosita
+			new Color(179, 255, 179),//verdecito
+			new Color(204, 230, 255),//celestito
+			new Color(255, 255, 179),//amarillito
+			new Color(236, 179, 255),//violetita
+			new Color(255, 204, 153), new Color(217, 255, 179),//limita
+			new Color(255, 179, 204) }; //morita //naranjita
+			
+			/*{ Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA,
+			Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };*/
 
 	public Pestana(Usuario usuario, JTabbedPane tabChats, Chat ventana) {
 		this.usuario = usuario;
@@ -84,6 +93,7 @@ public class Pestana {
 		JEditorPane mensajes = new JEditorPane();
 		mensajes.setContentType("text/html");
 		mensajes.setEditable(false);
+		mensajes.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 		mensajes.setFont(fuente);
 		scrollPane.setViewportView(mensajes);
 
@@ -382,7 +392,7 @@ public class Pestana {
 						String nombre = nombrePestana + " (" + mensajesSinLeer + ")";
 						tabChats.setTitleAt(indicePestana, nombre);
 						Thread.sleep(500);
-						tabChats.setTitleAt(indicePestana, nombrePestana + "....");
+						tabChats.setTitleAt(indicePestana, nombrePestana + " ...");
 					} else if (!sinLeer) {
 						sinLeer = true;
 						tabChats.setBackgroundAt(indicePestana, color);

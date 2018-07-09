@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import usuariosYAsistente.Usuario;
+import javax.swing.JButton;
 
 public class Chat extends JFrame {
 
@@ -32,6 +33,8 @@ public class Chat extends JFrame {
 	private JTabbedPane tabChats;
 	private String usuariosSeleccionados = "";
 	public boolean iniciado = false;
+	private JButton btnNuevaSala;
+	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
 
 	/**
 	 * Launch the application.
@@ -72,9 +75,9 @@ public class Chat extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 29, 229, 0 };
+		gridBagLayout.rowHeights = new int[] { 29, 22, 229, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 2.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 2.0, Double.MIN_VALUE };
 		contentPane.setLayout(gridBagLayout);
 
 		JLabel lblConectados = new JLabel("Conectados");
@@ -82,7 +85,24 @@ public class Chat extends JFrame {
 		gbc_lblConectados.insets = new Insets(0, 0, 5, 5);
 		gbc_lblConectados.gridx = 0;
 		gbc_lblConectados.gridy = 0;
+		lblConectados.setFont(fuente);
 		getContentPane().add(lblConectados, gbc_lblConectados);
+		
+		
+		btnNuevaSala = new JButton("Nueva sala");
+		btnNuevaSala.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int codChat = usuario.pedirNuevoChat("Nueva_Sala");
+				nuevaTab("Nueva Sala", codChat);
+			}
+		});
+		GridBagConstraints gbc_btnNuevaSala = new GridBagConstraints();
+		gbc_btnNuevaSala.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNuevaSala.gridx = 0;
+		gbc_btnNuevaSala.gridy = 1;
+		btnNuevaSala.setFont(fuente);
+		contentPane.add(btnNuevaSala, gbc_btnNuevaSala);
 
 		listaConectados = new List();
 		lblConectados.setLabelFor(listaConectados);
@@ -90,7 +110,7 @@ public class Chat extends JFrame {
 		gbc_listaConectados.insets = new Insets(0, 0, 0, 5);
 		gbc_listaConectados.fill = GridBagConstraints.BOTH;
 		gbc_listaConectados.gridx = 0;
-		gbc_listaConectados.gridy = 1;
+		gbc_listaConectados.gridy = 2;
 		getContentPane().add(listaConectados, gbc_listaConectados);
 
 		tabChats = new JTabbedPane(JTabbedPane.TOP);
@@ -98,7 +118,7 @@ public class Chat extends JFrame {
 		tabChats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		tabChats.setSize(this.getSize());
 		GridBagConstraints gbc_tabChats = new GridBagConstraints();
-		gbc_tabChats.insets = new Insets(0, 0, 5, 0);
+		gbc_tabChats.gridheight = 2;
 		gbc_tabChats.fill = GridBagConstraints.BOTH;
 		gbc_tabChats.gridx = 1;
 		gbc_tabChats.gridy = 1;
