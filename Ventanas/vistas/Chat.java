@@ -9,21 +9,22 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.List;
 import java.awt.SystemColor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import usuariosYAsistente.Usuario;
-import javax.swing.JButton;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class Chat extends JFrame {
 
@@ -38,6 +39,7 @@ public class Chat extends JFrame {
 	public boolean iniciado = false;
 	private JButton btnNuevaSala;
 	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
+	public JPopupMenu popupMenu;
 
 	/**
 	 * Launch the application.
@@ -89,8 +91,7 @@ public class Chat extends JFrame {
 		gbc_lblConectados.gridy = 0;
 		lblConectados.setFont(fuente);
 		getContentPane().add(lblConectados, gbc_lblConectados);
-		
-		
+
 		btnNuevaSala = new JButton("Nueva sala");
 		btnNuevaSala.addMouseListener(new MouseAdapter() {
 			@Override
@@ -99,6 +100,7 @@ public class Chat extends JFrame {
 				nuevaTab("Nueva Sala", codChat);
 			}
 		});
+
 		GridBagConstraints gbc_btnNuevaSala = new GridBagConstraints();
 		gbc_btnNuevaSala.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNuevaSala.gridx = 0;
@@ -116,11 +118,11 @@ public class Chat extends JFrame {
 		getContentPane().add(listaConectados, gbc_listaConectados);
 
 		tabChats = new JTabbedPane(JTabbedPane.TOP);
+
 		tabChats.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_W) //Ctrl + W
-				{
+				if (e.getKeyCode() == KeyEvent.VK_W && e.isControlDown() && !e.isShiftDown() && !e.isAltDown()) {
 					String user = tabChats.getTitleAt(tabChats.getSelectedIndex());
 					tabChats.remove(tabChats.getSelectedComponent());
 					usuariosSeleccionados.remove(user);
@@ -131,10 +133,10 @@ public class Chat extends JFrame {
 		tabChats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		tabChats.setSize(this.getSize());
 		GridBagConstraints gbc_tabChats = new GridBagConstraints();
-		gbc_tabChats.gridheight = 2;
+		gbc_tabChats.gridheight = 3;
 		gbc_tabChats.fill = GridBagConstraints.BOTH;
 		gbc_tabChats.gridx = 1;
-		gbc_tabChats.gridy = 1;
+		gbc_tabChats.gridy = 0;
 
 		getContentPane().add(tabChats, gbc_tabChats);
 
@@ -147,7 +149,7 @@ public class Chat extends JFrame {
 				if (cant == 1 && !usuariosSeleccionados.contains(selectedItem + " ")) {
 					try {
 						if (!selectedItem.equals("Nueva_Sala"))
-							usuariosSeleccionados.add(selectedItem);//usuariosSeleccionados += selectedItem + " ";
+							usuariosSeleccionados.add(selectedItem);
 						int codChat = usuario.pedirNuevoChat(selectedItem);
 						nuevaTab(selectedItem, codChat);
 					} catch (Exception e1) {
@@ -157,14 +159,13 @@ public class Chat extends JFrame {
 				listaConectados.deselect(listaConectados.getSelectedIndex());
 			}
 		});
+
+		
 	}
 
-
 	private void nuevaTab(String nombre, int codChat) {
-		for(int index=0;index<tabChats.getTabCount();index++)
-		{
-			if(tabChats.getTitleAt(index).contains(nombre))
-			{
+		for (int index = 0; index < tabChats.getTabCount(); index++) {
+			if (tabChats.getTitleAt(index).contains(nombre)) {
 				tabChats.setSelectedIndex(tabChats.indexOfTab(nombre + "*\\."));
 				return;
 			}
@@ -188,10 +189,11 @@ public class Chat extends JFrame {
 						}
 					} else if (nuevo.contains("levantarConexion")
 							&& !usuariosSeleccionados.contains(nuevo.substring(20) + " ")) {
-						usuariosSeleccionados.add(nuevo.substring(20));//usuariosSeleccionados += nuevo.substring(20) + " ";
+						usuariosSeleccionados.add(nuevo.substring(20));// usuariosSeleccionados += nuevo.substring(20) +
+																		// " ";
 						nuevaTab(nuevo.substring(20), Integer.parseInt(nuevo.substring(16, 20)));
 					}
-					
+
 				}
 			} catch (Exception e) {
 			}

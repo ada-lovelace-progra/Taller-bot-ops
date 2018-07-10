@@ -8,15 +8,21 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -26,7 +32,6 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import plugins.Codificaciones;
-import plugins.NotificacionSonora;
 import plugins.Youtube2;
 import plugins.Zumbido;
 import usuariosYAsistente.Usuario;
@@ -45,17 +50,22 @@ public class Pestana {
 	private boolean setearonPrivacidad;
 	private int mensajesSinLeer = 0;
 	private Chat ventana;
-	private static final Color[] colorArray = 	
-			{ new Color(255, 204, 204),//rosita
-			new Color(179, 255, 179),//verdecito
-			new Color(204, 230, 255),//celestito
-			new Color(255, 255, 179),//amarillito
-			new Color(236, 179, 255),//violetita
-			new Color(255, 204, 153), new Color(217, 255, 179),//limita
-			new Color(255, 179, 204) }; //morita //naranjita
-			
-			/*{ Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA,
-			Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };*/
+	private JTextField tituloPopUp;
+	private JPopupMenu popupMenu;
+	private JButton botonSalir;
+	private JCheckBox publicaBoolean;
+	private static final Color[] colorArray = { new Color(255, 204, 204), // rosita
+			new Color(179, 255, 179), // verdecito
+			new Color(204, 230, 255), // celestito
+			new Color(255, 255, 179), // amarillito
+			new Color(236, 179, 255), // violetita
+			new Color(255, 204, 153), new Color(217, 255, 179), // limita
+			new Color(255, 179, 204) }; // morita //naranjita
+
+	/*
+	 * { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA,
+	 * Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };
+	 */
 
 	public Pestana(Usuario usuario, JTabbedPane tabChats, Chat ventana) {
 		this.usuario = usuario;
@@ -111,6 +121,15 @@ public class Pestana {
 		textEnviar.setFont(fuente);
 		scrollEnviar.setViewportView(textEnviar);
 
+		popupMenu = new JPopupMenu();
+		tituloPopUp = new JTextField();
+		popupMenu.add(tituloPopUp);
+		tituloPopUp.setColumns(10);
+		publicaBoolean = new JCheckBox("Publica");
+		popupMenu.add(publicaBoolean);
+		botonSalir = new JButton("Salir");
+		popupMenu.add(botonSalir);
+
 		setearEventos(codChat, textEnviar, mensajes);
 		cargaMensajesNuevosHilo(codChat, mensajes);
 
@@ -118,6 +137,19 @@ public class Pestana {
 	}
 
 	private void setearEventos(int codChat, JEditorPane textEnviar, JEditorPane mensajes) {
+
+		tabChats.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (arg0.getButton() == MouseEvent.BUTTON2) {
+					tabChats.remove(tabChats.getSelectedIndex());
+				} else if (arg0.getButton() == MouseEvent.BUTTON3) {
+					popupMenu.show(tabChats, 20, 20);
+					popupMenu.grabFocus();
+				}
+			}
+		});
+
 		mensajes.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
 				String url = null;
@@ -221,6 +253,32 @@ public class Pestana {
 				mensajesSinLeer = 0;
 			}
 		});
+
+		popupMenu.addFocusListener(new FocusAdapter() {
+			private String titulo = "";
+			private String priv = "";
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				String temptitulo = "#T=" + tituloPopUp.getText();
+				String temppriv = "#P=" + (publicaBoolean.isSelected() ? 1 : 0);
+				try {
+					if (!titulo.equals(temptitulo)) {
+						titulo = temptitulo;
+						setearTitulo(titulo);
+						usuario.enviar(codChat, titulo);
+					}
+					if (!priv.equals(temppriv)) {
+						priv = temppriv;
+						setearPrivacidad(priv, codChat);
+						usuario.enviar(codChat, priv);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
 	}
 
 	private void cargaMensajesNuevosHilo(int codChat, JEditorPane mensajes) {
@@ -282,6 +340,9 @@ public class Pestana {
 		}.start();
 	}
 
+	public void setearTituloYPrivacidad(String titulo, boolean publico) {
+	}
+
 	private void enviarMensaje(JEditorPane textEnviar, JEditorPane mensajes, int codChat) {
 		String mensaje = textEnviar.getText().trim();
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
@@ -312,14 +373,16 @@ public class Pestana {
 	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
 		if (!fueSeteado) {
 			fueSeteado = true;
-			nombrePestana = tabChats.getTitleAt(indicePestana); //ESTO - para cerrar tabs: ver si puede obtener nombre del otro user mediante codChat
+			nombrePestana = tabChats.getTitleAt(indicePestana); // ESTO - para cerrar tabs: ver si puede obtener nombre
+																// del otro user mediante codChat
 			notificarMensajesNuevos.start();
 		}
-		
-//		if(!mensaje.contains(/*"@"+*/usuario.nombre))
-//			NotificacionSonora.sonar(); //Hasta no encontrar uno mejor, a este lo saco, es bastante traumático/dramático y además se corta
-			//Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
-		
+
+		// if(!mensaje.contains(/*"@"+*/usuario.nombre))
+		// NotificacionSonora.sonar(); //Hasta no encontrar uno mejor, a este lo saco,
+		// es bastante traumático/dramático y además se corta
+		// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
+
 		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));

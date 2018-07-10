@@ -104,7 +104,7 @@ public class HiloServer extends Thread {
 			try {
 				while (true) {
 					bufferDeSalida.writeUTF("----" + usuariosConectados);
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				}
 			} catch (Exception e) {
 				cerrar();
@@ -120,6 +120,7 @@ public class HiloServer extends Thread {
 					String mensaje = bufferDeEntrada.readUTF();
 					if (mensaje.contains(":")) {
 						mensaje = mensaje.substring(0, 4) + procesarPosibleInvitacion(mensaje.substring(4));
+						cambioDeNombre(mensaje);
 						reenviarATodos(mensaje);
 						asistente(mensaje.substring(4), mensaje.substring(0, 4));
 					}
@@ -132,21 +133,47 @@ public class HiloServer extends Thread {
 			trabajoABajoNivel();
 	}
 
+	private void cambioDeNombre(String mensaje) {
+		if (mensaje.contains("#")) {
+			String codChat = mensaje.substring(0, 4);
+			for (java.util.Map.Entry<String, String> temp : codChatPorSala.entrySet())
+				if (codChat.equals(temp.getValue())) {
+					codChatPorSala.remove(temp.getKey());
+					String nuevoNombre = "#"+ mensaje.substring(mensaje.indexOf("=")+1);
+					codChatPorSala.put(nuevoNombre, codChat);
+					usuariosConectados = usuariosConectados.replace(temp.getKey(), nuevoNombre);
+					return;
+				}
+		}
+	}
+
 	private void trabajoABajoNivel() {
 		try {
 			mandarConectados.start();
-			Pattern regex = Pattern.compile("agregarSala(.*)1([0-9]{4})");
+			Pattern regexAgregar = Pattern.compile("agregarSala(.*)1([0-9]{4})");
+			Pattern regexSacar = Pattern.compile("agregarSala(.*)0([0-9]{4})");
 
 			while (true) {
 				String leer = bufferDeEntrada.readUTF();
 
 				new peticionesNuevoChat(leer).start();
 
-				agregarSalaALista(regex, leer);
+				agregarSalaALista(regexAgregar, leer);
+				sacarSalaDeLista(regexSacar, leer);
 
 			}
 		} catch (Exception e) {
 			cerrar();
+		}
+	}
+
+	private void sacarSalaDeLista(Pattern regexSacar, String leer) {
+		Matcher match = regexSacar.matcher(leer);
+		if (match.find()) {
+			String sala = match.group(1);
+			usuariosConectados = usuariosConectados.replace(sala + "?", "");
+			if (codChatPorSala.contains(sala))
+				codChatPorSala.remove(sala);
 		}
 	}
 
@@ -277,8 +304,10 @@ public class HiloServer extends Thread {
 	};
 
 	private void cerrar() {
-		if (codChat.equals("0000"))
-			usuariosConectados.replace(usuario + "?", "");
+		if (codChat.equals("0000")) {
+			String clave = usuario + "?";
+			usuariosConectados = usuariosConectados.replace(clave, "");
+		}
 		try {
 			bufferDeEntrada.close();
 			bufferDeSalida.close();
