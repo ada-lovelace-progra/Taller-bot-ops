@@ -54,9 +54,8 @@ public class HiloServer extends Thread {
 	}
 
 	private void cargarUsuario(String user_pass) {
-		// AAAAAAAAASSHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!!!!!!!
+		// TODO Auto-generated method stub
 
-		// si esta en la base no hagas nada.... si no agregalo y lesto
 	}
 
 	private void comprobarUsuario(String user_pass) throws IOException {
@@ -182,7 +181,7 @@ public class HiloServer extends Thread {
 
 		public void run() {
 			try {
-				
+
 				// ejemplo de nuevo chat:
 				// 0000nuevoChat|Nueva_Sala|usuarioquelapidio
 				if (leer.contains("nuevoChat")) { // si es peticion entro
@@ -199,7 +198,6 @@ public class HiloServer extends Thread {
 
 						// le mando al usuario que pidio el chat el codigo nuevo
 						bufferDeSalida.writeUTF(codChatNuevo);
-
 
 					} else {// si pido a una sala
 						bufferDeSalida.writeUTF(codChatPorSala.get(mensaje[1]));
@@ -239,6 +237,9 @@ public class HiloServer extends Thread {
 	private void asistente(String mensaje, String codChat) throws Exception {
 		String respuetas = asistentePorCodChat.get(codChat).escuchar(mensaje);
 		if (!respuetas.contains("null")) {
+			if (!hiloEventos.isAlive())
+				hiloEventos.start();
+
 			DataOutputStream bufferDeSalida;
 			ArrayList<Socket> listaTemp = listaSocketPorCodChat.get(codChat);
 			for (Socket socketTemp : listaTemp) {
@@ -247,6 +248,25 @@ public class HiloServer extends Thread {
 			}
 		}
 	}
+
+	Thread hiloEventos = new Thread() {
+		public void run() {
+			while (true) {
+				String respuetas = asistentePorCodChat.get(codChat).getEvento();
+				if (!respuetas.contains("null")) {
+					try {
+						DataOutputStream bufferDeSalida;
+						ArrayList<Socket> listaTemp = listaSocketPorCodChat.get(codChat);
+						for (Socket socketTemp : listaTemp) {
+							bufferDeSalida = new DataOutputStream(socketTemp.getOutputStream());
+							bufferDeSalida.writeUTF(respuetas);
+						}
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
+	};
 
 	private void cerrar() {
 		if (codChat.equals("0000"))

@@ -14,12 +14,20 @@ public class Asistente extends UsuarioGenerico {
 	private RespuestaGenerico cadena;
 	private RespuestaGenerico cadenaCompleta;
 	private Llamada llamada;
+	private RecordarEventos eventos = new RecordarEventos();
 
 	public Asistente() {
 		llamada = new Llamada();
 		cadena = llamada;
 		cadenaCompleta = Crear.Cadena();
 		// el nombre se va a setear cuando lo llamen por primera vez
+	}
+
+	public String getEvento() {
+		String siguienteEvento = "";
+		while ((siguienteEvento = eventos.siguienteEvento()) != null)
+			;
+		return siguienteEvento;
 	}
 
 	public String escuchar(String entrada) {
