@@ -2,14 +2,16 @@ package dbUsuarios;
 
 public class RespuestaBD {
 	private int id;
-	private String Usuario_Pass;
+	private String usuario;
+	private String pass;
 
-	public String getUsuario_Pass() {
-		return Usuario_Pass;
+	public RespuestaBD() {
 	}
 
-	public void setUsuario_Pass(String usuario_Pass) {
-		Usuario_Pass = usuario_Pass;
+	public RespuestaBD(int id, String user, String pass) {
+		this.id = id;
+		this.usuario = user;
+		this.pass = pass;
 	}
 
 	public int getId() {
@@ -18,6 +20,22 @@ public class RespuestaBD {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
 	}
 
 }

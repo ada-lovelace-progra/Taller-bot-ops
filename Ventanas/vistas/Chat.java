@@ -11,6 +11,7 @@ import java.awt.List;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,8 @@ import javax.swing.border.MatteBorder;
 
 import usuariosYAsistente.Usuario;
 import javax.swing.JButton;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Chat extends JFrame {
 
@@ -31,7 +34,7 @@ public class Chat extends JFrame {
 	private Usuario usuario;
 	private List listaConectados;
 	private JTabbedPane tabChats;
-	private String usuariosSeleccionados = "";
+	private ArrayList<String> usuariosSeleccionados = new ArrayList<>();// = "";
 	public boolean iniciado = false;
 	private JButton btnNuevaSala;
 	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
@@ -48,11 +51,10 @@ public class Chat extends JFrame {
 	 * 
 	 * @throws Exception
 	 */
-	public Chat(String user, char[] cs) {
+	public Chat(String user, String pass) {
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setMinimumSize(new Dimension(542, 346));
-		String hash = hashear(cs);
-		usuario = new Usuario(user, hash);
+		usuario = new Usuario(user, pass);
 
 		this.setTitle(user);
 
@@ -114,6 +116,17 @@ public class Chat extends JFrame {
 		getContentPane().add(listaConectados, gbc_listaConectados);
 
 		tabChats = new JTabbedPane(JTabbedPane.TOP);
+		tabChats.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_W) //Ctrl + W
+				{
+					String user = tabChats.getTitleAt(tabChats.getSelectedIndex());
+					tabChats.remove(tabChats.getSelectedComponent());
+					usuariosSeleccionados.remove(user);
+				}
+			}
+		});
 		tabChats.setBorder(new MatteBorder(1, 1, 1, 1, (Color) SystemColor.control));
 		tabChats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		tabChats.setSize(this.getSize());
@@ -134,7 +147,7 @@ public class Chat extends JFrame {
 				if (cant == 1 && !usuariosSeleccionados.contains(selectedItem + " ")) {
 					try {
 						if (!selectedItem.equals("Nueva_Sala"))
-							usuariosSeleccionados += selectedItem + " ";
+							usuariosSeleccionados.add(selectedItem);//usuariosSeleccionados += selectedItem + " ";
 						int codChat = usuario.pedirNuevoChat(selectedItem);
 						nuevaTab(selectedItem, codChat);
 					} catch (Exception e1) {
@@ -146,16 +159,16 @@ public class Chat extends JFrame {
 		});
 	}
 
-	private String hashear(char[] cs) {
-		String retorno = "";
-		for (char c : cs) {
-			double divido = (c * 3) / 7;
-			retorno += (int) (divido * 11);
-		}
-		return retorno;
-	}
 
 	private void nuevaTab(String nombre, int codChat) {
+		for(int index=0;index<tabChats.getTabCount();index++)
+		{
+			if(tabChats.getTitleAt(index).contains(nombre))
+			{
+				tabChats.setSelectedIndex(tabChats.indexOfTab(nombre + "*\\."));
+				return;
+			}
+		}
 		tabChats.addTab(nombre, new Pestana(usuario, tabChats, this).nuevo(codChat));
 	}
 
@@ -175,7 +188,7 @@ public class Chat extends JFrame {
 						}
 					} else if (nuevo.contains("levantarConexion")
 							&& !usuariosSeleccionados.contains(nuevo.substring(20) + " ")) {
-						usuariosSeleccionados += nuevo.substring(20) + " ";
+						usuariosSeleccionados.add(nuevo.substring(20));//usuariosSeleccionados += nuevo.substring(20) + " ";
 						nuevaTab(nuevo.substring(20), Integer.parseInt(nuevo.substring(16, 20)));
 					}
 					

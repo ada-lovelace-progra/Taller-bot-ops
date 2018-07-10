@@ -92,10 +92,10 @@ public class Cliente extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyChar() == KeyEvent.VK_ENTER)
-					iniciarSesion();
+					cargarUsuarioEIniciar();
 			}
 		});
-		
+
 		JButton btnRegistrar = new JButton("Registrarse e Iniciar sesi\u00F3n");
 		btnRegistrar.addKeyListener(new KeyAdapter() {
 			@Override
@@ -113,34 +113,34 @@ public class Cliente extends JFrame {
 		btnRegistrar.setBounds(253, 183, 178, 23);
 		btnRegistrar.setFont(fuente);
 		contentPane.add(btnRegistrar);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.LIGHT_GRAY));
 		panel.setBounds(0, 0, 228, 251);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+
 		JLabel label = new JLabel("Email:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		label.setBounds(10, 60, 66, 14);
 		panel.add(label);
-		
+
 		txtMailLogin = new JTextField();
 		txtMailLogin.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtMailLogin.setColumns(10);
 		txtMailLogin.setBounds(10, 82, 205, 20);
 		panel.add(txtMailLogin);
-		
+
 		JLabel label_1 = new JLabel("Contase\u00F1a:");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		label_1.setBounds(10, 113, 66, 14);
 		panel.add(label_1);
-		
+
 		passLogin = new JPasswordField();
 		passLogin.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		passLogin.setBounds(10, 131, 205, 20);
 		panel.add(passLogin);
-		
+
 		JButton btnIniciarSesin = new JButton("Iniciar sesi\u00F3n");
 		btnIniciarSesin.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnIniciarSesin.addKeyListener(new KeyAdapter() {
@@ -156,18 +156,29 @@ public class Cliente extends JFrame {
 				iniciarSesion();
 			}
 		});
+
+		passLogin.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyChar() == KeyEvent.VK_ENTER)
+					iniciarSesion();
+			}
+		});
+
+		
 		btnIniciarSesin.setBounds(56, 182, 101, 23);
 		panel.add(btnIniciarSesin);
-		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{panel, txtMailLogin, passLogin, btnIniciarSesin, txtMailReg, txtUsuario, passReg, btnRegistrar}));
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { panel, txtMailLogin, passLogin,
+				btnIniciarSesin, txtMailReg, txtUsuario, passReg, btnRegistrar }));
 	}
 
 	private void cargarUsuarioEIniciar() {
-		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), passReg.getPassword());
+		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passLogin.getPassword()));
 		iniciado(ventanaChat);
 	}
 
 	private void iniciarSesion() {
-		Chat ventanaChat = new Chat(txtMailLogin.getText(), passLogin.getPassword());
+		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.getPassword()));
 		iniciado(ventanaChat);
 	}
 
@@ -177,5 +188,14 @@ public class Cliente extends JFrame {
 			ventanaChat.setVisible(true);
 			this.dispose();
 		}
+	}
+
+	private String hashear(char[] cs) {
+		String retorno = "";
+		for (char c : cs) {
+			double divido = (c * 3) / 7;
+			retorno += (int) (divido * 11);
+		}
+		return retorno;
 	}
 }

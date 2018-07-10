@@ -33,13 +33,12 @@ public class HiloServer extends Thread {
 		String readUTF = bufferDeEntrada.readUTF();
 
 		if (readUTF.startsWith("0000")) {
-			// comprobar si esta registrado
-			// ejemplo de lectura (readUTF):
-			// 0000Usuario|PassHash
+			// comprobar si está registrado
+			// ejemplo de lectura (readUTF): 0000Usuario|PassHash
 			String user_pass = readUTF.substring(4);
 			if (user_pass.charAt(0) == '$') {
-				user_pass = user_pass.substring(1);
-				cargarUsuario(user_pass);
+				user_pass = user_pass.replace("$", "");
+				crearUsuario(user_pass);
 			}
 			comprobarUsuario(user_pass);
 
@@ -53,16 +52,25 @@ public class HiloServer extends Thread {
 		usuario = cargaUsuario(readUTF);
 	}
 
-	private void cargarUsuario(String user_pass) {
-		// TODO Auto-generated method stub
+	private boolean crearUsuario(String user_pass) {
+		String user = user_pass.substring(0, user_pass.indexOf("|"));
+		String pass = user_pass.substring(user_pass.indexOf("|") + 1);
 
+		if (!dbUsuarios.BaseDato.comprobarUser(user))// Puedo crear el usuario si no existe
+		{
+			dbUsuarios.BaseDato.crearUsuario(user, pass);
+			return true;
+		}
+		return false;
 	}
 
 	private void comprobarUsuario(String user_pass) throws IOException {
-		if (!new dbUsuarios.BaseDato().traerDatos(user_pass)) {
+		String user = user_pass.substring(0, user_pass.indexOf("|"));
+		String pass = user_pass.substring(user_pass.indexOf("|") + 1);
+		if (!new dbUsuarios.BaseDato().traerDatos(user, pass)) {
 			iniciado = false;
-			System.out.println("no se encontro el usuario: " + user_pass);
-			bufferDeSalida.writeUTF("no se encontro el usuario");
+			System.out.println("No se encontró el usuario: " + user);
+			bufferDeSalida.writeUTF("No se encontró el usuario");
 			return;
 		}
 		iniciado = true;

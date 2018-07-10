@@ -312,12 +312,13 @@ public class Pestana {
 	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
 		if (!fueSeteado) {
 			fueSeteado = true;
-			nombrePestana = tabChats.getTitleAt(indicePestana);
+			nombrePestana = tabChats.getTitleAt(indicePestana); //ESTO - para cerrar tabs: ver si puede obtener nombre del otro user mediante codChat
 			notificarMensajesNuevos.start();
 		}
 		
-		if(mensaje.contains("@"+usuario.nombre))
-			NotificacionSonora.sonar();
+//		if(!mensaje.contains(/*"@"+*/usuario.nombre))
+//			NotificacionSonora.sonar(); //Hasta no encontrar uno mejor, a este lo saco, es bastante traumático/dramático y además se corta
+			//Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 		
 		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
