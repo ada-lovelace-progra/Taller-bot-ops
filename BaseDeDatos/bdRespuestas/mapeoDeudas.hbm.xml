@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="bdRespuestas.DeudasBD" table="Deudas">
+		<id column="prestamista" name="prestamista" type="string" />
+		<property column="deudor" name="deudor" type="string" />
+		<property column="monto" name="monto" type="float" />
+	</class>
+	
+</hibernate-mapping>

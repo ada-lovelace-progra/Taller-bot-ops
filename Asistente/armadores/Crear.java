@@ -6,6 +6,7 @@ import resolvedores.CalculoString;
 import resolvedores.Chuck;
 import resolvedores.Clima;
 import resolvedores.Despedida;
+import resolvedores.Deudas;
 import resolvedores.Fecha;
 import resolvedores.Gag9;
 import resolvedores.Giphy;
@@ -36,10 +37,12 @@ public class Crear {
 		Jueguito juego = new Jueguito();
 		Clima clima = new Clima();
 		Gag9 gag = new Gag9();
+		Deudas deuda = new Deudas();
 
 		eventos.siguiente(agradecer);
 		agradecer.siguiente(clima);
-		clima.siguiente(gif);
+		clima.siguiente(deuda);
+		deuda.siguiente(gif);
 		gif.siguiente(juego);
 		juego.siguiente(wikipediaGoogle);
 		wikipediaGoogle.siguiente(fecha);
@@ -50,7 +53,7 @@ public class Crear {
 		calcular.siguiente(gag);
 		gag.siguiente(unidades);
 		unidades.siguiente(despedida);
-				
+
 		return eventos;
 	}
 

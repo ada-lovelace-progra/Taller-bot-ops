@@ -7,28 +7,65 @@ import armadores.RespuestaGenerico;
 import bdRespuestas.DeudasBD;
 
 public class Deudas extends RespuestaGenerico {
-	private Pattern regex = Pattern.compile("[0-9]+(\\S+):.*@(\\S+).* ([0-9]+)");
+	private Pattern regexAgendar = Pattern.compile("(\\S+):.*@(\\S+)\\D+me debe\\D+([0-9]+)");
+	private Pattern regexAgendarLeDebo = Pattern.compile("(\\S+):\\D+([0-9]+)[^@]+@(\\S+)");
+	private Pattern regexCalcular = Pattern.compile("(\\w+):[^\\@]+@(\\w+)");
 
 	@Override
 	public String intentarResponder(String mensaje) {
-		if (consulta(mensaje))
-			return acreditarDeuda(mensaje);
+		if (consulta(mensaje)) {
+			if (mensaje.matches(".*cu.nto me debe.*"))
+				return "@" + mensaje.substring(0, mensaje.indexOf(":")) + ", " + calcularDeuda(mensaje);
+			if (mensaje.contains("me debe") || mensaje.contains("le debo"))
+				return acreditarDeuda(mensaje);
+		}
 		return null;
 	}
 
-	public String acreditarDeuda(String mensaje) {
-		if(mensaje.contains("me debe")){
-			Matcher match = regex.matcher(mensaje);
+	private String calcularDeuda(String mensaje) {
+		Matcher match = regexCalcular.matcher(mensaje);
+		if (!match.find())
+			return null;
+		String prestamista;
+		String deudor;
+		if (mensaje.contains("me debe")) {
+			prestamista = match.group(1);
+			deudor = match.group(2);
+			float buscarDeuda = new DeudasBD().buscarDeuda(prestamista, deudor);
+			return "@" + deudor + " te debe $"
+					+ (buscarDeuda % 1 == 0 ? String.format("%d", (int) buscarDeuda) : buscarDeuda);
+		} else {
+			prestamista = match.group(2);
+			deudor = match.group(1);
+			float buscarDeuda = new DeudasBD().buscarDeuda(prestamista, deudor);
+			return "le debés $" + (buscarDeuda % 1 == 0 ? String.format("%d", (int) buscarDeuda) : buscarDeuda) + "a @"
+					+ prestamista;
+		}
+	}
+
+	private String acreditarDeuda(String mensaje) {
+		Matcher match = regexAgendar.matcher(mensaje);
+		if (match.find()) {
+			String prestamista;
+			String deudor;
+			prestamista = match.group(1);
+			deudor = match.group(2);
+			float monto = Float.parseFloat(match.group(3));
+			if (new DeudasBD().acreditarDeuda(prestamista, deudor, monto))
+				return "Deuda agendada";
+		} else {
+			match = regexAgendarLeDebo.matcher(mensaje);
 			if (!match.find())
 				return null;
-			String prestamista = mensaje.substring(4, mensaje.indexOf(":"));
-			String deudor = match.group(2);
-			double monto = Double.parseDouble(match.group(3));
+			String prestamista;
+			String deudor;
+			prestamista = match.group(3);
+			deudor = match.group(1);
+			float monto = Float.parseFloat(match.group(2));
 			if (new DeudasBD().acreditarDeuda(prestamista, deudor, monto))
-				return "Deuda acreditada";
-
-			return "Deuda no acreditaa";
+				return "Deuda agendada";
 		}
-		return null;
+
+		return "Deuda no acreditaa";
 	}
 }
