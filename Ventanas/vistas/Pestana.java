@@ -270,7 +270,7 @@ public class Pestana {
 					}
 					if (!priv.equals(temppriv)) {
 						priv = temppriv;
-						setearPrivacidad(priv, codChat);
+						setearPrivacidad(priv, codChat, true);
 						usuario.enviar(codChat, priv);
 					}
 				} catch (Exception e1) {
@@ -298,7 +298,7 @@ public class Pestana {
 							setearTitulo(recibido);
 
 						if (estanSeteandoPrivacidad(recibido))
-							setearPrivacidad(recibido, codChat);
+							setearPrivacidad(recibido, codChat, false);
 
 						// youtube(mensajes, recibido);
 
@@ -356,7 +356,7 @@ public class Pestana {
 				setearTitulo(mensaje);
 
 			if (setearonNombre && estanSeteandoPrivacidad(mensaje))
-				setearPrivacidad(mensaje, codChat);
+				setearPrivacidad(mensaje, codChat, true);
 
 			cargarMensaje(mensajes, codChat, usuario.nombre + ": " + mensaje);
 
@@ -383,7 +383,7 @@ public class Pestana {
 		// es bastante traumático/dramático y además se corta
 		// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 
-		if (!mensaje.matches("^(.*: )?#.=\\S+$")) {
+		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
 			try {
@@ -397,11 +397,11 @@ public class Pestana {
 	}
 
 	private void setearTitulo(String mensaje) {
-		Matcher regex = Pattern.compile("#T=(.*)\\.?").matcher(mensaje);
+		Matcher regex = Pattern.compile("#T=(.+)\\.?").matcher(mensaje);
 		if (regex.find()) {
 			setearonNombre = true;
-			nombrePestana = regex.group(1);
-			tabChats.setTitleAt(indicePestana, "#" + nombrePestana);
+			nombrePestana = "#" + regex.group(1);
+			tabChats.setTitleAt(indicePestana, nombrePestana);
 		}
 	}
 
@@ -409,20 +409,19 @@ public class Pestana {
 		return mensaje.contains("#P=");
 	}
 
-	private void setearPrivacidad(String mensaje, int codChat) {
+	private void setearPrivacidad(String mensaje, int codChat, boolean enviar) {
 		Matcher regex = Pattern.compile("#P=(.)").matcher(mensaje);
 		if (regex.find()) {
 			setearonPrivacidad = true;
 			privacidad = regex.group(1).charAt(0);
 
 			// decirle al server que agregue la sala en caso de ser publica
-
-			try {
-				usuario.enviar(0, "agregarSala" + tabChats.getTitleAt(indicePestana) + privacidad
-						+ String.format("%04d", codChat));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			if (enviar)
+				try {
+					usuario.enviar(0, "agregarSala" + nombrePestana + privacidad + String.format("%04d", codChat));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 		}
 	}

@@ -25,8 +25,7 @@ public class Asistente extends UsuarioGenerico {
 
 	public String getEvento() {
 		String siguienteEvento = "";
-		while ((siguienteEvento = eventos.siguienteEvento()) != null)
-			;
+//		while ((siguienteEvento = eventos.siguienteEvento()) != null);
 		return siguienteEvento;
 	}
 

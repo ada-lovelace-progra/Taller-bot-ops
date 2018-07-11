@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
 import usuariosYAsistente.Asistente;
 
 public class HiloServer extends Thread {
@@ -78,6 +80,9 @@ public class HiloServer extends Thread {
 	}
 
 	private String cargaUsuario(String readUTF) {
+		if (readUTF.contains("#"))
+			return null;
+
 		String usuario = readUTF.substring(4);
 
 		if (!usuariosConectados.contains(usuario)) {
@@ -118,6 +123,7 @@ public class HiloServer extends Thread {
 			try {
 				while (true) {
 					String mensaje = bufferDeEntrada.readUTF();
+					System.out.println(mensaje);
 					if (mensaje.contains(":")) {
 						mensaje = mensaje.substring(0, 4) + procesarPosibleInvitacion(mensaje.substring(4));
 						cambioDeNombre(mensaje);
@@ -134,12 +140,12 @@ public class HiloServer extends Thread {
 	}
 
 	private void cambioDeNombre(String mensaje) {
-		if (mensaje.contains("#")) {
+		if (mensaje.contains("#T")) {
 			String codChat = mensaje.substring(0, 4);
 			for (java.util.Map.Entry<String, String> temp : codChatPorSala.entrySet())
 				if (codChat.equals(temp.getValue())) {
 					codChatPorSala.remove(temp.getKey());
-					String nuevoNombre = "#"+ mensaje.substring(mensaje.indexOf("=")+1);
+					String nuevoNombre = "#" + mensaje.substring(mensaje.indexOf("=") + 1);
 					codChatPorSala.put(nuevoNombre, codChat);
 					usuariosConectados = usuariosConectados.replace(temp.getKey(), nuevoNombre);
 					return;
@@ -155,7 +161,7 @@ public class HiloServer extends Thread {
 
 			while (true) {
 				String leer = bufferDeEntrada.readUTF();
-
+				System.err.println(leer);
 				new peticionesNuevoChat(leer).start();
 
 				agregarSalaALista(regexAgregar, leer);
@@ -181,6 +187,10 @@ public class HiloServer extends Thread {
 		Matcher match = regex.matcher(leer);
 		if (match.find()) {
 			String sala = match.group(1);
+
+			if (usuariosConectados.contains(sala))
+				return;
+
 			usuariosConectados += sala + "?";
 			codChatPorSala.put(sala, match.group(2));
 		}
@@ -272,7 +282,7 @@ public class HiloServer extends Thread {
 	private void asistente(String mensaje, String codChat) throws Exception {
 		String respuetas = asistentePorCodChat.get(codChat).escuchar(mensaje);
 		if (!respuetas.contains("null")) {
-			if (!hiloEventos.isAlive())
+			if (hiloEventos.isAlive())
 				hiloEventos.start();
 
 			DataOutputStream bufferDeSalida;
@@ -288,7 +298,7 @@ public class HiloServer extends Thread {
 		public void run() {
 			while (true) {
 				String respuetas = asistentePorCodChat.get(codChat).getEvento();
-				if (!respuetas.contains("null")) {
+				if (respuetas != null && !respuetas.contains("null")) {
 					try {
 						DataOutputStream bufferDeSalida;
 						ArrayList<Socket> listaTemp = listaSocketPorCodChat.get(codChat);

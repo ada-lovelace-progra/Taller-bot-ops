@@ -27,7 +27,7 @@ public class BaseDato {
 		try {
 			Criteria cb = session.createCriteria(RespuestaBD.class).add(
 					Restrictions.and(Restrictions.eq("usuario", user.toLowerCase()), Restrictions.eq("pass", pass)));
-
+	
 			if (cb != null && cb.list() != null && !cb.list().isEmpty()) {
 				return true;
 			}
