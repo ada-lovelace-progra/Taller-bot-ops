@@ -41,6 +41,8 @@ public class RecordarEventos extends RespuestaGenerico {
 	public String siguienteEvento() {
 		EventoBD siguiente = e.proximoEvento();
 		try {
+			if (siguiente.getDescripcion() == null)
+				Thread.sleep(10000);
 			Thread.sleep(e.getFecha().getTime() - new Date().getTime());
 		} catch (Exception e) {
 			return null;

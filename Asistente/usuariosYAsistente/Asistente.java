@@ -25,7 +25,7 @@ public class Asistente extends UsuarioGenerico {
 
 	public String getEvento() {
 		String siguienteEvento = "";
-//		while ((siguienteEvento = eventos.siguienteEvento()) != null);
+		while ((siguienteEvento = eventos.siguienteEvento()) != null);
 		return siguienteEvento;
 	}
 
@@ -64,8 +64,6 @@ public class Asistente extends UsuarioGenerico {
 	}
 
 	private void obtenerNombreAsistente(String entrada) {
-		/////////////////////////////////////////////////////////////////////////////
-		// nada.... es una garcha aveces regex....
 		Matcher regex = Pattern.compile(".*@([a-z]+) ?.*").matcher(entrada);
 		if (regex.find())
 			nombre = regex.group(1);
@@ -74,11 +72,9 @@ public class Asistente extends UsuarioGenerico {
 			if (regex.find())
 				nombre = regex.group(1);
 		}
-		/////////////////////////////////////////////////////////////////////////////
 
 		if (nombre != null)
 			nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
-		// lo formateo piola para que quede Ada o Jenkins... por si lo llaman ADA o ada
 		RespuestaGenerico.nombre = nombre;
 	}
 }
