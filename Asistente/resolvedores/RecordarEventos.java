@@ -81,7 +81,7 @@ public class RecordarEventos extends RespuestaGenerico {
 		return null;
 	}
 
-	public EventosBD siguienteEvento(String usuario) {
+	public static EventosBD siguienteEvento(String usuario) {
 		hilo = Thread.currentThread();
 		try {
 			EventosBD e = new EventosBD();
@@ -103,7 +103,7 @@ public class RecordarEventos extends RespuestaGenerico {
 		return null;
 	}
 
-	private void eliminarEvento(String fecha) {
+	private static void eliminarEvento(String fecha) {
 		new EventosBD().darDeBaja(fecha);
 	}
 

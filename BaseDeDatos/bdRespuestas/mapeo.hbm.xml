@@ -18,12 +18,6 @@
 		<property column="fechaLectura" name="fechaLectura" type="date" />
 	</class>
 	
-	<class name="bdRespuestas.EventoBD" table="Eventos">
-		<id column="id" name="id" type="int" />
-		<property column="fecha" name="fecha" type="date" />
-		<property column="descripcion" name="descripcion" type="string" />
-	</class>
-	
 	<class name="bdRespuestas.ConversionBD" table="Conversion">
 		<id column="id" name="id" type="int" />
 		<property column="de" name="de" type="string" />

@@ -63,7 +63,7 @@ public class EventosBD {
 			CriteriaQuery<EventosBD> query = cb.createQuery(EventosBD.class);
 			Root<EventosBD> root = query.from(EventosBD.class);
 
-			Criteria c = session.createCriteria(EventosBD.class);
+			Criteria c = session.createCriteria(EventosBD.class).add(Restrictions.eq("usuario", usuario.toLowerCase()));
 			List<EventosBD> lista = c.list();
 			lista.sort(new Comparator<EventosBD>() {
 				public int compare(EventosBD o1, EventosBD o2) {

@@ -8,6 +8,7 @@
 	<class name="bdRespuestas.EventosBD" table="Eventos">
 		<id column="fecha" name="fecha" type="string" />
 		<property column="descripcion" name="descripcion" type="string" />
+		<property column="usuario" name="usuario" type="string" />
 	</class>
 	
 </hibernate-mapping>

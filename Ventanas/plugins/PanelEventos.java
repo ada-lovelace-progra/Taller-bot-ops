@@ -1,6 +1,5 @@
 package plugins;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,38 +14,12 @@ public class PanelEventos {
 	private JFrame frame;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PanelEventos window = new PanelEventos("titulo", "asdasd", "asdaqwe");
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 * 
 	 * @param texto
 	 * @param hora
 	 */
 	public PanelEventos(String titulo, String texto, String hora) {
-		initialize(titulo, texto, hora);
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 * 
-	 * @param hora
-	 * @param texto
-	 */
-	private void initialize(String titulo, String texto, String hora) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

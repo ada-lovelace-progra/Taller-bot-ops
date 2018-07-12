@@ -15,7 +15,6 @@ public class Asistente extends UsuarioGenerico {
 	private RespuestaGenerico cadena;
 	private RespuestaGenerico cadenaCompleta;
 	private Llamada llamada;
-	private RecordarEventos eventos = new RecordarEventos();
 
 	public Asistente() {
 		llamada = new Llamada();
@@ -26,7 +25,7 @@ public class Asistente extends UsuarioGenerico {
 
 	public String getEvento(String usuario) {
 		EventosBD siguienteEvento = null;
-		while ((siguienteEvento = eventos.siguienteEvento(usuario)) == null)
+		while ((siguienteEvento = RecordarEventos.siguienteEvento(usuario)) == null)
 			;
 
 		String mensaje = "----" + (nombre != null ? nombre + ": " : "") + "Tenes un evento!!!||"
@@ -36,6 +35,8 @@ public class Asistente extends UsuarioGenerico {
 
 	public String escuchar(String entrada) {
 		entrada = entrada.toLowerCase().trim();
+		if (entrada.contains("#"))
+			entrada = entrada.substring(0, entrada.indexOf("#"));
 		// nunca esta de mas un buen trim.... y el buen toLower para evitar preguntar
 		// por mayuscula y minuscula
 		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
