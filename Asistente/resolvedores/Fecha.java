@@ -26,6 +26,7 @@ public class Fecha extends RespuestaGenerico {
 	 * 
 	 * @param s
 	 */
+	@SuppressWarnings("deprecation")
 	public Fecha(String s) {
 		Matcher regexFechaCompleta = patternFechaCompleta.matcher(s);
 		if (regexFechaCompleta.find()) {
