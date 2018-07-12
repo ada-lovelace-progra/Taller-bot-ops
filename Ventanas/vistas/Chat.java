@@ -24,6 +24,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import plugins.PanelEventos;
 import usuariosYAsistente.Usuario;
 
 public class Chat extends JFrame {
@@ -160,7 +161,6 @@ public class Chat extends JFrame {
 			}
 		});
 
-		
 	}
 
 	private void nuevaTab(String nombre, int codChat) {
@@ -179,14 +179,12 @@ public class Chat extends JFrame {
 				String anterior = null;
 				while (true) {
 					String nuevo = usuario.recibir(0);
-					if (nuevo.contains("?")) {
-						if (!nuevo.equals(anterior)) {
-							listaConectados.removeAll();
-							for (String user : nuevo.split("\\?"))
-								if (!user.equals(usuario.nombre))
-									listaConectados.add(user);
-							anterior = nuevo;
-						}
+					if (nuevo.contains("Tenes un evento")) {
+						System.out.println(nuevo);
+						String[] split = nuevo.split("\\|\\|");
+						new PanelEventos(split[0], split[1], split[2]);
+					} else if (nuevo.contains("?")) {
+						anterior = setearListaConectados(anterior, nuevo);
 					} else if (nuevo.contains("levantarConexion")
 							&& !usuariosSeleccionados.contains(nuevo.substring(20) + " ")) {
 						usuariosSeleccionados.add(nuevo.substring(20));
@@ -196,6 +194,17 @@ public class Chat extends JFrame {
 				}
 			} catch (Exception e) {
 			}
+		}
+
+		private String setearListaConectados(String anterior, String nuevo) {
+			if (!nuevo.equals(anterior)) {
+				listaConectados.removeAll();
+				for (String user : nuevo.split("\\?"))
+					if (!user.equals(usuario.nombre))
+						listaConectados.add(user);
+				anterior = nuevo;
+			}
+			return anterior;
 		}
 	}
 }

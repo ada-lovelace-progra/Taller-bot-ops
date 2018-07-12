@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import armadores.Crear;
 import armadores.RespuestaGenerico;
+import bdRespuestas.EventosBD;
 
 public class Asistente extends UsuarioGenerico {
 	// el nombre lo hereda de usuario generico
@@ -23,11 +24,14 @@ public class Asistente extends UsuarioGenerico {
 		// el nombre se va a setear cuando lo llamen por primera vez
 	}
 
-	public String getEvento() {
-		String siguienteEvento = "";
-		while ((siguienteEvento = eventos.siguienteEvento()) != null)
+	public String getEvento(String usuario) {
+		EventosBD siguienteEvento = null;
+		while ((siguienteEvento = eventos.siguienteEvento(usuario)) == null)
 			;
-		return siguienteEvento;
+
+		String mensaje = "----" + (nombre != null ? nombre + ": " : "") + "Tenes un evento!!!||"
+				+ siguienteEvento.getDescripcion() + "||" + siguienteEvento.getFecha();
+		return mensaje;
 	}
 
 	public String escuchar(String entrada) {

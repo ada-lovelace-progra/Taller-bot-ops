@@ -20,6 +20,7 @@ public class HiloServer extends Thread {
 	static private Hashtable<String, Asistente> asistentePorCodChat = new Hashtable<String, Asistente>();
 	static private Hashtable<String, Socket> socketPorUsuario = new Hashtable<String, Socket>();
 	static private Hashtable<String, String> codChatPorSala = new Hashtable<String, String>();
+	static private Asistente asistenteEventos = new Asistente();
 	static private String usuariosConectados = "";
 	private String codChat;
 	private int codChatLibres = 5;
@@ -50,6 +51,8 @@ public class HiloServer extends Thread {
 
 		cargaCodChat(readUTF);
 		usuario = cargaUsuario(readUTF);
+		if (codChat.equals("0000") && !hiloEventos.isAlive())
+			hiloEventos.start();
 	}
 
 	private boolean crearUsuario(String user_pass) {
@@ -280,9 +283,6 @@ public class HiloServer extends Thread {
 	private void asistente(String mensaje, String codChat) throws Exception {
 		String respuetas = asistentePorCodChat.get(codChat).escuchar(mensaje);
 		if (!respuetas.contains("null")) {
-			if (hiloEventos.isAlive())
-				hiloEventos.start();
-
 			DataOutputStream bufferDeSalida;
 			ArrayList<Socket> listaTemp = listaSocketPorCodChat.get(codChat);
 			for (Socket socketTemp : listaTemp) {
@@ -295,15 +295,10 @@ public class HiloServer extends Thread {
 	Thread hiloEventos = new Thread() {
 		public void run() {
 			while (true) {
-				String respuetas = asistentePorCodChat.get(codChat).getEvento();
+				String respuetas = asistenteEventos.getEvento(usuario);
 				if (respuetas != null && !respuetas.contains("null")) {
 					try {
-						DataOutputStream bufferDeSalida;
-						ArrayList<Socket> listaTemp = listaSocketPorCodChat.get(codChat);
-						for (Socket socketTemp : listaTemp) {
-							bufferDeSalida = new DataOutputStream(socketTemp.getOutputStream());
-							bufferDeSalida.writeUTF(respuetas);
-						}
+						bufferDeSalida.writeUTF(respuetas);
 					} catch (IOException e) {
 					}
 				}
