@@ -1,6 +1,5 @@
 package bdRespuestas;
 
-
 import java.util.Date;
 
 import org.hibernate.Criteria;
@@ -8,7 +7,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
-public class ChuckBD extends BaseDato{
+public class ChuckBD extends BaseDato {
 	private int id;
 	private String fact;
 	private Date fechaLectura;
@@ -47,7 +46,10 @@ public class ChuckBD extends BaseDato{
 	}
 
 	public String obtenerChuckFact() {
-		Transaction tx = session.beginTransaction();
+
+		Transaction tx = session.getTransaction();
+		if (tx != null)
+			tx = session.beginTransaction();
 		ChuckBD fact = null;
 
 		try {

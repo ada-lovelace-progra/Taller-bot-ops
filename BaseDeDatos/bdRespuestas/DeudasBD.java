@@ -1,5 +1,7 @@
 package bdRespuestas;
 
+import java.util.ArrayList;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -14,6 +16,8 @@ public class DeudasBD extends BaseDato {
 	private String prestamista;
 	private String deudor;
 	private float monto;
+	private Transaction tx = null;
+	private String id;
 
 	private static SessionFactory factory;
 	protected static Session session;
@@ -30,6 +34,7 @@ public class DeudasBD extends BaseDato {
 	public DeudasBD(String prestamista, String deudor, float monto) {
 		this.prestamista = prestamista;
 		this.deudor = deudor;
+		this.id = prestamista + deudor;
 		this.monto = monto;
 	}
 
@@ -63,12 +68,14 @@ public class DeudasBD extends BaseDato {
 		// if(!buscarUsuario(prestamista) && ! buscarUsuario(deudor))
 		// return false; //Falta alguno de los usuarios en la base de datos
 
-		float deuda = buscarDeuda(prestamista, deudor);
-		if (deuda == -1) // Algo falló en la consulta
-			return false;
+		Float deuda = darDeBaja(prestamista, deudor);
+		deuda -= darDeBaja(deudor, prestamista);
 		deuda += monto;
-
-		return actualizarDeuda(prestamista, deudor, deuda);
+		if (deuda > 0)
+			return actualizarDeuda(prestamista, deudor, deuda);
+		if (deuda < 0)
+			return actualizarDeuda(deudor, prestamista, -deuda);
+		return true;
 	}
 
 	public float buscarDeuda(String prestamista, String deudor) {
@@ -88,8 +95,52 @@ public class DeudasBD extends BaseDato {
 		return 0;
 	}
 
-	public boolean actualizarDeuda(String prestamista, String deudor, float monto) {
-		Transaction tx = session.beginTransaction();
+	@SuppressWarnings("all")
+	public ArrayList<DeudasBD> buscarDeuda(String user) {
+		try {
+			ArrayList<DeudasBD> peticiones = new ArrayList<>();
+			Criteria crit = session.createCriteria(DeudasBD.class)
+					.add(Restrictions.or(Restrictions.eq("prestamista", user), Restrictions.eq("deudor", user)));
+			if (crit != null && crit.list() != null && !crit.list().isEmpty()) {
+				peticiones.addAll((ArrayList<DeudasBD>) crit.list());
+				return peticiones;
+			}
+
+		} catch (HibernateException e) {
+			return null;
+		}
+		return null;
+	}
+
+	public float darDeBaja(String prestamista, String deudor) {
+		try {
+			if (tx == null)
+				tx = session.beginTransaction();
+
+			@SuppressWarnings("deprecation")
+			Criteria crit = session.createCriteria(DeudasBD.class).add(
+					Restrictions.and(Restrictions.eq("prestamista", prestamista), Restrictions.eq("deudor", deudor)))
+					.setMaxResults(1);
+
+			DeudasBD deuda = (DeudasBD) crit.uniqueResult();
+			if (crit != null && crit.list() != null && !crit.list().isEmpty()) {
+				deuda = (DeudasBD) crit.uniqueResult();
+				session.delete(deuda);
+				tx.commit();
+				tx = null;
+				return deuda.getMonto();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	private boolean actualizarDeuda(String prestamista, String deudor, float monto) {
+
+		if (tx == null)
+			tx = session.beginTransaction();
+
 		DeudasBD deuda = null;
 		try {
 			@SuppressWarnings("deprecation")
@@ -102,10 +153,12 @@ public class DeudasBD extends BaseDato {
 				deuda.setMonto(monto);
 				session.saveOrUpdate(deuda);
 				tx.commit();
+				tx = null;
 				return true;
 			} else {
 				session.saveOrUpdate(new DeudasBD(prestamista, deudor, monto));
 				tx.commit();
+				tx = null;
 				return true;
 			}
 		} catch (HibernateException e) {
@@ -114,5 +167,13 @@ public class DeudasBD extends BaseDato {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
