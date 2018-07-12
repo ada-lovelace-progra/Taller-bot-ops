@@ -37,6 +37,11 @@ public class Fecha extends RespuestaGenerico {
 		}
 	}
 
+	
+	public Fecha() {
+		super();
+	}
+	
 	@Override
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
