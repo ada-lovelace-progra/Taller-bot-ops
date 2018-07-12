@@ -6,76 +6,63 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import usuariosYAsistente.Asistente;
+import resolvedores.Fecha;
 
 public class FechaTest {
 
 	public final static String USUARIO = "delucas";
-	static Asistente ada;
+	static Fecha f;
 
 	@BeforeClass
 	public static void setup() {
-		ada = new Asistente();
-		escuchar("hola @ada");
-	}
-
-	private String formato(String mensaje) {
-		return "Ada: " + mensaje + " @" + USUARIO;
-	}
-
-	private static String escuchar(String mensaje) {
-		String escuchar = ada.escuchar(USUARIO + ": " + mensaje);
-		if (escuchar.length() > 5)
-			return escuchar.substring(4);
-		return null;
+		f = new Fecha( "15/07/2018" );
 	}
 
 	@Test
 	public void hora() {
-		String hora = new SimpleDateFormat("HH:mm").format(new Date());
-		Assert.assertEquals(formato(hora), escuchar("@ada hora"));
+		Assert.assertEquals("10:30", f.intentarResponder("hora"));		
 	}
 
 	@Test
 	public void dia() {
-		String dia = new SimpleDateFormat("EEEEEEEEE").format(new Date());
-		Assert.assertEquals(formato(dia), escuchar("@ada dia"));
+		Assert.assertEquals("domingo", f.intentarResponder("dia"));	
 	}
 
 	@Test
 	public void fecha() {
-		String dia = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-		Assert.assertEquals(formato(dia), escuchar("@ada getfecha"));
+		Assert.assertEquals("15/07/2018", f.intentarResponder("fecha getfecha"));		
 	}
-
+	
+	@Test
+	public void ahora() {
+		Assert.assertEquals("10:30:00 - 15/07/2018", f.intentarResponder("ahora"));		
+	}
+	
+	
 	@Test
 	public void hasta() {
-		//probar cuando facu cumple 23
-		Assert.assertEquals("Ada: faltan 596 dias @delucas", escuchar("@ada cuanto falta para la fecha 14/02/2020"));
-		
-		//para el proximo mundial que juegue chile
-		Assert.assertEquals("Ada: faltan 1447 dias @delucas", escuchar("@ada cuanto falta para la fecha 14/06/2022"));
+		Assert.assertEquals("faltan 9 dias", f.intentarResponder("cuanto falta para el 25/07/2018"));	
 	}
 
 	@Test
 	public void desde() {
-		Assert.assertEquals("Ada: 7803 dias @delucas", escuchar("@ada cuanto paso desde la fecha 14/02/1997"));
+		Assert.assertEquals("10 dias", f.intentarResponder("cuanto paso de 05/07/2018"));	
 	}
 
 	@Test
 	public void fechaCompleta() {
-		String fecha = new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
-		Assert.assertEquals(formato(fecha), escuchar("@ada dia de la semana es hoy"));
+		Assert.assertEquals("domingo, 15 de julio de 2018", f.intentarResponder("fecha completa semana"));
 	}
+
 	
 	@Test
 	public void dentrodeDias() {
-		Assert.assertTrue(escuchar("@ada dia dentro de 2 dias").matches("Ada: va a ser [0-9]{2}/[0-9]{2}/2018 @delucas"));
+		Assert.assertEquals("va a ser 20/07/2018", f.intentarResponder("fecha dentro de 5 dias"));
 	}
 	
 	@Test
 	public void haceDias() {
-		Assert.assertTrue(escuchar("@ada dia hace 5 dias").matches("Ada: [0-9]{2}/[0-9]{2}/2018 @delucas"));
+		Assert.assertEquals("10/07/2018", f.intentarResponder("fecha hace 5 dias"));
 	}
 
 }
