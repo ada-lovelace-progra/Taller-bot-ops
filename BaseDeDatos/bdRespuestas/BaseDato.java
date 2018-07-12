@@ -26,7 +26,6 @@ public class BaseDato {
 		try {
 			ArrayList<RespuestaBD> peticiones = new ArrayList<>();
 			Criteria cb = session.createCriteria(RespuestaBD.class).add(Restrictions.eq("clase", clase));
-			// mensaje = mensaje.replaceAll("[^a-z_0-9_ ]", "");
 			if (cb != null && cb.list() != null && !cb.list().isEmpty()) {
 				peticiones.addAll((ArrayList<RespuestaBD>) cb.list());
 				return peticiones;

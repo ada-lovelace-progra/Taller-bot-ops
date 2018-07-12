@@ -62,12 +62,7 @@ public class DeudasBD extends BaseDato {
 		return this.monto;
 	}
 
-	public boolean acreditarDeuda(String prestamista, String deudor, float monto) // Para un solo caso: A le debe a B o
-																					// al revés
-	{
-		// if(!buscarUsuario(prestamista) && ! buscarUsuario(deudor))
-		// return false; //Falta alguno de los usuarios en la base de datos
-
+	public boolean acreditarDeuda(String prestamista, String deudor, float monto) {
 		Float deuda = darDeBaja(prestamista, deudor);
 		deuda -= darDeBaja(deudor, prestamista);
 		deuda += monto;

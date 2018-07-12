@@ -25,13 +25,15 @@ public class Asistente extends UsuarioGenerico {
 
 	public String getEvento() {
 		String siguienteEvento = "";
-		while ((siguienteEvento = eventos.siguienteEvento()) != null);
+		while ((siguienteEvento = eventos.siguienteEvento()) != null)
+			;
 		return siguienteEvento;
 	}
 
 	public String escuchar(String entrada) {
-		entrada = entrada.toLowerCase().trim(); // nunca esta de mas un buen trim.... y el buen toLower para evitar
-												// preguntar por mayuscula y minuscula
+		entrada = entrada.toLowerCase().trim();
+		// nunca esta de mas un buen trim.... y el buen toLower para evitar preguntar
+		// por mayuscula y minuscula
 		RespondoA = " @" + entrada.substring(0, entrada.indexOf(":"));// aca guardo el nombre del usuario que me hablo
 
 		RespondoA = RespondoA.substring(0, 1).toUpperCase() + RespondoA.substring(1);
@@ -49,8 +51,7 @@ public class Asistente extends UsuarioGenerico {
 					cadena = cadenaCompleta;
 					retorno = nombre + ": " + respuestaTemp + RespondoA;
 				} else if (respuestaTemp.startsWith("-1-2")) {
-					// si comienza con el codigo de salida seteo a
-					// respuesta para que solo tenga un eslabon y sea el de llamada
+					// si comienza con el codigo de salida seteo a respuesta solo en llamada
 					respuestaTemp = respuestaTemp.substring(4);
 					cadena = new Llamada();
 					retorno = nombre + ": " + respuestaTemp + RespondoA;

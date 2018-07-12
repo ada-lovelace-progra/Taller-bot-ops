@@ -33,7 +33,6 @@ import bdRespuestas.UnidadesSMBD;
  */
 public class Unidades_S_Metrico extends RespuestaGenerico {
 
-	//@Override
 	public String intentarResponder(String mensaje) {
 		if (consulta(mensaje)) {
 			return cambio((mensaje.replace(this.respuesta.toLowerCase(), "")).trim());

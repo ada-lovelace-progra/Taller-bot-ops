@@ -332,7 +332,6 @@ public class Pestana {
 					editorKit.insertHTML(doc, doc.getLength(),
 							"<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>", 0,
 							0, null);
-					// JScrollBar vertical = scrollPane.getVerticalScrollBar();
 					mensajes.setCaretPosition(mensajes.getDocument().getLength());
 				} catch (Exception e) {
 				}
@@ -373,14 +372,10 @@ public class Pestana {
 	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
 		if (!fueSeteado) {
 			fueSeteado = true;
-			nombrePestana = tabChats.getTitleAt(indicePestana); // ESTO - para cerrar tabs: ver si puede obtener nombre
-																// del otro user mediante codChat
+			nombrePestana = tabChats.getTitleAt(indicePestana); 
 			notificarMensajesNuevos.start();
 		}
 
-		// if(!mensaje.contains(/*"@"+*/usuario.nombre))
-		// NotificacionSonora.sonar(); //Hasta no encontrar uno mejor, a este lo saco,
-		// es bastante traumático/dramático y además se corta
 		// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 
 		if (!mensaje.matches("^(.*: )?#.=.*")) {

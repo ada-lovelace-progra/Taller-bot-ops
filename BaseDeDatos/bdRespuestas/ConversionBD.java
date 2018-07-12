@@ -78,10 +78,8 @@ public class ConversionBD extends BaseDato {
 									Restrictions.eqOrIsNull("a", a.getAbreviacion())),
 							Restrictions.and(Restrictions.eq("de", a.getAbreviacion()),
 									Restrictions.eqOrIsNull("a", de.getAbreviacion()))));
-			try {
-				c = (ConversionBD) crit.uniqueResult(); // ver si de aca salta al catch en lugar de preguntar si es nulo
-			} catch (Exception e) {
-			}
+			if (crit != null && crit.list() != null && !crit.list().isEmpty())
+				c = (ConversionBD) crit.uniqueResult();
 
 			if (c != null) {
 				if (c.getDe().equals(a.getAbreviacion()))

@@ -14,7 +14,6 @@ public class Codificaciones {
 		Matcher regex = Pattern.compile(";(\\S+);").matcher(recibido);
 		String link = "";
 		if (regex.find()) {
-			// new Youtube2();
 			link = regex.group(1);
 			return recibido.replace(";" + link + ";",
 					"<a href=\"www.youtube.com/watch?v=dQw4w9WgXcQ\">" + link + "</a>");
@@ -29,20 +28,16 @@ public class Codificaciones {
 		String link = "";
 		if (regex.find()) {
 			link = regex.group(1);
-			// return recibido.replace(link, ini + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
-			// return recibido.replace(link,obtenerTituloYVistaPrevia(link));
 		}
 		regex = Pattern.compile("(www\\S+)").matcher(recibido);
 		if (regex.find()) {
 			link = regex.group(1);
-			// return recibido.replace(link, ini + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
 		}
 		regex = Pattern.compile("(\\S+.\\S+)").matcher(recibido);
 		if (regex.find()) {
 			link = regex.group(1);
-			// return recibido.replace(link, ini + "www." + link + fin + link);
 			return recibido.replace(link, ini + link + fin);
 		}
 		return recibido;
@@ -68,9 +63,8 @@ public class Codificaciones {
 	}
 
 	static private boolean esMeme(String recibido) {
-		// match = Pattern.compile(":(.+):").matcher(recibido);
-		if (recibido.matches(":(.*):"))// match.find())
-			return true;// !match.group(1).isEmpty();
+		if (recibido.matches(":(.*):"))
+			return true;
 		return false;
 	}
 

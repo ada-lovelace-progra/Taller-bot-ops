@@ -35,7 +35,7 @@ public class Chat extends JFrame {
 	private Usuario usuario;
 	private List listaConectados;
 	private JTabbedPane tabChats;
-	private ArrayList<String> usuariosSeleccionados = new ArrayList<>();// = "";
+	private ArrayList<String> usuariosSeleccionados = new ArrayList<>();
 	public boolean iniciado = false;
 	private JButton btnNuevaSala;
 	private Font fuente = new Font("Tahoma", Font.PLAIN, 11);
@@ -189,8 +189,7 @@ public class Chat extends JFrame {
 						}
 					} else if (nuevo.contains("levantarConexion")
 							&& !usuariosSeleccionados.contains(nuevo.substring(20) + " ")) {
-						usuariosSeleccionados.add(nuevo.substring(20));// usuariosSeleccionados += nuevo.substring(20) +
-																		// " ";
+						usuariosSeleccionados.add(nuevo.substring(20));
 						nuevaTab(nuevo.substring(20), Integer.parseInt(nuevo.substring(16, 20)));
 					}
 

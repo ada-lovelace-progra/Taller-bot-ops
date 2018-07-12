@@ -35,20 +35,20 @@ public class Cliente {
 	}
 
 	private void levantarServerYConectarse(int puerto) {
-//		new Thread() {
-//			public void run() {
-//				try {
-//					new Servidor(puerto);
-//				} catch (Exception e) {
-//				}
-//			}
-//		}.start();
-//		try {
-//			Thread.sleep(500);
-//			socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		new Thread() {
+			public void run() {
+				try {
+					new Servidor(puerto);
+				} catch (Exception e) {
+				}
+			}
+		}.start();
+		try {
+			Thread.sleep(500);
+			socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private boolean levantarConexion(int puerto) {

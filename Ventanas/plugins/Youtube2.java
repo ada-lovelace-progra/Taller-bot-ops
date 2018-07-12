@@ -24,7 +24,6 @@ public class Youtube2 extends JFrame {
 		frame.add(fxPanel);
 		frame.setSize(300, 200);
 		frame.setVisible(true);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -36,7 +35,6 @@ public class Youtube2 extends JFrame {
 	
 	 public static Component metodoLoco( Boolean b) {
 		final JFXPanel fxPanel = new JFXPanel();
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Platform.runLater(new Runnable() {
 			public void run() {
 				initFX(fxPanel);
@@ -47,7 +45,6 @@ public class Youtube2 extends JFrame {
 	}
 
 	private static void initFX(JFXPanel fxPanel) {
-		// This method is invoked on the JavaFX thread
 		Scene scene = createScene();
 		fxPanel.setScene(scene);
 	}

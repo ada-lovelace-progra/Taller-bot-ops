@@ -18,6 +18,3 @@ public class Agradecer extends RespuestaGenerico {
 	}
 
 }
-
-/**Estoy probando para hacer un commit. Manu **/
-//prueba de commit - Quimey
