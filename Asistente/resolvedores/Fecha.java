@@ -17,6 +17,25 @@ import armadores.RespuestaGenerico;
 public class Fecha extends RespuestaGenerico {
 	private Pattern patternFechaCompleta = Pattern.compile(".*([0-9][0-9])/([0-9]+)/([0-9]+).*");
 	private Pattern patternDias = Pattern.compile(".* ([0-9]+) ([a-z]+).*");
+	private DateTime fecha = null;
+	private Date fecha2 = null;
+
+	/**
+	 * Se agrega un constructor para testear. recive s en formato dd/MM/aaaa y hace
+	 * las cuentas en base a eso, asume que son las 10:30 de ese dia.
+	 * 
+	 * @param s
+	 */
+	public Fecha(String s) {
+		Matcher regexFechaCompleta = patternFechaCompleta.matcher(s);
+		if (regexFechaCompleta.find()) {
+			int dia = Integer.parseInt(regexFechaCompleta.group(1)),
+					mes = Integer.parseInt(regexFechaCompleta.group(2)),
+					ano = Integer.parseInt(regexFechaCompleta.group(3));
+			this.fecha = new DateTime(ano, mes, dia, 10, 30, 0, 0);
+			this.fecha2 = new Date(ano - 1900, mes - 1, dia, 10, 30);
+		}
+	}
 
 	@Override
 	public String intentarResponder(String mensaje) {
@@ -80,49 +99,50 @@ public class Fecha extends RespuestaGenerico {
 
 	// devuelve fecha actual en formato hora:min:seg dia/mes/a�o
 	private String now() {
-		return new SimpleDateFormat("hh:mm:ss - dd/MM/yyyy").format(new Date());
+		return new SimpleDateFormat("hh:mm:ss - dd/MM/yyyy").format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 
 	// devuelve hora:minutos
 	private String getHora() {
-		return new SimpleDateFormat("HH:mm").format(new Date());
+		return new SimpleDateFormat("HH:mm").format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 
 	// devuelve fecha actual en formato dia/mes/a�o
 	public String getFecha() {
-		return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		return new SimpleDateFormat("dd/MM/yyyy").format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 
 	// devuelve la fecha actual en formato "viernes, 04 de mayo de 2018"
 	private String getFechaCompleta() {
-		return new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy").format(new Date());
+		return new SimpleDateFormat("EEEEEEEEE, dd 'de' MMMMMMMMMM 'de' yyyy")
+				.format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 
 	///////////////////////////////////////
 	// devuelve la fecha dentro de X dias
 	private String dentrodeDias(int dia) {
-		DateTime dateTime = new DateTime();
+		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
 		dateTime = dateTime.plusDays(dia);
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
 		return "va a ser " + dtfOut.print(dateTime);
 	}
 
 	private String dentrodeMeses(int mes) {
-		DateTime dateTime = new DateTime();
+		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
 		dateTime = dateTime.plusMonths(mes);
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
 		return "va a ser " + dtfOut.print(dateTime);
 	}
 
 	private String haceDias(int dia) {
-		DateTime dateTime = new DateTime();
+		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
 		dateTime = dateTime.plusDays(dia * (-1));
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
 		return "" + dtfOut.print(dateTime);
 	}
 
 	private String haceMeses(int mes) {
-		DateTime dateTime = new DateTime();
+		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
 		dateTime = dateTime.plusMonths(mes * (-1));
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
 		return "" + dtfOut.print(dateTime);
@@ -131,12 +151,12 @@ public class Fecha extends RespuestaGenerico {
 
 	// Devuelve dia de la semana actual
 	private String getDiaDeLaSemana() {
-		return new SimpleDateFormat("EEEEEEEEE").format(new Date());
+		return new SimpleDateFormat("EEEEEEEEE").format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String hasta(int dia, int mes, int ano) {
-		DateTime startDate = new DateTime();
+		DateTime startDate = (this.fecha == null) ? new DateTime() : this.fecha;
 		DateTime endDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
 		Days d = Days.daysBetween(startDate, endDate);
 		int days = d.getDays();
@@ -146,7 +166,7 @@ public class Fecha extends RespuestaGenerico {
 	// Diferencia entre dos fechas, devuelve cantidad de dias
 	private String desde(int dia, int mes, int ano) {
 		DateTime startDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
-		DateTime endDate = new DateTime();
+		DateTime endDate = (this.fecha == null) ? new DateTime() : this.fecha;
 		Days d = Days.daysBetween(startDate, endDate);
 		int days = d.getDays();
 		return "" + days + " dias";
