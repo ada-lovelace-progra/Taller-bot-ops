@@ -1,13 +1,13 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static org.junit.Assert.*;
+import org.junit.Assert;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 

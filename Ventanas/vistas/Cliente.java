@@ -18,6 +18,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+import org.apache.commons.codec.digest.DigestUtils;
+
 
 public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -173,12 +175,12 @@ public class Cliente extends JFrame {
 	}
 
 	private void cargarUsuarioEIniciar() {
-		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passLogin.getPassword()));
+		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passLogin.toString()));
 		iniciado(ventanaChat);
 	}
 
 	private void iniciarSesion() {
-		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.getPassword()));
+		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.toString()));
 		iniciado(ventanaChat);
 	}
 
@@ -189,13 +191,10 @@ public class Cliente extends JFrame {
 			this.dispose();
 		}
 	}
-
-	private String hashear(char[] cs) {
-		String retorno = "";
-		for (char c : cs) {
-			double divido = (c * 3) / 7;
-			retorno += (int) (divido * 11);
-		}
-		return retorno;
+	
+	private String hashear(String pass){
+		 String encriptMD5= DigestUtils.sha1Hex(pass);
+		return encriptMD5;
 	}
+
 }
