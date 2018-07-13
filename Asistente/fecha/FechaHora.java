@@ -1,22 +1,21 @@
-package resolvedores;
+package fecha;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FechaAhora extends FechaGenerico {
+public class FechaHora extends FechaGenerico {
 	
-	public FechaAhora(String s) {
+	public FechaHora(String s) {
 		super(s);
 	}
 
-	public FechaAhora() {
+	public FechaHora() {
 		super();
 	}
 	
-	
 	@Override
 	public String request(String mensaje) {
-		if (mensaje.contains("ahora"))
+		if (mensaje.contains("hora"))
 			return handle( mensaje);
 		else if( this.siguiente != null ) {
 			return this.siguiente.request(mensaje);
@@ -26,7 +25,7 @@ public class FechaAhora extends FechaGenerico {
 	
 	@Override
 	public String handle(String mensaje) {
-		return new SimpleDateFormat("hh:mm:ss - dd/MM/yyyy").format((this.fecha2 == null) ? new Date() : this.fecha2);
+		return new SimpleDateFormat("HH:mm").format((this.fecha2 == null) ? new Date() : this.fecha2);
 	}
 	
 }

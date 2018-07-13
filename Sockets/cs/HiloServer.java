@@ -53,6 +53,7 @@ public class HiloServer extends Thread {
 		usuario = cargaUsuario(readUTF);
 		if (codChat.equals("0000") && !hiloEventos.isAlive())
 			hiloEventos.start();
+		this.setName("HServer | " + usuario);
 	}
 
 	private boolean crearUsuario(String user_pass) {
@@ -107,6 +108,7 @@ public class HiloServer extends Thread {
 
 	private Thread mandarConectados = new Thread() {
 		public void run() {
+			this.setName("EnvidoDeConectados | " + usuario);
 			try {
 				while (true) {
 					bufferDeSalida.writeUTF("----" + usuariosConectados);
@@ -228,7 +230,7 @@ public class HiloServer extends Thread {
 
 		public void run() {
 			try {
-
+				this.setName("peticionesNuevoChat | " + usuario);
 				// ejemplo de nuevo chat:
 				// 0000nuevoChat|Nueva_Sala|usuarioquelapidio
 				if (leer.contains("nuevoChat")) { // si es peticion entro
@@ -295,6 +297,7 @@ public class HiloServer extends Thread {
 
 	Thread hiloEventos = new Thread() {
 		public void run() {
+			this.setName("EnvioDeEventos | " + usuario);
 			while (true) {
 				String respuetas = asistenteEventos.getEvento(usuario);
 				if (respuetas != null && !respuetas.contains("null")) {
@@ -316,6 +319,7 @@ public class HiloServer extends Thread {
 			bufferDeEntrada.close();
 			bufferDeSalida.close();
 			socket.close();
+			this.interrupt();
 		} catch (Exception e) {
 		}
 	}

@@ -1,21 +1,23 @@
-package resolvedores;
+package fecha;
 
 import java.util.regex.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
-public class FechaHasta extends FechaGenerico {
-	public FechaHasta(String s) {
+public class FechaDesde extends FechaGenerico {
+	
+	public FechaDesde(String s) {
 		super(s);
 	}
 
-	public FechaHasta() {
+	public FechaDesde() {
 		super();
 	}
 	
+	
 	@Override
 	public String request(String mensaje) {
-		if (mensaje.contains("falta"))
+		if (mensaje.contains("paso"))
 			return handle(mensaje);
 		else if (this.siguiente != null) {
 			return this.siguiente.request(mensaje);
@@ -32,11 +34,11 @@ public class FechaHasta extends FechaGenerico {
 			mes = Integer.parseInt(regexFechaCompleta.group(2));
 			ano = Integer.parseInt(regexFechaCompleta.group(3));
 		}
-		DateTime startDate = (this.fecha == null) ? new DateTime() : this.fecha;
-		DateTime endDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
+		DateTime startDate = new DateTime(ano, mes, dia, 0, 0, 0, 0);
+		DateTime endDate = (this.fecha == null) ? new DateTime() : this.fecha;
 		Days d = Days.daysBetween(startDate, endDate);
 		int days = d.getDays();
-		return "faltan " + days + " dias";
+		return "" + days + " dias";
 	}
 
 }

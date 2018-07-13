@@ -48,7 +48,12 @@ public class Asistente extends UsuarioGenerico {
 		String retorno = null;
 		if (nombre != null && entrada.contains("@" + nombre.toLowerCase())) {
 			entrada = entrada.toLowerCase();
-			String respuestaTemp = cadena.intentar(entrada);
+			String respuestaTemp = null;
+			try {
+				respuestaTemp = cadena.intentar(entrada);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (respuestaTemp != null) {// con esto verifico si pudo responder
 				if (cadena.getClass() == Llamada.class) {

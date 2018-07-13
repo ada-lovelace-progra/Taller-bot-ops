@@ -52,7 +52,7 @@ public class Usuario extends UsuarioGenerico {
 		}
 	}
 
-	public void enviar(int codChat, String mensaje) throws Exception {
+	public void enviar(int codChat, String mensaje) {
 		clientePorCodChat.get(codChat).enviar(String.format("%04d", codChat) + nombre + ": " + mensaje);
 	}
 

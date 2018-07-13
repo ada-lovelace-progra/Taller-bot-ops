@@ -1,4 +1,6 @@
-package resolvedores;
+package fecha;
+
+import resolvedores.Fecha;
 
 public abstract class FechaGenerico extends Fecha {
 	protected FechaGenerico siguiente  = null;

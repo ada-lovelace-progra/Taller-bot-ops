@@ -271,6 +271,7 @@ public class Pestana {
 	private void cargaMensajesNuevosHilo(int codChat, JEditorPane mensajes) {
 		new Thread() {
 			public void run() {
+				this.setName("CargaMensajes");
 				cargaContenidoDeChat();
 				while (true) {
 					try {
@@ -347,11 +348,7 @@ public class Pestana {
 
 			cargarMensaje(mensajes, codChat, usuario.nombre + ": " + mensaje);
 
-			try {
-				usuario.enviar(codChat, mensaje);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			usuario.enviar(codChat, mensaje);
 		}
 	}
 
@@ -360,7 +357,7 @@ public class Pestana {
 	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
 		if (!fueSeteado) {
 			fueSeteado = true;
-			nombrePestana = tabChats.getTitleAt(indicePestana); 
+			nombrePestana = tabChats.getTitleAt(indicePestana);
 			notificarMensajesNuevos.start();
 		}
 
@@ -424,6 +421,7 @@ public class Pestana {
 	private final Thread notificarMensajesNuevos = new Thread() {
 
 		public void run() {
+			this.setName("Notificacion Mensajes Nuevos |" + tabChats.getTitleAt(indicePestana));
 			Color colorNotificacion = colorArray[(int) (Math.random() * 8)];
 			Color color = tabChats.getBackground();
 			boolean sinLeer = true;

@@ -37,6 +37,7 @@ public class Cliente {
 	private void levantarServerYConectarse(int puerto) {
 		new Thread() {
 			public void run() {
+				this.setName("Servidor en Cliente");
 				try {
 					new Servidor(puerto);
 				} catch (Exception e) {
@@ -95,9 +96,13 @@ public class Cliente {
 		socket = new Socket(host.getHostAddress(), puerto);
 	}
 
-	public void enviar(String mensaje) throws Exception {
-		dataOutputStream.writeUTF(mensaje);
-		dataOutputStream.flush();
+	public void enviar(String mensaje) {
+		try {
+			dataOutputStream.writeUTF(mensaje);
+			dataOutputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String recibir() throws Exception {

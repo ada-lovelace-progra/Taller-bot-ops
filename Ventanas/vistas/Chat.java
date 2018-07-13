@@ -175,6 +175,7 @@ public class Chat extends JFrame {
 
 	class escucharCodChat_0 extends Thread {
 		public void run() {
+			this.setName("EscuchaCodChat 0");
 			try {
 				String anterior = null;
 				while (true) {

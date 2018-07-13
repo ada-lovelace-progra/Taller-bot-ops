@@ -70,15 +70,6 @@ public class RecordarEventos extends RespuestaGenerico {
 			return "Evento agregado";
 		} else
 			return "No se pudo agregar el evento";
-
-	}
-
-	public Thread getThreadByName(String nombre) {
-		for (Thread hilo : Thread.getAllStackTraces().keySet())
-			if (hilo.getName().equals(nombre))
-				return hilo;
-
-		return null;
 	}
 
 	public static EventosBD siguienteEvento(String usuario) {

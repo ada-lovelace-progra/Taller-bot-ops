@@ -11,6 +11,7 @@ public class Zumbido extends Thread {
 	}
 
 	public void run() {
+		this.setName("Zumbido");
 		int veces = 50;
 		int x = (int) ventana.getLocation().getY();
 		int y = (int) ventana.getLocation().getX();

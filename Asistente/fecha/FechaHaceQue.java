@@ -1,4 +1,5 @@
-package resolvedores;
+package fecha;
+
 
 import java.util.regex.Matcher;
 
@@ -6,25 +7,25 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class FechaDentroDe extends FechaGenerico {
-	public FechaDentroDe(String s) {
+public class FechaHaceQue extends FechaGenerico {
+	public FechaHaceQue(String s) {
 		super(s);
 	}
 
-	public FechaDentroDe() {
+	public FechaHaceQue() {
 		super();
 	}
 	
 	@Override
 	public String request(String mensaje) {
-		if (mensaje.contains("dentro"))
-			return handle( mensaje);
-		else if( this.siguiente != null ) {
+		if (mensaje.contains("hace"))
+			return handle(mensaje);
+		else if (this.siguiente != null) {
 			return this.siguiente.request(mensaje);
-		}else
+		} else
 			return null;
 	}
-	
+
 	@Override
 	public String handle(String mensaje) {
 		Matcher regexDias = patternDias.matcher(mensaje);
@@ -32,25 +33,26 @@ public class FechaDentroDe extends FechaGenerico {
 			int dia = Integer.parseInt(regexDias.group(1));
 			switch (regexDias.group(2)) {
 			case "dias":
-				return dentrodeDias(dia);
+				return haceDias(dia);
 			case "meses":
-				return dentrodeMeses(dia);
+				return haceMeses(dia);
 			}
 		}
 		return null;
 	}
 
-	private String dentrodeDias(int dia) {
+	private String haceDias(int dia) {
 		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
-		dateTime = dateTime.plusDays(dia);
+		dateTime = dateTime.plusDays(dia * (-1));
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
-		return "va a ser " + dtfOut.print(dateTime);
+		return "" + dtfOut.print(dateTime);
 	}
 
-	private String dentrodeMeses(int mes) {
+	private String haceMeses(int mes) {
 		DateTime dateTime = (this.fecha == null) ? new DateTime() : this.fecha;
-		dateTime = dateTime.plusMonths(mes);
+		dateTime = dateTime.plusMonths(mes * (-1));
 		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yyyy");
-		return "va a ser " + dtfOut.print(dateTime);
+		return "" + dtfOut.print(dateTime);
 	}
+
 }

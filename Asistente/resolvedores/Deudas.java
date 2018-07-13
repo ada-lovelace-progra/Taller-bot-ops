@@ -182,6 +182,8 @@ public class Deudas extends RespuestaGenerico {
 		String miNombre = mensaje.substring(0, mensaje.indexOf(":"));
 		String salida = "";
 		ArrayList<DeudasBD> lista = new DeudasBD().buscarDeuda(miNombre);
+		if (lista == null)
+			return "No tenes deudas registradas";
 		for (DeudasBD temp : lista)
 			if (temp.getPrestamista().equals(miNombre))
 				salida += formateoDeben(temp.getPrestamista(), temp.getDeudor(), temp.getMonto()) + ", ";
