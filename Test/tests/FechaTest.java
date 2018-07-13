@@ -15,6 +15,12 @@ public class FechaTest {
 	@BeforeClass
 	public static void setup() {
 		f = new Fecha( "15/07/2018" );
+		f.crearCadena();
+	}
+
+	@Test
+	public void fecha() {
+		Assert.assertEquals("15/07/2018", f.intentarResponder("fecha getfecha"));		
 	}
 
 	@Test
@@ -27,11 +33,6 @@ public class FechaTest {
 		Assert.assertEquals("domingo", f.intentarResponder("dia"));	
 	}
 
-	@Test
-	public void fecha() {
-		Assert.assertEquals("15/07/2018", f.intentarResponder("fecha getfecha"));		
-	}
-	
 	@Test
 	public void ahora() {
 		Assert.assertEquals("10:30:00 - 15/07/2018", f.intentarResponder("ahora"));		
