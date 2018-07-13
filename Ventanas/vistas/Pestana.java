@@ -28,6 +28,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -124,11 +126,14 @@ public class Pestana {
 
 		popupMenu = new JPopupMenu();
 		tituloPopUp = new JTextField();
+		tituloPopUp.setFont(fuente);
 		popupMenu.add(tituloPopUp);
 		tituloPopUp.setColumns(10);
 		publicaBoolean = new JCheckBox("Publica");
+		publicaBoolean.setFont(fuente);
 		popupMenu.add(publicaBoolean);
-		botonSalir = new JButton("Salir");
+		botonSalir = new JButton("Listo");
+		botonSalir.setFont(fuente);
 		popupMenu.add(botonSalir);
 
 		setearEventos(codChat, textEnviar, mensajes);
@@ -241,12 +246,40 @@ public class Pestana {
 			}
 		});
 
-		popupMenu.addFocusListener(new FocusAdapter() {
+		popupMenu.addPopupMenuListener(new PopupMenuListener() {
+
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			if(nombrePestana!=null && nombrePestana.contains("#"))
+				{
+					//popupMenu.setVisible(true);
+					tituloPopUp.setText(nombrePestana.replace("#", ""));
+					publicaBoolean.setSelected(privacidad=='1');
+				}
+			else if(nombrePestana!=null && !nombrePestana.contains("#"))
+				popupMenu.setVisible(false);
+			}
+
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		botonSalir.addMouseListener(new MouseAdapter() {
 			private String titulo = "";
 			private String priv = "";
 
 			@Override
-			public void focusLost(FocusEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				String temptitulo = "#T=" + tituloPopUp.getText();
 				String temppriv = "#P=" + (publicaBoolean.isSelected() ? 1 : 0);
 				try {
@@ -260,6 +293,9 @@ public class Pestana {
 						setearPrivacidad(priv, codChat, true);
 						usuario.enviar(codChat, priv);
 					}
+					//tituloPopUp.setText(nombrePestana.replace("#", ""));
+					//publicaBoolean.setSelected(!setearonPrivacidad);
+					popupMenu.setVisible(false);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
