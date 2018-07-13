@@ -95,20 +95,17 @@ public class Pestana {
 		gbl_panel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 0;
-		panel.add(scrollPane, gbc_scrollPane);
-
-		JEditorPane mensajes = new JEditorPane();
-		mensajes.setContentType("text/html");
-		mensajes.setEditable(false);
-		mensajes.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-		mensajes.setFont(fuente);
-		scrollPane.setViewportView(mensajes);
+		JPanel mensajes = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridy = 0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		
+		GridBagConstraints gbc_1 = new GridBagConstraints();
+		gbc_1.fill = GridBagConstraints.BOTH;
+		panel.add(new JScrollPane(mensajes), gbc_1);
 
 		JScrollPane scrollEnviar = new JScrollPane();
 		GridBagConstraints gbc_scrollEnviar = new GridBagConstraints();
@@ -143,7 +140,7 @@ public class Pestana {
 		return panel;
 	}
 
-	private void setearEventos(int codChat, JEditorPane textEnviar, JEditorPane mensajes) {
+	private void setearEventos(int codChat, JEditorPane textEnviar, JPanel mensajes) {
 
 		tabChats.addMouseListener(new MouseAdapter() {
 			@Override
@@ -155,53 +152,6 @@ public class Pestana {
 					popupMenu.grabFocus();
 				}
 			}
-		});
-
-		mensajes.addHyperlinkListener(new HyperlinkListener() {
-			public void hyperlinkUpdate(HyperlinkEvent hLinkEv) {
-				String url = null;
-				URL uURL = hLinkEv.getURL();
-				if (uURL != null)
-					url = uURL.toString();
-				else
-					url = hLinkEv.getDescription();
-
-				if (hLinkEv.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					if (Desktop.isDesktopSupported())
-						try {
-							Desktop.getDesktop().browse(new URI(url));
-						} catch (Exception e1) {
-						}
-					else
-						try {
-							new ProcessBuilder(url).start();
-						} catch (Exception e2) {
-							try {
-								String comando = url;
-								Runtime.getRuntime().exec("start ");
-								Runtime.getRuntime().exec(comando);
-							} catch (Exception e3) {
-							}
-						}
-				}
-			}
-		});
-
-		mensajes.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				mensajes.setCaretPosition(mensajes.getDocument().getLength());
-			}
-
 		});
 
 		textEnviar.addKeyListener(new KeyAdapter() {
@@ -303,11 +253,10 @@ public class Pestana {
 
 	}
 
-	private void cargaMensajesNuevosHilo(int codChat, JEditorPane mensajes) {
+	private void cargaMensajesNuevosHilo(int codChat, JPanel mensajes) {
 		new Thread() {
 			public void run() {
 				this.setName("CargaMensajes");
-				cargaContenidoDeChat();
 				while (true) {
 					try {
 						String recibido = usuario.recibir(codChat);
@@ -348,25 +297,13 @@ public class Pestana {
 				}
 			}
 
-			private void cargaContenidoDeChat() {
-				try {
-					mensajes.setContentType("text/html");
-					HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-					HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
-					editorKit.insertHTML(doc, doc.getLength(),
-							"<HTML>\r\n" + "<HEAD>\r\n" + "</HEAD>\r\n" + "<BODY>\r\n" + "</BODY>\r\n" + "</HTML>", 0,
-							0, null);
-					mensajes.setCaretPosition(mensajes.getDocument().getLength());
-				} catch (Exception e) {
-				}
-			}
 		}.start();
 	}
 
 	public void setearTituloYPrivacidad(String titulo, boolean publico) {
 	}
 
-	private void enviarMensaje(JEditorPane textEnviar, JEditorPane mensajes, int codChat) {
+	private void enviarMensaje(JEditorPane textEnviar, JPanel mensajes, int codChat) {
 		String mensaje = textEnviar.getText().trim();
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
 			textEnviar.setText("");
@@ -387,11 +324,8 @@ public class Pestana {
 		}
 	}
 
-	private boolean fueSeteado = false;
-
-	private void cargarMensaje(JEditorPane mensajes, int codChat, String mensaje) {
-		if (!fueSeteado) {
-			fueSeteado = true;
+	private void cargarMensaje(JPanel mensajes, int codChat, String mensaje) {
+		if (!notificarMensajesNuevos.isAlive()) {
 			nombrePestana = tabChats.getTitleAt(indicePestana);
 			notificarMensajesNuevos.start();
 		}
@@ -401,13 +335,9 @@ public class Pestana {
 		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
-			try {
-				HTMLDocument doc = (HTMLDocument) mensajes.getDocument();
-				HTMLEditorKit editorKit = (HTMLEditorKit) mensajes.getEditorKit();
-				editorKit.insertHTML(doc, doc.getLength(), mensaje, 0, 0, null);
-				mensajes.setCaretPosition(mensajes.getDocument().getLength());
-			} catch (Exception e) {
-			}
+			mensajes.add(new Mensaje(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
+			mensajes.validate();
+			mensajes.repaint();
 		}
 	}
 
