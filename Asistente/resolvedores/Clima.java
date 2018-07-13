@@ -15,7 +15,7 @@ import armadores.RespuestaGenerico;
 public class Clima extends RespuestaGenerico {
 
 	public String intentarResponder(String mensaje) {
-		if (mensaje.contains("clima"))
+		if (consulta(mensaje))
 			return obtenerClima();
 		return null;
 	}

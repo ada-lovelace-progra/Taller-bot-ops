@@ -6,8 +6,7 @@
 <hibernate-mapping>
 
 	<class name="dbUsuarios.RespuestaBD" table="Usuarios">
-		<id column="id" name="id" type="int" />
-		<property column="usuario" name="usuario" type="string" />
+		<id column="usuario" name="usuario" type="string" />
 		<property column="pass" name="pass" type="string" />
 	</class>
 	

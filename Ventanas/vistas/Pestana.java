@@ -250,30 +250,28 @@ public class Pestana {
 
 			@Override
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-			if(nombrePestana!=null && nombrePestana.contains("#"))
-				{
-					//popupMenu.setVisible(true);
+				if (nombrePestana != null && nombrePestana.contains("#")) {
+					// popupMenu.setVisible(true);
 					tituloPopUp.setText(nombrePestana.replace("#", ""));
-					publicaBoolean.setSelected(privacidad=='1');
-				}
-			else if(nombrePestana!=null && !nombrePestana.contains("#"))
-				popupMenu.setVisible(false);
+					publicaBoolean.setSelected(privacidad == '1');
+				} else if (nombrePestana != null && !nombrePestana.contains("#"))
+					popupMenu.setVisible(false);
 			}
 
 			@Override
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void popupMenuCanceled(PopupMenuEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
-		
+
 		botonSalir.addMouseListener(new MouseAdapter() {
 			private String titulo = "";
 			private String priv = "";
@@ -293,8 +291,8 @@ public class Pestana {
 						setearPrivacidad(priv, codChat, true);
 						usuario.enviar(codChat, priv);
 					}
-					//tituloPopUp.setText(nombrePestana.replace("#", ""));
-					//publicaBoolean.setSelected(!setearonPrivacidad);
+					// tituloPopUp.setText(nombrePestana.replace("#", ""));
+					// publicaBoolean.setSelected(!setearonPrivacidad);
 					popupMenu.setVisible(false);
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -482,6 +480,23 @@ public class Pestana {
 				} catch (Exception e) {
 					noVaMas++;
 				}
+		}
+	};
+
+	private Thread refrescoDeIndice = new Thread() {
+		public void run() {
+			int index;
+			while (true) {
+				index = tabChats.indexOfTab(nombrePestana);
+				if (index == -1)
+					nombrePestana = tabChats.getTitleAt(indicePestana);
+				else
+					indicePestana = index;
+				try {
+					Thread.sleep(2000);
+				} catch (Exception e) {
+				}
+			}
 		}
 	};
 }

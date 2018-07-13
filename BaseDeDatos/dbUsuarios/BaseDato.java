@@ -54,7 +54,7 @@ public class BaseDato {
 	public static boolean crearUsuario(String user, String pass) {
 		Transaction tx = session.beginTransaction();
 		try {
-			RespuestaBD res = new RespuestaBD(5, user, pass);
+			RespuestaBD res = new RespuestaBD(5, user.toLowerCase(), pass);
 			session.save(res);
 			tx.commit();
 			return true;

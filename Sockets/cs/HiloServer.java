@@ -37,8 +37,11 @@ public class HiloServer extends Thread {
 			// comprobar si está registrado
 			// ejemplo de lectura (readUTF): 0000Usuario|PassHash
 			String user_pass = readUTF.substring(4);
+			if (usuariosConectados.contains(user_pass.substring(0, user_pass.indexOf("|"))))
+				return;
 			if (user_pass.charAt(0) == '$') {
 				user_pass = user_pass.replace("$", "");
+				readUTF = readUTF.replace("$", "");
 				crearUsuario(user_pass);
 			}
 			comprobarUsuario(user_pass);
@@ -53,7 +56,7 @@ public class HiloServer extends Thread {
 		usuario = cargaUsuario(readUTF);
 		if (codChat.equals("0000") && !hiloEventos.isAlive())
 			hiloEventos.start();
-		this.setName("HServer | " + usuario);
+		this.setName("HServer | " + usuario + " | " + codChat);
 	}
 
 	private boolean crearUsuario(String user_pass) {
@@ -73,7 +76,6 @@ public class HiloServer extends Thread {
 		String pass = user_pass.substring(user_pass.indexOf("|") + 1);
 		if (!new dbUsuarios.BaseDato().traerDatos(user, pass)) {
 			iniciado = false;
-			System.out.println("No se encontró el usuario: " + user);
 			bufferDeSalida.writeUTF("No se encontró el usuario");
 			return;
 		}
@@ -314,6 +316,8 @@ public class HiloServer extends Thread {
 		if (codChat.equals("0000")) {
 			String clave = usuario + "?";
 			usuariosConectados = usuariosConectados.replace(clave, "");
+		} else {
+			listaSocketPorCodChat.get(codChat).remove(socket);
 		}
 		try {
 			bufferDeEntrada.close();

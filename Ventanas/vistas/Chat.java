@@ -1,6 +1,7 @@
 package vistas;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -59,6 +60,8 @@ public class Chat extends JFrame {
 		setMinimumSize(new Dimension(542, 346));
 		usuario = new Usuario(user, pass);
 
+		if (user.contains("$"))
+			user.replace("$", "");
 		this.setTitle(user);
 
 		if (!usuario.nuevoChat(0)) {
@@ -125,7 +128,8 @@ public class Chat extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_W && e.isControlDown() && !e.isShiftDown() && !e.isAltDown()) {
 					String user = tabChats.getTitleAt(tabChats.getSelectedIndex());
-					tabChats.remove(tabChats.getSelectedComponent());
+					Component selectedComponent = tabChats.getSelectedComponent();
+					tabChats.remove(selectedComponent);
 					usuariosSeleccionados.remove(user);
 				}
 			}
