@@ -20,7 +20,6 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import org.apache.commons.codec.digest.DigestUtils;
 
-
 public class Cliente extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -167,7 +166,6 @@ public class Cliente extends JFrame {
 			}
 		});
 
-		
 		btnIniciarSesin.setBounds(56, 182, 101, 23);
 		panel.add(btnIniciarSesin);
 		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { panel, txtMailLogin, passLogin,
@@ -175,12 +173,12 @@ public class Cliente extends JFrame {
 	}
 
 	private void cargarUsuarioEIniciar() {
-		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passLogin.toString()));
+		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passReg.getPassword()));
 		iniciado(ventanaChat);
 	}
 
 	private void iniciarSesion() {
-		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.toString()));
+		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.getPassword()));
 		iniciado(ventanaChat);
 	}
 
@@ -191,9 +189,13 @@ public class Cliente extends JFrame {
 			this.dispose();
 		}
 	}
-	
-	private String hashear(String pass){
-		 String encriptMD5= DigestUtils.sha1Hex(pass);
+
+	private String hashear(char[] pass) {
+		String passS = "";
+		for (char c : pass) {
+			passS += c;
+		}
+		String encriptMD5 = DigestUtils.sha1Hex(passS);
 		return encriptMD5;
 	}
 
