@@ -137,7 +137,6 @@ public class HiloServer extends Thread {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				cerrar();
 			}
 		/// mensajes "bajo nivel" entre server y cliente

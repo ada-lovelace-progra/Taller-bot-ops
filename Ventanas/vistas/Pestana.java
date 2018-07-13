@@ -139,6 +139,7 @@ public class Pestana {
 		setearEventos(codChat, textEnviar, mensajes);
 		cargaMensajesNuevosHilo(codChat, mensajes);
 
+		refrescoDeIndice.start();
 		return panel;
 	}
 
@@ -462,6 +463,7 @@ public class Pestana {
 			int noVaMas = 0;
 			while (true && noVaMas != 10)
 				try {
+					escaneo();
 					if (mensajesSinLeer != 0) {
 						if (sinLeer) {
 							tabChats.setBackgroundAt(indicePestana, colorNotificacion);
@@ -485,18 +487,23 @@ public class Pestana {
 
 	private Thread refrescoDeIndice = new Thread() {
 		public void run() {
-			int index;
 			while (true) {
-				index = tabChats.indexOfTab(nombrePestana);
-				if (index == -1)
-					nombrePestana = tabChats.getTitleAt(indicePestana);
-				else
-					indicePestana = index;
+				escaneo();
 				try {
 					Thread.sleep(2000);
 				} catch (Exception e) {
 				}
 			}
 		}
+
 	};
+
+	private void escaneo() {
+		for (int i = 0; i < tabChats.getTabCount(); i++) {
+			String tituloTemp = tabChats.getTitleAt(i);
+			if (tituloTemp.matches(nombrePestana + "( \\.{3})?( \\(\\d+\\))?")) {
+				indicePestana = i;
+			}
+		}
+	}
 }

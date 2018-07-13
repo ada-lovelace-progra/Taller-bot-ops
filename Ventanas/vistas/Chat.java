@@ -61,7 +61,7 @@ public class Chat extends JFrame {
 		usuario = new Usuario(user, pass);
 
 		if (user.contains("$"))
-			user.replace("$", "");
+			user=user.replace("$", "");
 		this.setTitle(user);
 
 		if (!usuario.nuevoChat(0)) {

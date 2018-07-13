@@ -43,6 +43,7 @@ public class Usuario extends UsuarioGenerico {
 			clientePorCodChat.put(codChat, new Cliente(5050));
 			if (codChat == 0) {
 				clientePorCodChat.get(codChat).enviar(String.format("%04d", codChat) + nombre + "|" + pass);
+				nombre = nombre.replace("$", "");
 				return clientePorCodChat.get(codChat).recibir().equals("iniciado");
 			} else
 				clientePorCodChat.get(codChat).enviar(String.format("%04d", codChat) + nombre);
