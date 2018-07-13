@@ -90,6 +90,8 @@ public class Fecha extends RespuestaGenerico {
 
 	@Override
 	public String intentarResponder(String mensaje) {
+		if(this.primero==null)
+			crearCadena();
 		return this.primero.request(mensaje);
 	}
 

@@ -83,6 +83,7 @@ public class Pestana {
 			@Override
 			public void focusGained(FocusEvent arg0) {
 				mensajesSinLeer = 0;
+				notificarMensajesNuevos.interrupt();
 			}
 		});
 		GridBagLayout gbl_panel = new GridBagLayout();
@@ -202,24 +203,8 @@ public class Pestana {
 				if (arg0.getKeyChar() == '\n') {
 					enviarMensaje(textEnviar, mensajes, codChat);
 					textEnviar.setText("");
-				} else if (textEnviar.getText().length() > 1) {
-					char charAt = textEnviar.getText().charAt(0);
-					try {
-						while (charAt == '\n' || charAt == '\r' && textEnviar.getText().length() > 1) {
-							textEnviar.setText(textEnviar.getText().substring(1));
-							charAt = textEnviar.getText().charAt(0);
-						}
-					} catch (Exception e) {
-					}
-					try {
-						int length = textEnviar.getText().length();
-						charAt = textEnviar.getText().charAt(length - 1);
-						while (charAt == '\n' || charAt == '\r' && textEnviar.getText().length() > 1) {
-							textEnviar.setText(textEnviar.getText().substring(0, --length - 1));
-							charAt = textEnviar.getText().charAt(length - 1);
-						}
-					} catch (Exception e) {
-					}
+				} else if (textEnviar.getText().length() < 5) {
+					textEnviar.setText(textEnviar.getText().trim());
 				}
 			}
 		});
@@ -244,6 +229,7 @@ public class Pestana {
 		mensajes.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent arg0) {
 				mensajesSinLeer = 0;
+				notificarMensajesNuevos.interrupt();
 			}
 		});
 
@@ -251,6 +237,7 @@ public class Pestana {
 			@Override
 			public void focusGained(FocusEvent e) {
 				mensajesSinLeer = 0;
+				notificarMensajesNuevos.interrupt();
 			}
 		});
 
@@ -307,6 +294,7 @@ public class Pestana {
 
 						cargarMensaje(mensajes, codChat, recibido);
 						mensajesSinLeer++;
+						notificarMensajesNuevos.start();
 					} catch (Exception e) {
 					}
 				}
