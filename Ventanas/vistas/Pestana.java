@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -47,6 +48,8 @@ public class Pestana {
 	private JPopupMenu popupMenu;
 	private JButton botonSalir;
 	private JCheckBox publicaBoolean;
+	private boolean primerMensaje = true;
+	private JScrollPane scrollbar;
 	private static final Color[] colorArray = { new Color(255, 204, 204), // rosita
 			new Color(179, 255, 179), // verdecito
 			new Color(204, 230, 255), // celestito
@@ -65,7 +68,7 @@ public class Pestana {
 		this.tabChats = tabChats;
 		indicePestana = tabChats.getTabCount();
 		this.ventana = ventana;
-		this.nombrePestana=nombre;
+		this.nombrePestana = nombre;
 	}
 
 	/**
@@ -87,14 +90,16 @@ public class Pestana {
 		gbl_panel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
-		JPanel mensajes = new JPanel(new GridBagLayout());
+		JPanel mensajes = new JPanel();
+		mensajes.setBackground(Color.WHITE);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridy = 0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		JScrollPane scrollbar = new JScrollPane(mensajes);
+		scrollbar = new JScrollPane(mensajes);
+		scrollbar.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollbar.getVerticalScrollBar().setUnitIncrement(16);
 		panel.add(scrollbar, gbc);
 
@@ -128,8 +133,13 @@ public class Pestana {
 		cargaMensajesNuevosHilo(codChat, mensajes);
 
 		refrescoDeIndice.start();
-		
-		cargarMensaje(mensajes, 23, "asdasd");
+
+		GridBagLayout gbl_mensajes = new GridBagLayout();
+		gbl_mensajes.columnWidths = new int[] { 0 };
+		gbl_mensajes.rowHeights = new int[] { 0 };
+		gbl_mensajes.columnWeights = new double[] { Double.MIN_VALUE };
+		gbl_mensajes.rowWeights = new double[] { Double.MIN_VALUE };
+		mensajes.setLayout(gbl_mensajes);
 		return panel;
 	}
 
@@ -265,8 +275,10 @@ public class Pestana {
 
 						cargarMensaje(mensajes, codChat, recibido);
 						mensajesSinLeer++;
-						notificarMensajesNuevos.start();
+						if (notificarMensajesNuevos.isAlive())
+							notificarMensajesNuevos.start();
 
+						scrollbar.scrollRectToVisible(mensajes.getBounds());
 					} catch (Exception e) {
 					}
 				}
@@ -302,11 +314,15 @@ public class Pestana {
 	}
 
 	private void cargarMensaje(JPanel mensajes, int codChat, String mensaje) {
-
+		if (primerMensaje) {
+			primerMensaje = false;
+			cargarMensaje(mensajes, codChat, "");
+		}
 		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
 			mensajes.add(new Mensaje().nuevo(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
+			scrollbar.scrollRectToVisible(mensajes.getBounds());
 			mensajes.revalidate();
 			mensajes.repaint();
 		}
@@ -378,6 +394,7 @@ public class Pestana {
 						sinLeer = true;
 						tabChats.setBackgroundAt(indicePestana, color);
 						tabChats.setTitleAt(indicePestana, nombrePestana);
+						this.interrupt();
 					}
 					Thread.sleep(500);
 				} catch (Exception e) {
