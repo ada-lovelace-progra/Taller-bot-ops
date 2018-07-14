@@ -26,7 +26,6 @@ public class Cliente extends JFrame {
 	private JPanel contentPane;
 	private static Cliente ventana;
 	private Font fuente;
-	private JTextField txtMailReg;
 	private JTextField txtUsuario;
 	private JPasswordField passReg;
 	private JTextField txtMailLogin;
@@ -56,17 +55,6 @@ public class Cliente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.setFont(fuente);
-
-		JLabel lblMailReg = new JLabel("Email:");
-		lblMailReg.setBounds(238, 21, 66, 14);
-		lblMailReg.setFont(fuente);
-		contentPane.add(lblMailReg);
-
-		txtMailReg = new JTextField();
-		txtMailReg.setBounds(238, 39, 200, 20);
-		txtMailReg.setFont(fuente);
-		contentPane.add(txtMailReg);
-		txtMailReg.setColumns(10);
 
 		JLabel lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setBounds(238, 67, 66, 14);
@@ -122,10 +110,10 @@ public class Cliente extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		JLabel label = new JLabel("Email:");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		label.setBounds(10, 60, 66, 14);
-		panel.add(label);
+		JLabel lblUsuario_1 = new JLabel("Usuario:");
+		lblUsuario_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblUsuario_1.setBounds(10, 60, 66, 14);
+		panel.add(lblUsuario_1);
 
 		txtMailLogin = new JTextField();
 		txtMailLogin.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -169,8 +157,7 @@ public class Cliente extends JFrame {
 
 		btnIniciarSesin.setBounds(56, 182, 101, 23);
 		panel.add(btnIniciarSesin);
-		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { panel, txtMailLogin, passLogin,
-				btnIniciarSesin, txtMailReg, txtUsuario, passReg, btnRegistrar }));
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{panel, txtMailLogin, passLogin, btnIniciarSesin, txtUsuario, passReg, btnRegistrar}));
 	}
 
 	@SuppressWarnings("static-access")
