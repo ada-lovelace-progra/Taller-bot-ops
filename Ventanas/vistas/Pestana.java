@@ -165,12 +165,12 @@ public class Pestana {
 
 		textEnviar.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyChar() == '\n') {
+				if (arg0.getKeyChar() == KeyEvent.VK_ENTER) {
 					enviarMensaje(textEnviar, mensajes);
-					textEnviar.setText("");
-				} else if (arg0.getKeyCode() != ' ' && textEnviar.getText().length() < 5) {
+					textEnviar.setText(null);
+				} /*else if (arg0.getKeyCode() != ' ' && textEnviar.getText().length() < 5) {
 					textEnviar.setText(textEnviar.getText().trim());
-				}
+				}*/
 			}
 		});
 

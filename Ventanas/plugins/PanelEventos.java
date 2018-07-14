@@ -8,8 +8,12 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class PanelEventos {
+	
+	private static final Color[] colorArray = { new Color(179, 255, 179), new Color(255, 204, 204), new Color(204, 230, 255),
+			new Color(255, 255, 179), new Color(236, 179, 255), new Color(255, 204, 153), new Color(217, 255, 179),	new Color(255, 179, 204) };
 
 	private JFrame frame;
 
@@ -20,7 +24,10 @@ public class PanelEventos {
 	 * @param hora
 	 */
 	public PanelEventos(String titulo, String texto, String hora) {
+		int color = (int) (Math.random()*8);
 		frame = new JFrame();
+		frame.getContentPane().setBackground(colorArray[color]);
+		frame.setBackground(colorArray[color/2]);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -32,8 +39,9 @@ public class PanelEventos {
 		frame.getContentPane().setLayout(gridBagLayout);
 
 		JTextField textoEvento = new JTextField();
+		textoEvento.setBackground(colorArray[color]);
 		textoEvento.setHorizontalAlignment(SwingConstants.CENTER);
-		textoEvento.setFont(new Font("Blackadder ITC", Font.BOLD, 38));
+		textoEvento.setFont(new Font("Calibri", Font.BOLD, 36));
 		textoEvento.setText(texto);
 		textoEvento.setEditable(false);
 		GridBagConstraints gbc_textoEvento = new GridBagConstraints();
@@ -45,8 +53,9 @@ public class PanelEventos {
 		textoEvento.setColumns(10);
 
 		JTextField horaEvento = new JTextField();
+		horaEvento.setBackground(colorArray[color]);
 		horaEvento.setHorizontalAlignment(SwingConstants.CENTER);
-		horaEvento.setFont(new Font("Blackadder ITC", Font.PLAIN, 36));
+		horaEvento.setFont(new Font("Calibri", Font.PLAIN, 34));
 		horaEvento.setText(hora);
 		horaEvento.setEditable(false);
 		horaEvento.setColumns(10);

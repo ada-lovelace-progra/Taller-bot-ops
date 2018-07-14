@@ -106,7 +106,7 @@ public class Codificaciones {
 	}
 
 	static private boolean esLink(String recibido) {
-		return recibido.contains("http") || recibido.contains("https") || recibido.contains("www")
+		return recibido.contains("http") || recibido.contains("https") || recibido.contains("www.")
 				|| recibido.contains(".com");
 	}
 
