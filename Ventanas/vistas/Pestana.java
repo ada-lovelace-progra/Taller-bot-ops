@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -278,7 +278,12 @@ public class Pestana {
 						if (notificarMensajesNuevos.isAlive())
 							notificarMensajesNuevos.start();
 
-						scrollbar.scrollRectToVisible(mensajes.getBounds());
+						JScrollBar verticalScrollBar = scrollbar.getVerticalScrollBar();
+						int maximum = verticalScrollBar.getMaximum();
+						Thread.sleep(50);
+						verticalScrollBar.setValue(maximum);
+						verticalScrollBar.setValue(maximum + 1);
+						verticalScrollBar.setValue(Integer.MAX_VALUE);
 					} catch (Exception e) {
 					}
 				}
@@ -322,7 +327,6 @@ public class Pestana {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
 			mensajes.add(new Mensaje().nuevo(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
-			scrollbar.scrollRectToVisible(mensajes.getBounds());
 			mensajes.revalidate();
 			mensajes.repaint();
 		}
