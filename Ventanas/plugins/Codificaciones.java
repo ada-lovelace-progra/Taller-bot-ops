@@ -55,8 +55,7 @@ public class Codificaciones {
 			meme = mat.group(1);
 			String path = new MemesBD().obtenerMeme(meme);
 			if (path != null) {
-				recibido = recibido.replace(":" + meme + ":", "<a href= \"" + path + "\" title=\"Ampliar :" + meme
-						+ ":\"> <img width=\"200\" height=\"100\" src=\"" + path + "\"> </a>");
+				recibido = recibido.replace(":" + meme + ":", "meme:" + path);
 			}
 		}
 		return recibido;

@@ -25,7 +25,7 @@ public class Asistente extends UsuarioGenerico {
 
 	public String getEvento(String usuario) {
 		EventosBD siguienteEvento = null;
-		while ((siguienteEvento = RecordarEventos.siguienteEvento(usuario)) == null)
+		while ((siguienteEvento = RecordarEventos.esperarSiguienteEvento(usuario)) == null)
 			;
 
 		String mensaje = "----" + (nombre != null ? nombre + ": " : "") + "Tenes un evento!!!||"

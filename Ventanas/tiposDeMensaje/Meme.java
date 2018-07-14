@@ -11,14 +11,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 
-public class Youtube extends JPanel {
+public class Meme extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Youtube(String link) {
+	public Meme(String link) {
 		try {
 			GridBagLayout gridBagLayout = new GridBagLayout();
 			gridBagLayout.columnWidths = new int[]{54, 0};
@@ -27,7 +27,7 @@ public class Youtube extends JPanel {
 			gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 			setLayout(gridBagLayout);
 			setAlignmentX(LEFT_ALIGNMENT);
-			setSize(300, 200);
+			setSize(200, 800);
 			final JFXPanel fxPanel = new JFXPanel();
 			fxPanel.setAlignmentX(LEFT_ALIGNMENT);
 			GridBagConstraints gbc_fxPanel = new GridBagConstraints();
@@ -55,13 +55,8 @@ public class Youtube extends JPanel {
 	private static Scene createScene(String link) {
 		WebView webview = new WebView();
 		webview.getEngine().load(link);
-		webview.setPrefSize(320, 195);
+		webview.setPrefSize(620, 395);
 		Scene scene = new Scene(webview);
 		return (scene);
-	}
-
-	public static void main(String[] args) {
-		new Youtube(
-				"https://www.youtube-nocookie.com/embed/DLzxrzFCyOs?rel=0&amp;controls=0&amp;showinfo=0?autoplay=1");
 	}
 }

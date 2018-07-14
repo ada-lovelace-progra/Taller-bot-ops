@@ -30,7 +30,7 @@ public class RecordarEventosTest {
 	public void leerEvento() {
 		ArrayList<String> rep = new ArrayList<>();
 		String[] cad = { "Ada: El proximo evento es (pinponeada en lo de facu 3/06/2018) y falta/n  (1) dias @delucas",
-				"Ada: No hay eventos para el dia de la fecha @delucas" };
+				"Ada: No hay eventos proximos @delucas" };
 	
 		for (String temp : cad)
 			rep.add(temp);
@@ -42,7 +42,7 @@ public class RecordarEventosTest {
 	@Test
 	public void cargarEvento() {
 		Assert.assertEquals("Ada: Evento agregado @delucas",
-				escucha("@ada me agregas este evento : Fiesta en lo de pepe 2/08/2018 "));
+				escucha("@ada me agregas este evento: Fiesta en lo de pepe 2/08/2018 "));
 	}
 
 }

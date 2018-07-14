@@ -168,9 +168,10 @@ public class Pestana {
 				if (arg0.getKeyChar() == KeyEvent.VK_ENTER) {
 					enviarMensaje(textEnviar, mensajes);
 					textEnviar.setText(null);
-				} /*else if (arg0.getKeyCode() != ' ' && textEnviar.getText().length() < 5) {
-					textEnviar.setText(textEnviar.getText().trim());
-				}*/
+				} /*
+					 * else if (arg0.getKeyCode() != ' ' && textEnviar.getText().length() < 5) {
+					 * textEnviar.setText(textEnviar.getText().trim()); }
+					 */
 			}
 		});
 
@@ -332,6 +333,10 @@ public class Pestana {
 		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
+
+			if (mensaje.contains("meme:"))
+				mensajes.add(new Mensaje().nuevo(usuario.nombre + ":"), Mensaje.gbc(), mensajes.getComponentCount());
+
 			mensajes.add(new Mensaje().nuevo(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
 			mensajes.revalidate();
 			mensajes.repaint();

@@ -2,6 +2,7 @@ package bdRespuestas;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -116,7 +117,13 @@ public class EventosBD {
 	}
 
 	public String toString() {
-		return new SimpleDateFormat("dd/MM/yyyy").format(this.fecha) + this.descripcion;
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("yyyy/MM/dd_hh:mm").parse(this.fecha);
+		} catch (Exception e) {
+		}
+		String fecha = new SimpleDateFormat("hh:mm dd/MM/yyyy").format(date);
+		return this.descripcion + " " + fecha;
 	}
 
 	public void setUsuario(String usuario) {
