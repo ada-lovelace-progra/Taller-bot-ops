@@ -27,7 +27,7 @@ public class MemesTest {
 	public void Memes() {
 		String[] mensajes = { ":its a trap:", ":yao ming:", ":troll face:" };
 		for (String mensaje : mensajes) {
-			Assert.assertTrue(Codificaciones.codificar(mensaje).contains("<img"));
+			Assert.assertTrue(Codificaciones.codificar(mensaje).matches(".*meme:.*\\..*"));
 		}
 	}
 
