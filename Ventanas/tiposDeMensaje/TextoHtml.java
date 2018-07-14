@@ -1,5 +1,6 @@
 package tiposDeMensaje;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 import javax.swing.JEditorPane;
@@ -39,6 +40,8 @@ public class TextoHtml extends JPanel {
 		JEditorPane contenedor = new JEditorPane();
 		contenedor.setEditable(false);
 		contenedor.setContentType("text/html");
+		contenedor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+		contenedor.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		contenedor.setEditable(false);
 		try {
 

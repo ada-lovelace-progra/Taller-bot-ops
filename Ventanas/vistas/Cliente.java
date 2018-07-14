@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -172,14 +173,32 @@ public class Cliente extends JFrame {
 				btnIniciarSesin, txtMailReg, txtUsuario, passReg, btnRegistrar }));
 	}
 
+	@SuppressWarnings("static-access")
 	private void cargarUsuarioEIniciar() {
 		Chat ventanaChat = new Chat("$" + txtUsuario.getText(), hashear(passReg.getPassword()));
-		iniciado(ventanaChat);
+		if(ventanaChat.iniciado==false)
+		{
+			JOptionPane mensaje = new JOptionPane();
+			JLabel lbl = new JLabel("No se pudo crear el usuario. Intenta nuevamente.");
+			lbl.setFont(fuente);
+			mensaje.showMessageDialog(ventana, lbl, "Error en la creación del usuario", JOptionPane.ERROR_MESSAGE);
+		}
+		else
+			iniciado(ventanaChat);
 	}
 
+	@SuppressWarnings("static-access")
 	private void iniciarSesion() {
 		Chat ventanaChat = new Chat(txtMailLogin.getText(), hashear(passLogin.getPassword()));
-		iniciado(ventanaChat);
+		if(ventanaChat.iniciado==false)
+		{
+			JOptionPane mensaje = new JOptionPane();
+			JLabel lbl = new JLabel("No se pudo iniciar. Intenta nuevamente.");
+			lbl.setFont(fuente);
+			mensaje.showMessageDialog(ventana, lbl, "Error en el inicio de sesión", JOptionPane.ERROR_MESSAGE);
+		}
+		else
+			iniciado(ventanaChat);
 	}
 
 	private void iniciado(Chat ventanaChat) {

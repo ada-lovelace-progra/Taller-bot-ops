@@ -1,5 +1,6 @@
 package tiposDeMensaje;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 import javax.swing.JPanel;
@@ -36,6 +37,7 @@ public class TextoPlano extends JPanel {
 		gbc_txtpnAsd.gridy = 0;
 		JTextPane txtpnAsd = new JTextPane();
 		txtpnAsd.setText(mensaje);
+		txtpnAsd.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtpnAsd.setEditable(false);
 		add(txtpnAsd, gbc_txtpnAsd);
 	}

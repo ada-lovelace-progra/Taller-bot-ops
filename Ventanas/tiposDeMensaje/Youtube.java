@@ -7,6 +7,8 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 public class Youtube extends JPanel {
@@ -32,6 +34,8 @@ public class Youtube extends JPanel {
 			gbc_fxPanel.anchor = GridBagConstraints.NORTHWEST;
 			gbc_fxPanel.gridx = 0;
 			gbc_fxPanel.gridy = 0;
+			fxPanel.setBackground(Color.WHITE);
+			fxPanel.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			add(fxPanel, gbc_fxPanel);
 			setVisible(true);
 
