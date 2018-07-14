@@ -37,8 +37,11 @@ public class HiloServer extends Thread {
 			// comprobar si está registrado
 			// ejemplo de lectura (readUTF): 0000Usuario|PassHash
 			String user_pass = readUTF.substring(4);
-			if (usuariosConectados.contains(user_pass.substring(0, user_pass.indexOf("|"))))
+			if (usuariosConectados.toLowerCase()
+					.contains(user_pass.substring(0, user_pass.indexOf("|")).toLowerCase())) {
+				bufferDeSalida.writeUTF("Ya se inicio Sesion Con este Usuario");
 				return;
+			}
 			if (user_pass.charAt(0) == '$') {
 				user_pass = user_pass.replace("$", "");
 				readUTF = readUTF.replace("$", "");

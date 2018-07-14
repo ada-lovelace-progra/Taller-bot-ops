@@ -1,17 +1,15 @@
 package vistas;
 
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,19 +24,12 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 
 import plugins.Codificaciones;
-import plugins.Youtube2;
 import plugins.Zumbido;
 import usuariosYAsistente.Usuario;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class Pestana {
 
@@ -69,11 +60,12 @@ public class Pestana {
 	 * Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };
 	 */
 
-	public Pestana(Usuario usuario, JTabbedPane tabChats, Chat ventana) {
+	public Pestana(Usuario usuario, JTabbedPane tabChats, Chat ventana, String nombre) {
 		this.usuario = usuario;
 		this.tabChats = tabChats;
 		indicePestana = tabChats.getTabCount();
 		this.ventana = ventana;
+		this.nombrePestana=nombre;
 	}
 
 	/**
@@ -102,10 +94,9 @@ public class Pestana {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		
-		GridBagConstraints gbc_1 = new GridBagConstraints();
-		gbc_1.fill = GridBagConstraints.BOTH;
-		panel.add(new JScrollPane(mensajes), gbc_1);
+		JScrollPane scrollbar = new JScrollPane(mensajes);
+		scrollbar.getVerticalScrollBar().setUnitIncrement(16);
+		panel.add(scrollbar, gbc);
 
 		JScrollPane scrollEnviar = new JScrollPane();
 		GridBagConstraints gbc_scrollEnviar = new GridBagConstraints();
@@ -137,6 +128,8 @@ public class Pestana {
 		cargaMensajesNuevosHilo(codChat, mensajes);
 
 		refrescoDeIndice.start();
+		
+		cargarMensaje(mensajes, 23, "asdasd");
 		return panel;
 	}
 
@@ -211,14 +204,10 @@ public class Pestana {
 
 			@Override
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void popupMenuCanceled(PopupMenuEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 		});
@@ -272,14 +261,12 @@ public class Pestana {
 						if (estanSeteandoPrivacidad(recibido))
 							setearPrivacidad(recibido, codChat, false);
 
-						// youtube(mensajes, recibido);
-
-						// if(recibido.contains("@"+usuario.nombre))
-						// NotificacionSonora.sonar();
+						// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 
 						cargarMensaje(mensajes, codChat, recibido);
 						mensajesSinLeer++;
 						notificarMensajesNuevos.start();
+
 					} catch (Exception e) {
 					}
 				}
@@ -290,17 +277,7 @@ public class Pestana {
 					new Zumbido(ventana).start();
 			}
 
-			@SuppressWarnings("unused")
-			private void youtube(JEditorPane mensajes, String recibido) {
-				if (recibido.contains("youtube")) {
-					mensajes.add(Youtube2.metodoLoco(true));
-				}
-			}
-
 		}.start();
-	}
-
-	public void setearTituloYPrivacidad(String titulo, boolean publico) {
 	}
 
 	private void enviarMensaje(JEditorPane textEnviar, JPanel mensajes, int codChat) {
@@ -325,18 +302,12 @@ public class Pestana {
 	}
 
 	private void cargarMensaje(JPanel mensajes, int codChat, String mensaje) {
-		if (!notificarMensajesNuevos.isAlive()) {
-			nombrePestana = tabChats.getTitleAt(indicePestana);
-			notificarMensajesNuevos.start();
-		}
-
-		// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 
 		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
 				mensaje = mensaje.substring(0, mensaje.indexOf("#"));
-			mensajes.add(new Mensaje(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
-			mensajes.validate();
+			mensajes.add(new Mensaje().nuevo(mensaje), Mensaje.gbc(), mensajes.getComponentCount());
+			mensajes.revalidate();
 			mensajes.repaint();
 		}
 	}
@@ -417,10 +388,11 @@ public class Pestana {
 
 	private Thread refrescoDeIndice = new Thread() {
 		public void run() {
+			this.setName("refresco del indice");
 			while (true) {
 				escaneo();
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(200);
 				} catch (Exception e) {
 				}
 			}

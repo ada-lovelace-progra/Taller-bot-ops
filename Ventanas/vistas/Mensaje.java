@@ -1,23 +1,22 @@
 package vistas;
 
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.border.MatteBorder;
-import java.awt.GridBagLayout;
+
+import tiposDeMensaje.TextoHtml;
+import tiposDeMensaje.TextoPlano;
+import tiposDeMensaje.Youtube;
 
 public class Mensaje extends JPanel {
 	/**
 	 * 
 	 */
-	
+	private static String regexHTML = ".*<.*http.*>.*";
+
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	public static GridBagConstraints gbc() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -26,20 +25,11 @@ public class Mensaje extends JPanel {
 		return gbc;
 	}
 
-	public Mensaje(String mensaje) {
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{118, 0};
-		gridBagLayout.rowHeights = new int[]{20, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		setLayout(gridBagLayout);
-		setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
-		GridBagConstraints gbc_txtpnAsd = new GridBagConstraints();
-		gbc_txtpnAsd.fill = GridBagConstraints.BOTH;
-		gbc_txtpnAsd.gridx = 0;
-		gbc_txtpnAsd.gridy = 0;
-		JTextPane txtpnAsd = new JTextPane();
-		txtpnAsd.setText(mensaje);
-		add(txtpnAsd, gbc_txtpnAsd);
+	public Component nuevo(String mensaje) {
+		if (mensaje.toLowerCase().contains("youtube"))
+			return new Youtube("https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1");
+		if (mensaje.matches(regexHTML))
+			return new TextoHtml(mensaje);
+		return new TextoPlano(mensaje);
 	}
 }

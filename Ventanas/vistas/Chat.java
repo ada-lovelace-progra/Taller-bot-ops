@@ -174,7 +174,7 @@ public class Chat extends JFrame {
 				return;
 			}
 		}
-		tabChats.addTab(nombre, new Pestana(usuario, tabChats, this).nuevo(codChat));
+		tabChats.addTab(nombre, new Pestana(usuario, tabChats, this,nombre).nuevo(codChat));
 	}
 
 	class escucharCodChat_0 extends Thread {
