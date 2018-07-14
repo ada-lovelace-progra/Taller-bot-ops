@@ -10,6 +10,8 @@ import tiposDeMensaje.TextoPlano;
 import tiposDeMensaje.Youtube;
 
 public class Mensaje extends JPanel {
+	public Mensaje() {
+	}
 	/**
 	 * 
 	 */
@@ -27,7 +29,7 @@ public class Mensaje extends JPanel {
 
 	public Component nuevo(String mensaje) {
 		if (mensaje.toLowerCase().contains("youtube"))
-			return new Youtube("https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1");
+			return new Youtube("https://www.youtube-nocookie.com/embed/DLzxrzFCyOs?rel=0&amp;controls=0&amp;showinfo=0?autoplay=1");
 		if (mensaje.matches(regexHTML))
 			return new TextoHtml(mensaje);
 		return new TextoPlano(mensaje);

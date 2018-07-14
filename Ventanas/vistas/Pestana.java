@@ -50,6 +50,7 @@ public class Pestana {
 	private JCheckBox publicaBoolean;
 	private boolean primerMensaje = true;
 	private JScrollPane scrollbar;
+	private int codChat;
 	private static final Color[] colorArray = { new Color(255, 204, 204), // rosita
 			new Color(179, 255, 179), // verdecito
 			new Color(204, 230, 255), // celestito
@@ -75,6 +76,7 @@ public class Pestana {
 	 * @wbp.parser.entryPoint
 	 */
 	public JPanel nuevo(int codChat) {
+		this.codChat = codChat;
 		JPanel panel = new JPanel();
 		panel.addFocusListener(new FocusAdapter() {
 			@Override
@@ -99,8 +101,8 @@ public class Pestana {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		scrollbar = new JScrollPane(mensajes);
-		scrollbar.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollbar.getVerticalScrollBar().setUnitIncrement(16);
+		scrollbar.getHorizontalScrollBar().setUnitIncrement(16);
 		panel.add(scrollbar, gbc);
 
 		JScrollPane scrollEnviar = new JScrollPane();
@@ -129,8 +131,8 @@ public class Pestana {
 		botonSalir.setFont(fuente);
 		popupMenu.add(botonSalir);
 
-		setearEventos(codChat, textEnviar, mensajes);
-		cargaMensajesNuevosHilo(codChat, mensajes);
+		setearEventos(textEnviar, mensajes);
+		cargaMensajesNuevosHilo(mensajes);
 
 		refrescoDeIndice.start();
 
@@ -140,10 +142,14 @@ public class Pestana {
 		gbl_mensajes.columnWeights = new double[] { Double.MIN_VALUE };
 		gbl_mensajes.rowWeights = new double[] { Double.MIN_VALUE };
 		mensajes.setLayout(gbl_mensajes);
+
 		return panel;
 	}
 
-	private void setearEventos(int codChat, JEditorPane textEnviar, JPanel mensajes) {
+	public void setCodChat() {
+	}
+
+	private void setearEventos(JEditorPane textEnviar, JPanel mensajes) {
 
 		tabChats.addMouseListener(new MouseAdapter() {
 			@Override
@@ -160,9 +166,9 @@ public class Pestana {
 		textEnviar.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyChar() == '\n') {
-					enviarMensaje(textEnviar, mensajes, codChat);
+					enviarMensaje(textEnviar, mensajes);
 					textEnviar.setText("");
-				} else if (textEnviar.getText().length() < 5) {
+				} else if (arg0.getKeyCode() != ' ' && textEnviar.getText().length() < 5) {
 					textEnviar.setText(textEnviar.getText().trim());
 				}
 			}
@@ -238,7 +244,7 @@ public class Pestana {
 					}
 					if (!priv.equals(temppriv)) {
 						priv = temppriv;
-						setearPrivacidad(priv, codChat, true);
+						setearPrivacidad(priv, true);
 						usuario.enviar(codChat, priv);
 					}
 					// tituloPopUp.setText(nombrePestana.replace("#", ""));
@@ -252,7 +258,7 @@ public class Pestana {
 
 	}
 
-	private void cargaMensajesNuevosHilo(int codChat, JPanel mensajes) {
+	private void cargaMensajesNuevosHilo(JPanel mensajes) {
 		new Thread() {
 			public void run() {
 				this.setName("CargaMensajes");
@@ -269,13 +275,13 @@ public class Pestana {
 							setearTitulo(recibido);
 
 						if (estanSeteandoPrivacidad(recibido))
-							setearPrivacidad(recibido, codChat, false);
+							setearPrivacidad(recibido, false);
 
 						// Toolkit.getDefaultToolkit().beep(); //Ruidito por default del sistema
 
-						cargarMensaje(mensajes, codChat, recibido);
+						cargarMensaje(mensajes, recibido);
 						mensajesSinLeer++;
-						if (notificarMensajesNuevos.isAlive())
+						if (!notificarMensajesNuevos.isAlive())
 							notificarMensajesNuevos.start();
 
 						JScrollBar verticalScrollBar = scrollbar.getVerticalScrollBar();
@@ -297,7 +303,7 @@ public class Pestana {
 		}.start();
 	}
 
-	private void enviarMensaje(JEditorPane textEnviar, JPanel mensajes, int codChat) {
+	private void enviarMensaje(JEditorPane textEnviar, JPanel mensajes) {
 		String mensaje = textEnviar.getText().trim();
 		if (mensaje.length() > 0 && !mensaje.equals("\n")) {
 			textEnviar.setText("");
@@ -310,18 +316,18 @@ public class Pestana {
 				setearTitulo(mensaje);
 
 			if (setearonNombre && estanSeteandoPrivacidad(mensaje))
-				setearPrivacidad(mensaje, codChat, true);
+				setearPrivacidad(mensaje, true);
 
-			cargarMensaje(mensajes, codChat, usuario.nombre + ": " + mensaje);
+			cargarMensaje(mensajes, usuario.nombre + ": " + mensaje);
 
 			usuario.enviar(codChat, mensaje);
 		}
 	}
 
-	private void cargarMensaje(JPanel mensajes, int codChat, String mensaje) {
+	private void cargarMensaje(JPanel mensajes, String mensaje) {
 		if (primerMensaje) {
 			primerMensaje = false;
-			cargarMensaje(mensajes, codChat, "");
+			cargarMensaje(mensajes, "");
 		}
 		if (!mensaje.matches("^(.*: )?#.=.*")) {
 			if (mensaje.contains("@") && mensaje.contains("#"))
@@ -345,7 +351,7 @@ public class Pestana {
 		return mensaje.contains("#P=");
 	}
 
-	private void setearPrivacidad(String mensaje, int codChat, boolean enviar) {
+	private void setearPrivacidad(String mensaje, boolean enviar) {
 		Matcher regex = Pattern.compile("#P=(.)").matcher(mensaje);
 		if (regex.find()) {
 			setearonPrivacidad = true;

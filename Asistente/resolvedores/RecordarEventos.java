@@ -78,7 +78,7 @@ public class RecordarEventos extends RespuestaGenerico {
 			EventosBD e = new EventosBD();
 			EventosBD siguiente = e.proximoEvento(usuario);
 			if (siguiente == null || siguiente.getDescripcion() == null)
-				Thread.sleep(10000);
+				Thread.sleep(60000);
 			else {
 				long horaEvento = new SimpleDateFormat("yyyy/MM/dd_hh:mm:ss").parse(siguiente.getFecha()).getTime();
 				long horaActual = new Date().getTime();

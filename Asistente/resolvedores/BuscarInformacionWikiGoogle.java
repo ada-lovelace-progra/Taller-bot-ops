@@ -32,7 +32,7 @@ public class BuscarInformacionWikiGoogle extends RespuestaGenerico {
 				String link = "http://www.google.com/search?&btnI=745&pws=0&q=wikipedia%20sobre%20";
 				link += tema.group(1).replace(" ", "%20");
 				String info = obtenerTituloYVistaPrevia(link);
-				info = info.substring(3, info.length() - 4);
+				info = info.substring(3);
 				if (info != null)
 					return "Segun Wikipedia " + info;
 			}

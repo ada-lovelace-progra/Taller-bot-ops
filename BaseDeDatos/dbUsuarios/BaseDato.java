@@ -37,7 +37,7 @@ public class BaseDato {
 		return false;
 	}
 
-	public static boolean comprobarUser(String user) {
+	public boolean comprobarUser(String user) {
 		try {
 			@SuppressWarnings("deprecation")
 			Criteria crit = session.createCriteria(RespuestaBD.class)
@@ -51,10 +51,10 @@ public class BaseDato {
 		return false;
 	}
 
-	public static boolean crearUsuario(String user, String pass) {
+	public boolean crearUsuario(String user, String pass) {
 		Transaction tx = session.beginTransaction();
 		try {
-			RespuestaBD res = new RespuestaBD(5, user.toLowerCase(), pass);
+			RespuestaBD res = new RespuestaBD(user.toLowerCase(), pass);
 			session.save(res);
 			tx.commit();
 			return true;

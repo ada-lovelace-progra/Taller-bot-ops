@@ -37,6 +37,7 @@ public class TextoHtml extends JPanel {
 		gbc_txtpnAsd.gridx = 0;
 		gbc_txtpnAsd.gridy = 0;
 		JEditorPane contenedor = new JEditorPane();
+		contenedor.setEditable(false);
 		contenedor.setContentType("text/html");
 		contenedor.setEditable(false);
 		try {

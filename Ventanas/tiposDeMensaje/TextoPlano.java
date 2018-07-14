@@ -36,6 +36,7 @@ public class TextoPlano extends JPanel {
 		gbc_txtpnAsd.gridy = 0;
 		JTextPane txtpnAsd = new JTextPane();
 		txtpnAsd.setText(mensaje);
+		txtpnAsd.setEditable(false);
 		add(txtpnAsd, gbc_txtpnAsd);
 	}
 }

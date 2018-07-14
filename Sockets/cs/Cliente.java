@@ -1,6 +1,10 @@
 package cs;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -15,8 +19,7 @@ public class Cliente {
 
 	public Cliente(int puerto) {
 		if (host == null) {
-			if (levantarConexion(puerto))
-				levantarServerYConectarse(puerto);
+			levantarConexion(puerto);
 		} else
 			try {
 				socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
@@ -31,24 +34,6 @@ public class Cliente {
 			dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			dataOutputStream.flush();
 		} catch (Exception e) {
-		}
-	}
-
-	private void levantarServerYConectarse(int puerto) {
-		new Thread() {
-			public void run() {
-				this.setName("Servidor en Cliente");
-				try {
-					new Servidor(puerto);
-				} catch (Exception e) {
-				}
-			}
-		}.start();
-		try {
-			Thread.sleep(500);
-			socket = new Socket(InetAddress.getByName(host).getHostAddress(), puerto);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

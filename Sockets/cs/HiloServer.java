@@ -66,9 +66,9 @@ public class HiloServer extends Thread {
 		String user = user_pass.substring(0, user_pass.indexOf("|"));
 		String pass = user_pass.substring(user_pass.indexOf("|") + 1);
 
-		if (!dbUsuarios.BaseDato.comprobarUser(user))// Puedo crear el usuario si no existe
+		if (!new dbUsuarios.BaseDato().comprobarUser(user))// Puedo crear el usuario si no existe
 		{
-			dbUsuarios.BaseDato.crearUsuario(user, pass);
+			new dbUsuarios.BaseDato().crearUsuario(user, pass);
 			return true;
 		}
 		return false;
